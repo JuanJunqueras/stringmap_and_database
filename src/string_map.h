@@ -27,7 +27,7 @@ public:
 
     class iterator;
     class const_iterator;
-    
+
 
     /** @brief Construye mapa vacio
      *
@@ -95,7 +95,7 @@ public:
      *  @returns una referencia const a la definicion.
      *
      *  \complexity{\O(S)}
-     */ 
+     */
     const mapped_type& at(const key_type& key) const;
 
     /** @brief Vacia el mapa */
@@ -164,6 +164,19 @@ public:
 
 private:
 
+    template<typename T>
+    struct Nodo {
+        Nodo *hijos[27];
+        T valor;
+
+        Nodo(T v) : valor(v) {
+            for (int i = 0; i < 27; ++i) {
+                hijos[i] = nullptr;
+            }
+        };
+    };
+
+    Nodo *raiz;
 };
 
 

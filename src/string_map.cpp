@@ -1,7 +1,7 @@
 #include "string_map.h"
 
 string_map::string_map(){
-
+    raiz = new Nodo(NULL);
 }
 
 string_map::~string_map() {
