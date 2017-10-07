@@ -75,10 +75,29 @@ string_map::const_iterator string_map::cend() const {
 }
 
 string_map::iterator string_map::find(const string_map::key_type &key) {
+
+
     return string_map::iterator();
 }
 
 string_map::const_iterator string_map::find(const string_map::key_type &key) const {
+
+
+    int index = 0;
+    int siguiente = (int) key[index] - 97;
+    Nodo* actual = raiz;
+    while (index != key.size() && actual->hijos[siguiente] != nullptr) {
+        siguiente = (int) key[index] - 97;
+        actual = actual->hijos[siguiente];
+        index++;
+    }
+
+    if (index == key.size() && actual->hijos[26]->valor != NULL) {
+        //FIXME> devolver el iterador
+    } else {
+        // FIXME> devolver iterador al final del map.
+    }
+
     return string_map::const_iterator();
 }
 
