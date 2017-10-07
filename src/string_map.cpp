@@ -82,8 +82,32 @@ string_map::const_iterator string_map::find(const string_map::key_type &key) con
     return string_map::const_iterator();
 }
 
+template<typename T>
 pair<string_map::iterator, bool> string_map::insert(const string_map::value_type &value) {
-    return pair<string_map::iterator, bool>();
+
+    bool inserta = false;
+    string clave = value.first;
+    T valor = value.second;
+
+    int index = 0;
+    Nodo* actual = raiz;
+    while (index != clave.size()) {
+        int siguiente = (int) clave[index] - 97;
+        if (actual->hijos[siguiente] == nullptr) {
+            actual->hijos[siguiente] = new Nodo(NULL);
+        }
+        actual = actual->hijos[siguiente];
+        index++;
+    }
+
+    Nodo* ultimo = actual->hijos[26];
+    if (ultimo->valor == nullptr) {
+        ultimo->valor = valor;
+        inserta = true;
+    }
+
+    // TODO: agregar iterador
+    return pair<string_map::iterator, bool>(, inserta);
 }
 
 string_map::size_type string_map::erase(const string_map::key_type &key) {
