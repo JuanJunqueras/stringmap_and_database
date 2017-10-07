@@ -51,6 +51,25 @@ void string_map::clear() {
 }
 
 string_map::iterator string_map::begin() {
+
+//    (int) key[index] - 97
+
+    Nodo *actual = raiz;
+    while (actual != nullptr) {
+
+        if (actual->hijos[26] != nullptr) {
+            auto it = new string_map::iterator();
+//            return new string_map::iterator();// actual->hijos[26]->valor;
+        }
+
+        for (int i = 0; i < 26; ++i) {
+            if (actual->hijos[i] != nullptr) {
+//                actual =
+            }
+        }
+
+    }
+
     return string_map::iterator();
 }
 
