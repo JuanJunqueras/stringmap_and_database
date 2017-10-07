@@ -25,7 +25,13 @@ size_t string_map::size() const {
 }
 
 bool string_map::empty() const {
-    return false;
+    bool empty = true;
+    for (int i = 0; i < 27 && empty; ++i) {
+        if (raiz->hijos[i] != nullptr) {
+            empty = false;
+        }
+    }
+    return empty;
 }
 
 mapped_type &string_map::operator[](const string_map::key_type &key) {
