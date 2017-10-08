@@ -163,7 +163,7 @@ public:
     iterator erase(iterator pos);
 
 private:
-
+    size_t string_map::sizeBelow(Nodo* raiz)const;
     template<typename T>
     struct Nodo {
         Nodo *hijos[27];
@@ -177,6 +177,8 @@ private:
     };
 
     Nodo *raiz;
+
+    size_t sizeBelow(Nodo *pNodo)const;
 };
 
 

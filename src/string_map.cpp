@@ -20,8 +20,19 @@ bool string_map::operator==(const string_map &otro) const {
     return false;
 }
 
+size_t string_map::sizeBelow(Nodo* pseudoRaiz)const {
+    int total = 0;
+    for(int i = 0 ; i<27 ; i++){
+        if(pseudoRaiz->hijos[i]){
+            size_t debajo = sizeBelow(pseudoRaiz->hijos[i]);
+            total+= (1 + debajo);
+        }
+
+    }
+    return total;
+}
 size_t string_map::size() const {
-    return 0;
+    return sizeBelow(raiz);
 }
 
 bool string_map::empty() const {
