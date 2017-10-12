@@ -167,7 +167,6 @@ public:
     iterator erase(iterator pos);
 
 private:
-    template<typename T>
     struct Nodo {
         map<char, Nodo*> hijos;
         pair<string, T>* valor;
