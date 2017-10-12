@@ -26,7 +26,27 @@ public:
     typedef size_t size_type;
 
 
-    class iterator;
+    class iterator{
+        iterator(string_map mapa);
+
+        friend class string_map;
+        Nodo* posicion;
+        Nodo* raizDelArbol;
+    public:
+
+        using value_type = const string_map::value_type;
+        using iterator_category = std::forward_iterator_tag;
+        using reference = value_type&;
+        using pointer = value_type*;
+        using difference_type = std::ptrdiff_t;
+        T& operator*();
+        T operator->();
+        iterator& operator++();
+        bool operator==(iterator& o_it);
+        bool operator!=(const iterator& o_it);
+
+
+    };
     class const_iterator;
 
 
@@ -165,35 +185,17 @@ public:
      *  \complexity{\O(S)}
      */
     iterator erase(iterator pos);
-
+    Nodo *getRaiz();
 private:
-    template<typename T>
+
     struct Nodo {
         map<char, Nodo*> hijos;
         pair<string, T>* valor;
 
         Nodo(pair<string, T>* v) : valor(v) {};
     };
-    <T>
-    class iterator{
-        friend class string_map;
-        Nodo* posicion;
-        Nodo* raizDelArbol;
-        public:
-            iterator(Nodo* raiz);
-            using value_type = const string_map::value_type;
-            using iterator_category = std::forward_iterator_tag;
-            using reference = value_type&;
-            using pointer = value_type*;
-            using difference_type = std::ptrdiff_t;
-            T& operator*();
-            T operator->();
-            iterator& operator++();
-            bool operator==(iterator& o_it);
-            bool operator!=(const iterator& o_it);
 
 
-    };
 
     Nodo* raiz;
     size_t _cantidadDeClaves;
@@ -203,6 +205,8 @@ private:
     string primeraClave() const;
 
     string encontrarClave(Nodo *nodoActual, string claveHastaAhora)const;
+
+
 };
 
 

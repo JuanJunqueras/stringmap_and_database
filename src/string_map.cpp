@@ -14,8 +14,9 @@ string_map::string_map(const string_map &) {
 
 }
 
-string_map &string_map::operator=(const string_map &) {
-    return <#initializer#>;
+string_map &string_map::operator=(const string_map &otro) {
+    raiz = otro.raiz;
+    _cantidadDeClaves=otro._cantidadDeClaves;
 }
 
 bool string_map::operator==(const string_map &otro) const {
@@ -42,15 +43,15 @@ bool string_map::empty() const {
 }
 
 mapped_type &string_map::operator[](const string_map::key_type &key) {
-    return <#initializer#>;
+    return find(key);
 }
 
 mapped_type &string_map::at(const string_map::key_type &key) {
-    return <#initializer#>;
+    return *find(key).first;
 }
 
 const mapped_type &string_map::at(const string_map::key_type &key) const {
-    return <#initializer#>;
+    return *find(key).first;
 }
 
 void string_map::clear() {
@@ -202,11 +203,15 @@ char string_map::enesimoCaracter(string_map::Nodo *pNodo, int n) const {
     if(claves.size()>n){return claves[n];}
     return NULL;
 }
+
+string_map::Nodo *string_map::getRaiz() {
+    return this->raiz;
+}
 ////////  empieza iterador /////////////////////
 
-string_map::iterator::iterator(Nodo* raiz) {
-    this->raizDelArbol = raiz;
-    this->posicion = raiz;
+string_map::iterator::iterator(string_map mapa) {
+    this->raizDelArbol = mapa.getRaiz();
+    this->posicion = mapa.getRaiz();
 }
 
 
