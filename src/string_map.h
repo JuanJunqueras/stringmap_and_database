@@ -175,12 +175,12 @@ private:
         Nodo(pair<string, T>* v) : valor(v) {};
     };
     <T>
-    class iterador{
+    class iterator{
         friend class string_map;
         Nodo* posicion;
-        Nodo* raiz;
+        Nodo* raizDelArbol;
         public:
-            iterador();
+            iterator(Nodo* raiz);
             using value_type = const string_map::value_type;
             using iterator_category = std::forward_iterator_tag;
             using reference = value_type&;
@@ -188,16 +188,21 @@ private:
             using difference_type = std::ptrdiff_t;
             T& operator*();
             T operator->();
-            iterador& operator++();
-            bool operator==(iterador& o_it);
-            bool operator!=(const iterador& o_it);
+            iterator& operator++();
+            bool operator==(iterator& o_it);
+            bool operator!=(const iterator& o_it);
 
 
     };
 
     Nodo* raiz;
     size_t _cantidadDeClaves;
+
+    char enesimoCaracter(Nodo* pNodo, int n)const;
     size_t sizeBelow(Nodo *pNodo)const;
+    string primeraClave() const;
+
+    string encontrarClave(Nodo *nodoActual, string claveHastaAhora)const;
 };
 
 

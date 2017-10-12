@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "string_map.h"
 
 string_map::string_map(){
@@ -125,6 +126,7 @@ pair<string_map::iterator, bool> string_map::insert(const string_map::value_type
                 actual->hijos.insert(pair<char,Nodo*>(siguiente, nodoSiguiente));
             }
             actual = actual->hijos[siguiente];
+
             index++;
         }
         actual->valor = &value;
@@ -167,24 +169,57 @@ string_map::size_type string_map::erase(const string_map::key_type &key) {
 string_map::size_type string_map::count(const string_map::key_type &key) const {
     return 0;
 }
+string string_map::primeraClave() const {
+    Nodo* nodoActual = raiz;
+    if(raiz->hijos.size()==0){
+        return NULL;
+    }
+    else {
+        string clave = encontrarClave(nodoActual,"");
+        if(clave!=NULL){return clave;}
+        }
+    }
+}
+string string_map::encontrarClave(Nodo* nodoActual, string claveHastaAhora)const {
+    if(find(claveHastaAhora)){return claveHastaAhora;}
+    int n = 0;
+    while(enesimoCaracter(nodoActual,n)){
+        char siguiente = enesimoCaracter(nodoActual,n);
+        if(encontrarClave(nodoActual->hijos[siguiente],claveHastaAhora+siguiente)!=NULL){
+            return encontrarClave(nodoActual->hijos[siguiente],claveHastaAhora+siguiente);
+        };
+        n++;
+    }
+    return NULL;
+};
+char string_map::enesimoCaracter(string_map::Nodo *pNodo, int n) const {
+    auto hijos = pNodo->hijos;
+    vector<char> claves = vector<char>();
+    for(auto it = hijos.begin();it!=hijos.end;it++){
+        claves.push_back(*it.first);
+    }
+    std::sort(claves.begin(),claves.end());
+    if(claves.size()>n){return claves[n];}
+    return NULL;
+}
 ////////  empieza iterador /////////////////////
 
-string_map::iterador::iterador() {
-    raiz = this->raiz;
-    posicion = this->posicion;
+string_map::iterator::iterator(Nodo* raiz) {
+    this->raizDelArbol = raiz;
+    this->posicion = raiz;
 }
 
 
 template <typename T>
-T& string_map::iterador::operator*() {
+T& string_map::iterator::operator*() {
     return posicion->valor;
 }
 template <typename T>
-T string_map::iterador::operator->() {
+T string_map::iterator::operator->() {
     return posicion->valor;
 }
 
-bool operator==(string_map::iterador& o_it){
-    return (o_it.raiz==raiz) && (o_it.posicion==posicion);
+bool operator==(string_map::iterator& o_it){
+    return (o_it.raizDelArbol==raizDelArbol) && (o_it.posicion==posicion);
 
 }
