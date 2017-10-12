@@ -1,7 +1,7 @@
 #include "string_map.h"
 
 string_map::string_map(){
-    raiz = new Nodo(NULL);
+    raiz = new Nodo(nullptr);
 }
 
 string_map::~string_map() {
@@ -62,29 +62,16 @@ void string_map::clear() {
 }
 
 string_map::iterator string_map::begin() {
-
-//    (int) key[index] - 97
-
     Nodo *actual = raiz;
-    while (actual != nullptr) {
-
-        if (actual->hijos[26] != nullptr) {
-            auto it = new string_map::iterator();
-//            return new string_map::iterator();// actual->hijos[26]->valor;
-        }
-
-        for (int i = 0; i < 26; ++i) {
-            if (actual->hijos[i] != nullptr) {
-//                actual =
-            }
-        }
-
+    while (actual->valor == nullptr && !actual->hijos.empty()) {
+        actual = actual->hijos.begin();
     }
-
+    //TODO devolver iterador a actual
     return string_map::iterator();
 }
 
 string_map::iterator string_map::end() {
+    // FIXME esto sería return nullptr creo.
     return string_map::iterator();
 }
 
@@ -105,27 +92,21 @@ string_map::const_iterator string_map::cend() const {
 }
 
 string_map::iterator string_map::find(const string_map::key_type &key) {
-
-
     return string_map::iterator();
 }
 
 string_map::const_iterator string_map::find(const string_map::key_type &key) const {
-
-
-    int index = 0;
-    int siguiente = (int) key[index] - 97;
+    int index = 0;;
     Nodo* actual = raiz;
-    while (index != key.size() && actual->hijos[siguiente] != nullptr) {
-        siguiente = (int) key[index] - 97;
-        actual = actual->hijos[siguiente];
+    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
+        actual = actual->hijos[key[index]];
         index++;
     }
 
-    if (index == key.size() && actual->hijos[26]->valor != NULL) {
-        //FIXME> devolver el iterador
+    if (index == key.size() && actual->valor != nullptr) {
+        //FIXME devolver el iterador
     } else {
-        // FIXME> devolver iterador al final del map.
+        return this->end();
     }
 
     return string_map::const_iterator();
@@ -133,30 +114,30 @@ string_map::const_iterator string_map::find(const string_map::key_type &key) con
 
 template<typename T>
 pair<string_map::iterator, bool> string_map::insert(const string_map::value_type &value) {
-
     bool inserta = false;
     string clave = value.first;
     T valor = value.second;
-
-    int index = 0;
-    Nodo* actual = raiz;
-    while (index != clave.size()) {
-        int siguiente = (int) clave[index] - 97;
-        if (actual->hijos[siguiente] == nullptr) {
-            actual->hijos[siguiente] = new Nodo(NULL);
+    if (this->find(clave) != this->end()) {
+        pair<string_map::iterator, bool> res = make_pair(this->end(), inserta);
+        return res;
+    }
+    else {
+        int index = 0;
+        Nodo* actual = raiz;
+        while (index != clave.size()-1) {
+            char siguiente = clave[index + 1];
+            if (actual->hijos.count(clave[index]) == nullptr) {
+                Nodo* nodoSiguiente = new Nodo(nullptr);
+                actual->hijos.insert(pair<char,Nodo*>(siguiente, nodoSiguiente));
+            }
+            actual = actual->hijos[siguiente];
+            index++;
         }
-        actual = actual->hijos[siguiente];
-        index++;
-    }
-
-    Nodo* ultimo = actual->hijos[26];
-    if (ultimo->valor == nullptr) {
-        ultimo->valor = valor;
+        actual->valor = &value;
         inserta = true;
-    }
-
-    // TODO: agregar iterador
+        // TODO agregar return al iterador
     return pair<string_map::iterator, bool>(, inserta);
+    }
 }
 
 string_map::size_type string_map::erase(const string_map::key_type &key) {
@@ -184,6 +165,6 @@ T string_map::iterador::operator->() {
 }
 
 bool operator==(string_map::iterador& o_it){
-    return (o_it.raiz==raiz) &&(o_it.posicion==posicion);
+    return (o_it.raiz==raiz) && (o_it.posicion==posicion);
 
 }

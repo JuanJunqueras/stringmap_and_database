@@ -4,10 +4,9 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include <map>
 
-using std::string;
-using std::vector;
-using std::pair;
+using namespace std;
 
 /**
  * Implementacion de map<string,T> sobre Trie
@@ -165,14 +164,10 @@ public:
 private:
     template<typename T>
     struct Nodo {
-        Nodo *hijos[27];
-        T valor;
+        map<char, Nodo*> hijos;
+        pair<string, T>* valor;
 
-        Nodo(T v) : valor(v) {
-            for (int i = 0; i < 27; ++i) {
-                hijos[i] = nullptr;
-            }
-        };
+        Nodo(pair<string, T>* v) : valor(v) {};
     };
     <T>
     class iterador{
