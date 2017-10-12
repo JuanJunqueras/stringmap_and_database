@@ -2,6 +2,7 @@
 
 string_map::string_map(){
     raiz = new Nodo(nullptr);
+    _cantidadDeClaves = 0;
 }
 
 string_map::~string_map() {
@@ -36,13 +37,7 @@ size_t string_map::size() const {
 }
 
 bool string_map::empty() const {
-    bool empty = true;
-    for (int i = 0; i < 27 && empty; ++i) {
-        if (raiz->hijos[i] != nullptr) {
-            empty = false;
-        }
-    }
-    return empty;
+    return (this->raiz->valor == nullptr) && (this->raiz->hijos.empty());
 }
 
 mapped_type &string_map::operator[](const string_map::key_type &key) {
@@ -58,7 +53,6 @@ const mapped_type &string_map::at(const string_map::key_type &key) const {
 }
 
 void string_map::clear() {
-
 }
 
 string_map::iterator string_map::begin() {
@@ -135,13 +129,40 @@ pair<string_map::iterator, bool> string_map::insert(const string_map::value_type
         }
         actual->valor = &value;
         inserta = true;
+        this->_cantidadDeClaves++;
         // TODO agregar return al iterador
     return pair<string_map::iterator, bool>(, inserta);
     }
 }
 
 string_map::size_type string_map::erase(const string_map::key_type &key) {
-    return 0;
+    int index = 0;
+    Nodo* actual = raiz;
+    stack<Nodo*> nodosRecorridos;
+    while (index != key.size()) {//Lo busca
+         actual = actual->hijos[key[index]];
+         nodosRecorridos.push(actual);
+         index++;
+    }
+    nodosRecorridos.pop();
+    index--;
+    actual->valor = nullptr;
+    if (actual->hijos.empty()){//Si no era prefijo de otra clave...
+        delete actual;
+        this->_cantidadDeClaves--;
+        while (!nodosRecorridos.empty()){
+            actual = nodosRecorridos.top();//Recorre hacia atrás
+            nodosRecorridos.pop();
+            if (actual->hijos.size() == 1){//Si ese nodo solo existía para formar la clave que borré...
+                delete actual;//...lo borra también...
+                this->_cantidadDeClaves--;
+            } else {
+                actual->hijos.erase(key[index]);//... y sino le saca el hijo correspondiente...
+            }
+            index--;//... iterando en reversa por la clave.
+        }
+    }
+    return this->size();
 }
 
 string_map::size_type string_map::count(const string_map::key_type &key) const {

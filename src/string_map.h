@@ -4,7 +4,9 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include <stack>
 #include <map>
+
 
 using namespace std;
 
@@ -193,8 +195,8 @@ private:
 
     };
 
-    Nodo *raiz;
-
+    Nodo* raiz;
+    size_t _cantidadDeClaves;
     size_t sizeBelow(Nodo *pNodo)const;
 };
 
