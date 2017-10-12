@@ -163,7 +163,6 @@ public:
     iterator erase(iterator pos);
 
 private:
-    size_t string_map::sizeBelow(Nodo* raiz)const;
     template<typename T>
     struct Nodo {
         Nodo *hijos[27];
@@ -174,6 +173,26 @@ private:
                 hijos[i] = nullptr;
             }
         };
+    };
+    <T>
+    class iterador{
+        friend class string_map;
+        Nodo* posicion;
+        Nodo* raiz;
+        public:
+            iterador();
+            using value_type = const string_map::value_type;
+            using iterator_category = std::forward_iterator_tag;
+            using reference = value_type&;
+            using pointer = value_type*;
+            using difference_type = std::ptrdiff_t;
+            T& operator*();
+            T operator->();
+            iterador& operator++();
+            bool operator==(iterador& o_it);
+            bool operator!=(const iterador& o_it);
+
+
     };
 
     Nodo *raiz;

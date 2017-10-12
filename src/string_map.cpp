@@ -29,7 +29,7 @@ size_t string_map::sizeBelow(Nodo* pseudoRaiz)const {
         }
 
     }
-    return total;
+    return (size_t) total;
 }
 size_t string_map::size() const {
     return sizeBelow(raiz);
@@ -165,4 +165,25 @@ string_map::size_type string_map::erase(const string_map::key_type &key) {
 
 string_map::size_type string_map::count(const string_map::key_type &key) const {
     return 0;
+}
+////////  empieza iterador /////////////////////
+
+string_map::iterador::iterador() {
+    raiz = this->raiz;
+    posicion = this->posicion;
+}
+
+
+template <typename T>
+T& string_map::iterador::operator*() {
+    return posicion->valor;
+}
+template <typename T>
+T string_map::iterador::operator->() {
+    return posicion->valor;
+}
+
+bool operator==(string_map::iterador& o_it){
+    return (o_it.raiz==raiz) &&(o_it.posicion==posicion);
+
 }
