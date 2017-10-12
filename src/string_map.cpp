@@ -37,7 +37,7 @@ size_t string_map::size() const {
 }
 
 bool string_map::empty() const {
-    return (this->raiz->valor == nullptr) && (this->raiz->hijos.empty());
+    return this->raiz->hijos.empty();
 }
 
 mapped_type &string_map::operator[](const string_map::key_type &key) {
@@ -155,7 +155,6 @@ string_map::size_type string_map::erase(const string_map::key_type &key) {
             nodosRecorridos.pop();
             if (actual->hijos.size() == 1){//Si ese nodo solo existía para formar la clave que borré...
                 delete actual;//...lo borra también...
-                this->_cantidadDeClaves--;
             } else {
                 actual->hijos.erase(key[index]);//... y sino le saca el hijo correspondiente...
             }
