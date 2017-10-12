@@ -27,11 +27,10 @@ public:
 
 
     class iterator{
-        iterator(string_map mapa);
-
+        iterator(string_map* mapa);
+        string_map* mapa;
         friend class string_map;
-        Nodo* posicion;
-        Nodo* raizDelArbol;
+        string claveActual;
     public:
 
         using value_type = const string_map::value_type;

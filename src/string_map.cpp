@@ -209,22 +209,22 @@ string_map::Nodo *string_map::getRaiz() {
 }
 ////////  empieza iterador /////////////////////
 
-string_map::iterator::iterator(string_map mapa) {
-    this->raizDelArbol = mapa.getRaiz();
-    this->posicion = mapa.getRaiz();
+string_map::iterator::iterator(string_map* mapa) {
+    claveActual = mapa->primeraClave();
+    this->mapa = mapa;
 }
 
 
 template <typename T>
 T& string_map::iterator::operator*() {
-    return posicion->valor;
+    return mapa->find(claveActual);
 }
 template <typename T>
 T string_map::iterator::operator->() {
-    return posicion->valor;
+    return mapa->find(claveActual);
 }
 
 bool operator==(string_map::iterator& o_it){
-    return (o_it.raizDelArbol==raizDelArbol) && (o_it.posicion==posicion);
+    return (o_it.mapa == mapa) && (o_it.claveActual==claveActual);
 
 }
