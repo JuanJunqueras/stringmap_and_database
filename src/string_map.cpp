@@ -86,6 +86,17 @@ string_map::const_iterator string_map::cend() const {
 }
 
 string_map::iterator string_map::find(const string_map::key_type &key) {
+    int index = 0;
+    Nodo* actual = raiz;
+    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
+        actual = actual->hijos[key[index]];
+        index++;
+    }
+    if (index == key.size() && actual->valor != nullptr) {
+        //FIXME: devolver el iterador. Creo que acá iría return string_map::iterator() en vez de al final de la función.
+    } else {
+        return this->end();
+    }
     return string_map::iterator();
 }
 
