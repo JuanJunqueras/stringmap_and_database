@@ -184,7 +184,9 @@ public:
      *  \complexity{\O(S)}
      */
     iterator erase(iterator pos);
-    Nodo *getRaiz();
+
+
+
 private:
 
     struct Nodo {
@@ -193,7 +195,6 @@ private:
 
         Nodo(pair<string, T>* v) : valor(v) {};
     };
-
 
 
     Nodo* raiz;
