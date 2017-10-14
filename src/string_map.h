@@ -201,7 +201,6 @@ private:
     size_t _cantidadDeClaves;
 
     char enesimoCaracter(Nodo* pNodo, int n)const;
-    size_t sizeBelow(Nodo *pNodo)const;
     string primeraClave() const;
 
     string encontrarClave(Nodo *nodoActual, string claveHastaAhora)const;

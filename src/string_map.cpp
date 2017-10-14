@@ -29,21 +29,8 @@ bool string_map<T>::operator==(const string_map &otro) const {
 }
 
 template <typename T>
-size_t string_map<T>::sizeBelow(Nodo* pseudoRaiz)const {
-    int total = 0;
-    for(int i = 0 ; i<27 ; i++){
-        if(pseudoRaiz->hijos[i]){
-            size_t debajo = sizeBelow(pseudoRaiz->hijos[i]);
-            total+= (1 + debajo);
-        }
-
-    }
-    return (size_t) total;
-}
-
-template <typename T>
 size_t string_map<T>::size() const {
-    return sizeBelow(raiz);
+    return this->_cantidadDeClaves;
 }
 
 template <typename T>
