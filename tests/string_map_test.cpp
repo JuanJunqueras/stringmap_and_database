@@ -1,15 +1,17 @@
 #include <gtest/gtest.h>
 #include <list>
-#include "../src/string_map.h"
+#include "../src/string_map.cpp"
 #include "../src/Dato.h"
 
-#ifdef POST_SOLUCION
-/*
 TEST(string_map_test, test_constructor) {
     string_map<int> m1,m2;
     string_map<int> m3(m1);
     string_map<string_map<string> > m4;
 }
+
+#ifdef POST_SOLUCION
+/*
+
 */
 TEST(string_map_test, test_definir) {
     string_map<int> m;
