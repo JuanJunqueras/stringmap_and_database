@@ -8,6 +8,15 @@ TEST(string_map_test, test_constructor) {
     string_map<int> m3(m1);
     string_map<string_map<string> > m4;
 }
+TEST(string_map_test, test_insercion) {
+    string_map<int> m1;/*
+    m1.insert(make_pair("perros",1));
+    EXPECT_EQ(*(m1.begin()),1);
+    EXPECT_EQ(res.second,true);
+    */
+
+
+}
 
 #ifdef POST_SOLUCION
 /*

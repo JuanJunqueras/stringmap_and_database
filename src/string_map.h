@@ -191,7 +191,7 @@ private:
 
     struct Nodo {
         map<char, Nodo*> hijos;
-        pair<string, T>* valor;
+        T valor;
 
         Nodo(pair<string, T>* v) : valor(v) {};
     };
