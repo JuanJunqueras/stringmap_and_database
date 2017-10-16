@@ -7,9 +7,11 @@
 #include <utility>
 #include <list>
 #include <string>
+#include <set>
 #include "linear_map.h"
 #include "linear_set.h"
 #include "utils.h"
+#include "string_map.h"
 
 using namespace std;
 
@@ -162,6 +164,22 @@ public:
    */
   linear_set<Criterio> top_criterios() const;
 
+
+  /**
+   * @brief Crea un índice para el campo de la tabla
+   *
+   * @param nombre Nombre de la tabla a la que se crea el índice
+   * @param campo Nombre del campo de la tabla a la que se crea el índice
+   *
+   * \pre db = \P{this} \LAND nombre \IN tablas(\P{this}) \LAND
+   *      puedoInsertar?(r, dameTabla(\P{this}))
+   * \post \P{this} = insertarEntrada(r, nombre, db)
+   *
+   * \complexity{\O(T + copy(reg))}
+   */
+    // TODO: actualizar documentación del método
+    void crearIndice(const string &nombre, const string &campo);
+
 private:
 	  ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación
@@ -186,10 +204,15 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    typedef string_map<set<Registro>> indice;
+    typedef string_map<indice> indices_en_campos;
+
     /** @{ */
     linear_set<string> _nombres_tablas;
     linear_map<string, Tabla> _tablas;
     linear_map<Criterio, int> _uso_criterios;
+    string_map<indices_en_campos> tablas_indices;
+
     /** @} */
 
     /** @{ */
