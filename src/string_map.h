@@ -27,12 +27,14 @@ public:
 
 
     class iterator{
-        iterator(string_map* mapa);
+
         string_map* mapa;
         friend class string_map;
         string claveActual;
     public:
-
+        key_type getClave();
+        iterator(string_map* mapa);
+        iterator();
         using value_type = const string_map::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference = value_type&;
@@ -41,12 +43,34 @@ public:
         T& operator*();
         T operator->();
         iterator& operator++();
+        bool operator!=(iterator& o_it);
         bool operator==(iterator& o_it);
-        bool operator!=(const iterator& o_it);
+
+        bool isEnd();
+
+    };
+    class const_iterator{
+
+            const string_map* mapa;
+            friend class string_map;
+            string claveActual;
+            public:
+            const_iterator(const string_map* mapa);
+            const_iterator();
+            using value_type = const string_map::value_type;
+            using iterator_category = std::forward_iterator_tag;
+            using reference = value_type&;
+            using pointer = value_type*;
+            using difference_type = std::ptrdiff_t;
+            T& operator*();
+            T operator->();
+            bool isEnd();
+            const_iterator& operator++();
+            bool operator==(const_iterator& o_it);
+            bool operator!=(const const_iterator& o_it);
 
 
     };
-    class const_iterator;
 
 
     /** @brief Construye mapa vacio
@@ -191,20 +215,17 @@ private:
 
     struct Nodo {
         map<char, Nodo*> hijos;
-        T valor;
-
-        Nodo(pair<string, T>* v) : valor(v) {};
+        T* valor;
+        //asume T tiene constructor por copia.
+        Nodo(T* v) : valor(v) {};
     };
 
 
     Nodo* raiz;
     size_t _cantidadDeClaves;
-
-    char enesimoCaracter(Nodo* pNodo, int n)const;
     string primeraClave() const;
-
-    string encontrarClave(Nodo *nodoActual, string claveHastaAhora)const;
-
+    string siguienteClave(string claveActual) const;
+    Nodo * findNodo(string key)const;
 
 };
 

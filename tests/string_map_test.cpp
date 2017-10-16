@@ -4,20 +4,46 @@
 #include "../src/Dato.h"
 
 TEST(string_map_test, test_constructor) {
-    string_map<int> m1,m2;
-    string_map<int> m3(m1);
+   string_map<int> m1,m2;
+     string_map<int> m3(m1);
     string_map<string_map<string> > m4;
 }
 TEST(string_map_test, test_insercion) {
-    string_map<int> m1;/*
-    m1.insert(make_pair("perros",1));
-    EXPECT_EQ(*(m1.begin()),1);
-    EXPECT_EQ(res.second,true);
-    */
-
-
+    string_map<int> m1;
+    EXPECT_EQ(m1.size(),0);
+    m1.insert(pair<const string, int>("strikingLoo", 1));
+    EXPECT_EQ(m1.size(),1);
+    m1.insert(pair<const string, int>("pablo", 5));
+    auto falsy = m1.insert(pair<const string, int>("pablo", 7));
+    EXPECT_EQ(m1.at("strikingLoo"),1);
+    EXPECT_EQ(m1.at("pablo"),5);
+    EXPECT_EQ(falsy.second,false);
+    m1.at("pablo") = 3;
+    EXPECT_EQ(m1.at("pablo"),3);
+    m1["pablo"] = 4;
+    EXPECT_EQ(m1.at("pablo"),4);
+    m1["alberto"] = 7;
+    EXPECT_EQ(m1.at("alberto"),7);
+}
+TEST(string_map_test, test_corchetes){
+    string_map<int> m1;
+    m1["pablo"] = 4;
+    EXPECT_EQ(m1.at("pablo"),4);
+    m1["alberto"] = 7;
+    EXPECT_EQ(m1.at("alberto"),7);
+}
+TEST(string_map_test, test_clave_iterador){
+    string_map<int> m1;
+    m1["pablo"] = 4;
+    string_map<int>::iterator it = m1.begin();
 }
 
+TEST(string_map_test, test_siguiente_clave){
+    string_map<int> m1;
+    m1["juan"] = 4;
+    m1["juancito"] = 5;
+    
+}
 #ifdef POST_SOLUCION
 /*
 

@@ -40,17 +40,26 @@ bool string_map<T>::empty() const {
 
 template <typename mapped_type>
 mapped_type &string_map<mapped_type>::operator[](const string_map<mapped_type>::key_type &key) {
-    return find(key);
+    if(find(key).isEnd()){insert(make_pair(key,mapped_type()));}
+    return at(key);
 }
 
 template<typename mapped_type>
 mapped_type &string_map<mapped_type>::at(const string_map<mapped_type>::key_type &key) {
-    return *find(key).first != NULL ? *find(key).first : NULL ;
+
+    int index = 0;
+    Nodo* actual = raiz;
+    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
+        actual = actual->hijos[key[index]];
+        index++;
+    }
+    return *(actual->valor);
+
 }
 
 template <typename T>
 const T &string_map<T>::at(const string_map<T>::key_type &key) const {
-    return *find(key).first != NULL ? *find(key).first : NULL ;
+    return at(key);
 }
 
 template <typename T>
@@ -59,16 +68,16 @@ void string_map<T>::clear() {
 
 template <typename T>
 typename string_map<T>::iterator string_map<T>::begin() {
-
-
     auto it = new string_map<T>::iterator(this);
     it->claveActual = primeraClave();
+    return *it;
 }
 
 template <typename T>
 typename string_map<T>::iterator string_map<T>::end() {
-
-    return nullptr;
+    auto it = new string_map<T>::iterator(this);
+    it->claveActual="";
+    return *it;
 }
 
 template <typename T>
@@ -93,11 +102,19 @@ typename string_map<T>::const_iterator string_map<T>::cend() const {
 
 template <typename T>
 typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_type &key) {
-    return string_map<T>::iterator(this);
+
+    Nodo* nodoEncontrado = findNodo(key);
+    if(nodoEncontrado==nullptr){return end();}
+    else{
+        auto it = string_map<T>::iterator(this);
+        it.claveActual = key;
+        return it;
+    }
 }
 
 template <typename T>
 typename string_map<T>::const_iterator string_map<T>::find(const string_map<T>::key_type &key) const {
+
     int index = 0;
     Nodo* actual = raiz;
     while (index != key.size() && actual->hijos.count(key[index]) != 0) {
@@ -106,43 +123,49 @@ typename string_map<T>::const_iterator string_map<T>::find(const string_map<T>::
     }
 
     if (index == key.size() && actual->valor != nullptr) {
-        //FIXME devolver el iterador
+        auto it = string_map<T>::const_iterator(this);
+        it.claveActual = key;
+        return it;
     } else {
         return this->end();
     }
-
-    return string_map<T>::const_iterator();
 }
 
 template<typename T>
 pair<typename string_map<T>::iterator, bool> string_map<T>::insert(const string_map<T>::value_type &value) {
+
     bool inserta = false;
     string clave = value.first;
     T valor = value.second;
-    if (this->find(clave) != this->end()) {
-        cout <<"entra aca "<< endl;
+
+    auto it = find(clave);
+
+    if (!it.isEnd()) {
+
         pair<string_map<T>::iterator, bool> res = make_pair(this->end(), inserta);
         return res;
     }
     else {
+
         int index = 0;
         Nodo* actual = raiz;
-        while (index != clave.size()-1) {
-            char siguiente = clave[index + 1];
-            if (actual->hijos.count(clave[index]) == 0) {
-                cout <<"esta entrando aca " << endl;
-                Nodo* nodoSiguiente = new Nodo(nullptr);
-                actual->hijos.insert(pair<char,Nodo*>(siguiente, nodoSiguiente));
-            }
-            actual = actual->hijos[siguiente];
+        while (index < clave.size()) {
 
+            if (actual->hijos.count(clave[index]) == 0) {
+
+                Nodo* nodoSiguiente = new Nodo(nullptr);
+                actual->hijos.insert(pair<char,Nodo*>(clave[index], nodoSiguiente));
+            }
+            actual = actual->hijos[clave[index]];
             index++;
         }
-        actual->valor = value.second;
+        actual->valor = new T(value.second);
         inserta = true;
         this->_cantidadDeClaves++;
         // TODO agregar return al iterador
-        return make_pair<string_map<T>::iterator, bool>(iterator(this), inserta);
+        pair<string_map<T>::iterator, bool> res;
+        res = make_pair(iterator(this), inserta);
+        return res;
     }
 }
 
@@ -184,46 +207,57 @@ typename string_map<T>::size_type string_map<T>::count(const string_map<T>::key_
 template <typename T>
 string string_map<T>::primeraClave() const {
     Nodo* nodoActual = raiz;
-    if(raiz->hijos.size() == 0){
-        return NULL;
-    } else {
-        string clave = encontrarClave(nodoActual, "");
-        if(clave){return clave;}
-    }
-}
+    string clave = "";
 
+    while(nodoActual->hijos.size()!=0&&nodoActual->valor== nullptr){
+        auto tuplaPrimera = nodoActual->hijos.begin();
+        char primerChar = (*tuplaPrimera).first;
+        clave+=primerChar;
+        nodoActual= nodoActual->hijos[primerChar];
+    }
+    return clave;
+}
 template <typename T>
-string string_map<T>::encontrarClave(Nodo* nodoActual, string claveHastaAhora)const {
-    if(find(claveHastaAhora)){return claveHastaAhora;}
-    int n = 0;
-    while(enesimoCaracter(nodoActual,n)){
-        char siguiente = enesimoCaracter(nodoActual,n);
-        if(encontrarClave(nodoActual->hijos[siguiente],claveHastaAhora+siguiente)!=NULL){
-            return encontrarClave(nodoActual->hijos[siguiente],claveHastaAhora+siguiente);
+string string_map<T>::siguienteClave(string claveActual) const {
+    Nodo* nodoActual = findNodo(claveActual);
+    string clave = "";
+    if(nodoActual->hijos.size()>0){
+        clave = claveActual;
+        while(nodoActual->hijos.size()!=0&&nodoActual->valor== nullptr){
+            auto tuplaPrimera = nodoActual->hijos.begin();
+            char primerChar = (*tuplaPrimera).first;
+            clave+=primerChar;
+            nodoActual= nodoActual->hijos[primerChar];
         }
-        n++;
+        return clave;
     }
-    return NULL;
+
+}
+template <typename T>
+typename  string_map<T>::Nodo * string_map<T>::findNodo(string key)const {
+    int index = 0;
+    string_map<T>::Nodo* actual = raiz;
+    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
+        actual = actual->hijos[key[index]];
+        index++;
+    }
+
+    if (index == key.size() && actual->valor != nullptr) {
+        return actual;
+    } else {
+        return nullptr;
+    }
 }
 
-template <typename T>
-char string_map<T>::enesimoCaracter(string_map<T>::Nodo *pNodo, int n) const {
-    auto hijos = pNodo->hijos;
-    vector<char> claves = vector<char>();
-    for(auto it = hijos.begin();it!=hijos.end;it++){
-        claves.push_back(*it.first);
-    }
-    std::sort(claves.begin(),claves.end());
-    if(claves.size()>n){return claves[n];}
-    return NULL;
-}
 
 
 ////////  empieza iterador /////////////////////
 
 template <typename T>
 string_map<T>::iterator::iterator(string_map* mapa) {
-    claveActual = mapa->primeraClave();
+
+    this->claveActual = mapa->primeraClave();
+
     this->mapa = mapa;
 }
 
@@ -236,8 +270,59 @@ template <typename T>
 T string_map<T>::iterator::operator->() {
     return mapa->at(claveActual);
 }
+template <typename T>
+string_map<T>::iterator::iterator() {
+    mapa = nullptr;
+    claveActual="pepito";
+}
+template <typename T>
+bool string_map<T>::iterator::isEnd() {
+    return this->claveActual=="";
+}
 
 template <typename T>
-bool operator==(typename string_map<T>::iterator& o_it, typename string_map<T>::iterator& o_it2){
-    return (o_it.mapa == o_it2->mapa) && (o_it.claveActual == o_it2->claveActual);
+bool string_map<T>::iterator::operator==(string_map<T>::iterator &o_it) {
+    return (o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual);
+}
+template <typename T>
+bool string_map<T>::iterator::operator!=(string_map<T>::iterator &o_it) {
+    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));
+}
+template <typename T>
+typename string_map<T>::key_type string_map<T>::iterator::getClave() {
+    return claveActual;
+}
+
+
+////////  empieza const-iterator /////////////////////
+template <typename T>
+string_map<T>::const_iterator::const_iterator(const string_map* mapa) {
+
+    this->claveActual = mapa->primeraClave();
+
+    this->mapa = mapa;
+}
+
+
+template <typename T>
+T& string_map<T>::const_iterator::operator*() {
+    return mapa->at(claveActual);
+}
+template <typename T>
+T string_map<T>::const_iterator::operator->() {
+    return mapa->at(claveActual);
+}
+template <typename T>
+string_map<T>::const_iterator::const_iterator() {
+    mapa = nullptr;
+    claveActual="";
+}
+template <typename T>
+bool string_map<T>::const_iterator::isEnd() {
+    return claveActual=="";
+}
+
+template <typename T>
+bool operator==(typename string_map<T>::const_iterator& o_it, typename string_map<T>::const_iterator& o_it2){
+    return (o_it.mapa == o_it2.mapa) && (o_it.claveActual == o_it2.claveActual);
 }
