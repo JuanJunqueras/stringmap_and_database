@@ -42,7 +42,7 @@ TEST(string_map_test, test_siguiente_clave){
     string_map<int> m1;
     m1["juan"] = 4;
     m1["juancito"] = 5;
-    
+
 }
 #ifdef POST_SOLUCION
 /*

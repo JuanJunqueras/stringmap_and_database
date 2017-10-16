@@ -31,6 +31,7 @@ public:
         string_map* mapa;
         friend class string_map;
         string claveActual;
+        mapped_type* valorActual;
     public:
         key_type getClave();
         iterator(string_map* mapa);

@@ -70,6 +70,7 @@ template <typename T>
 typename string_map<T>::iterator string_map<T>::begin() {
     auto it = new string_map<T>::iterator(this);
     it->claveActual = primeraClave();
+    it->valorActual = &at(it->claveActual);
     return *it;
 }
 
@@ -77,6 +78,7 @@ template <typename T>
 typename string_map<T>::iterator string_map<T>::end() {
     auto it = new string_map<T>::iterator(this);
     it->claveActual="";
+    it->valorActual = nullptr;
     return *it;
 }
 
@@ -257,7 +259,7 @@ template <typename T>
 string_map<T>::iterator::iterator(string_map* mapa) {
 
     this->claveActual = mapa->primeraClave();
-
+    this->valorActual = &mapa->at(claveActual);
     this->mapa = mapa;
 }
 
