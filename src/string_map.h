@@ -26,7 +26,26 @@ public:
     typedef size_t size_type;
 
 
-    class iterator;
+    class iterator{
+        iterator(string_map* mapa);
+        string_map* mapa;
+        friend class string_map;
+        string claveActual;
+    public:
+
+        using value_type = const string_map::value_type;
+        using iterator_category = std::forward_iterator_tag;
+        using reference = value_type&;
+        using pointer = value_type*;
+        using difference_type = std::ptrdiff_t;
+        T& operator*();
+        T operator->();
+        iterator& operator++();
+        bool operator==(iterator& o_it);
+        bool operator!=(const iterator& o_it);
+
+
+    };
     class const_iterator;
 
 
@@ -166,37 +185,27 @@ public:
      */
     iterator erase(iterator pos);
 
+
+
 private:
+
     struct Nodo {
         map<char, Nodo*> hijos;
-        pair<string, T>* valor;
+        T valor;
 
         Nodo(pair<string, T>* v) : valor(v) {};
     };
-    <T>
-    class iterador{
-        friend class string_map;
-        Nodo* posicion;
-        Nodo* raiz;
-        public:
-            iterador();
-            using value_type = const string_map::value_type;
-            using iterator_category = std::forward_iterator_tag;
-            using reference = value_type&;
-            using pointer = value_type*;
-            using difference_type = std::ptrdiff_t;
-            T& operator*();
-            T operator->();
-            iterador& operator++();
-            bool operator==(iterador& o_it);
-            bool operator!=(const iterador& o_it);
 
-
-    };
 
     Nodo* raiz;
     size_t _cantidadDeClaves;
-    size_t sizeBelow(Nodo *pNodo)const;
+
+    char enesimoCaracter(Nodo* pNodo, int n)const;
+    string primeraClave() const;
+
+    string encontrarClave(Nodo *nodoActual, string claveHastaAhora)const;
+
+
 };
 
 

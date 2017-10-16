@@ -1,15 +1,27 @@
 #include <gtest/gtest.h>
 #include <list>
-#include "../src/string_map.h"
+#include "../src/string_map.cpp"
 #include "../src/Dato.h"
 
-#ifdef POST_SOLUCION
 TEST(string_map_test, test_constructor) {
     string_map<int> m1,m2;
     string_map<int> m3(m1);
     string_map<string_map<string> > m4;
 }
+TEST(string_map_test, test_insercion) {
+    string_map<int> m1;/*
+    m1.insert(make_pair("perros",1));
+    EXPECT_EQ(*(m1.begin()),1);
+    EXPECT_EQ(res.second,true);
+    */
 
+
+}
+
+#ifdef POST_SOLUCION
+/*
+
+*/
 TEST(string_map_test, test_definir) {
     string_map<int> m;
     EXPECT_TRUE(m.empty());
@@ -158,71 +170,71 @@ TEST(string_map_test, test_iterator) {
      *      |-h-o-l-a[1]
      *      \-m-u-n-d-o[2]
      */
-    std::list<int> l1, l2 = {0,1,2};
-    for (auto p : m1)
-        l1.push_back(p.second);
-    EXPECT_EQ(l1,l2);
+std::list<int> l1, l2 = {0,1,2};
+for (auto p : m1)
+l1.push_back(p.second);
+EXPECT_EQ(l1,l2);
 
-    // Agrego subramas de "aa": debe iterar en orden correcto lexicográfico
-    m1["aaaab"] = 12;
-    m1["aaaba"] = 24;
-    m1["aabba"] = 48;
-    /**
-     * m1:  .-a-a-a-a[0]-b[12]
-     *      |    | \b-a[24]
-     *      |    \b-b-a[48]
-     *      |-h-o-l-a[1]
-     *      \-m-u-n-d-o[2]
-     */
+// Agrego subramas de "aa": debe iterar en orden correcto lexicográfico
+m1["aaaab"] = 12;
+m1["aaaba"] = 24;
+m1["aabba"] = 48;
+/**
+ * m1:  .-a-a-a-a[0]-b[12]
+ *      |    | \b-a[24]
+ *      |    \b-b-a[48]
+ *      |-h-o-l-a[1]
+ *      \-m-u-n-d-o[2]
+ */
 
-    std::list<int> l3, l4 = {0,12,24,48,1,2};
-    for (auto p : m1)
-        l3.push_back(p.second);
-    EXPECT_EQ(l3,l4);
+std::list<int> l3, l4 = {0,12,24,48,1,2};
+for (auto p : m1)
+l3.push_back(p.second);
+EXPECT_EQ(l3,l4);
 
-    // Borro 1ra clave: debe apuntar a la siguiente (en este caso una subrama)
-    EXPECT_EQ(m1.erase("aaaa"), 1);
+// Borro 1ra clave: debe apuntar a la siguiente (en este caso una subrama)
+EXPECT_EQ(m1.erase("aaaa"), 1);
 
-    auto it = m1.find("aaaab");
-    it = m1.erase(it);
-    /**
-     * m1:  .-a-a-a-b-a[24]
-     *      |    \b-b-a[48]
-     *      |-h-o-l-a[1]
-     *      \-m-u-n-d-o[2]
-     */
-    EXPECT_EQ(it->first, "aaaba");
-    EXPECT_EQ(it->second, 24);
+auto it = m1.find("aaaab");
+it = m1.erase(it);
+/**
+ * m1:  .-a-a-a-b-a[24]
+ *      |    \b-b-a[48]
+ *      |-h-o-l-a[1]
+ *      \-m-u-n-d-o[2]
+ */
+EXPECT_EQ(it->first, "aaaba");
+EXPECT_EQ(it->second, 24);
 
-    // borro ultima clave de una subrama: debe devolver la de rama siguiente pasando por la raiz
-    it = m1.find("aabba");
-    it = m1.erase(it);
-    /**
-     * m1:  .-a-a-a-b-a[24]
-     *      |-h-o-l-a[1]
-     *      \-m-u-n-d-o[2]
-     */
-    EXPECT_EQ(it, m1.find("hola"));
+// borro ultima clave de una subrama: debe devolver la de rama siguiente pasando por la raiz
+it = m1.find("aabba");
+it = m1.erase(it);
+/**
+ * m1:  .-a-a-a-b-a[24]
+ *      |-h-o-l-a[1]
+ *      \-m-u-n-d-o[2]
+ */
+EXPECT_EQ(it, m1.find("hola"));
 
-    // borro ultima clave: debe devolver end()
-    EXPECT_EQ(m1.erase(m1.find("mundo")), m1.end());
-    /**
-     * m1:  .-a-a-a-b-a[24]
-     *      \-h-o-l-a[1]
-     */
-    std::list<int> l5, l6 = {24,1};
-    for (auto p : m1)
-        l5.push_back(p.second);
-    EXPECT_EQ(l5,l6);
+// borro ultima clave: debe devolver end()
+EXPECT_EQ(m1.erase(m1.find("mundo")), m1.end());
+/**
+ * m1:  .-a-a-a-b-a[24]
+ *      \-h-o-l-a[1]
+ */
+std::list<int> l5, l6 = {24,1};
+for (auto p : m1)
+l5.push_back(p.second);
+EXPECT_EQ(l5,l6);
 
 }
 
 TEST(string_map_test, no_default) {
-  string_map<Dato> dato_map;
-  dato_map.insert(make_pair("March", datoStr("March")));
-  dato_map.insert(make_pair("EvilMarch", datoNat(-1000)));
+    string_map<Dato> dato_map;
+    dato_map.insert(make_pair("March", datoStr("March")));
+    dato_map.insert(make_pair("EvilMarch", datoNat(-1000)));
 
-  EXPECT_NE(dato_map.find("March"), dato_map.end());
-  EXPECT_NE(dato_map.find("EvilMarch"), dato_map.end());
+    EXPECT_NE(dato_map.find("March"), dato_map.end());
+    EXPECT_NE(dato_map.find("EvilMarch"), dato_map.end());
 }
 #endif // POST_SOLUCION
