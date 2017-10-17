@@ -27,10 +27,10 @@ public:
 
 
     class iterator{
-
+        void setClave(key_type key);
         string_map* mapa;
         friend class string_map;
-        string claveActual;
+        key_type claveActual;
         mapped_type* valorActual;
     public:
         key_type getClave();
@@ -41,8 +41,8 @@ public:
         using reference = value_type&;
         using pointer = value_type*;
         using difference_type = std::ptrdiff_t;
-        T& operator*();
-        T operator->();
+        //value_type& operator*();
+        value_type operator->();
         iterator& operator++();
         bool operator!=(iterator& o_it);
         bool operator==(iterator& o_it);
@@ -72,7 +72,8 @@ public:
 
 
     };
-
+    friend class iterator;
+    friend class const_iterator;
 
     /** @brief Construye mapa vacio
      *
@@ -211,6 +212,7 @@ public:
     iterator erase(iterator pos);
 
 
+    string siguienteClave(string claveActual) const;
 
 private:
 
@@ -220,14 +222,13 @@ private:
         //asume T tiene constructor por copia.
         Nodo(T* v) : valor(v) {};
     };
-
+    //pre: la clave pertenece al dicc.
 
     Nodo* raiz;
     size_t _cantidadDeClaves;
     string primeraClave() const;
-    string siguienteClave(string claveActual) const;
     Nodo * findNodo(string key)const;
-
+    vector<Nodo*> getBranch(string key)const;
 };
 
 

@@ -42,8 +42,32 @@ TEST(string_map_test, test_siguiente_clave){
     string_map<int> m1;
     m1["juan"] = 4;
     m1["juancito"] = 5;
-
+    m1["juatir"] = 6;
+    string juancito = m1.siguienteClave("juan");
+    EXPECT_EQ(juancito,"juancito");
+    string wtv = m1.siguienteClave("juancito");
+    EXPECT_EQ(wtv,"juanir");
 }
+
+TEST(string_map_test, test_asterisco){
+    string_map<int> m1;
+    m1["pablorrr"] = 4;
+    auto begin = m1.begin();
+    //cout << "wtv" << endl;
+    //std::pair<string, int> pair = (*begin);
+    /*
+     * el asterisco no funciona
+     * cout << "claramente si" << endl;
+    cout<<pair.first<<endl;
+    int* chars = new int[pair.first.size()];
+    for(int i = 0 ; i<pair.first.size(); i++){
+        chars[i]=pair.first[i];
+    }
+    for(int i = 0; i<pair.first.size();i++){cout<<chars[i]<<endl;}
+    //EXPECT_EQ((*begin).first,"pablo");*/
+    /* EXPECT_EQ(m1.begin().operator*().second, 4);*/
+}
+
 #ifdef POST_SOLUCION
 /*
 
