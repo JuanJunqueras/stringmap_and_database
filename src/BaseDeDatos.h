@@ -205,7 +205,7 @@ private:
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     typedef string_map<linear_set<Registro> > indice;
-typedef string_map<indice> indices_en_campos;
+    typedef string_map<indice> indices_en_campos;
 
     /** @{ */
     linear_set<string> _nombres_tablas;

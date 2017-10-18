@@ -142,13 +142,15 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
 }
 
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
-    Tabla t = this->dameTabla(nombre);
-    indice i;
-    for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg ){
-        const Registro& reg = *(it_reg);
-        Dato dato = reg.dato(campo);
-        string valor;
-        valor = dato.esString() ? dato.valorStr() : to_string(dato.valorNat());
-        i[valor].insert(reg);
+    Tabla t = this->dameTabla(nombre); //O(?)
+    indice i; //O(1)
+    for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg ){ // O(m)
+        const Registro& reg = *(it_reg); // O(1)
+        Dato dato = reg.dato(campo); // O(1)
+        string valor; //O(1)
+        valor = dato.esString() ? dato.valorStr() : to_string(dato.valorNat()); //O(1)
+        i[valor].insert(reg); //O(L)
     }
+    tablas_indices[nombre][campo] = i; //O(copy(i))
 }
+
