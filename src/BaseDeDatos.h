@@ -11,7 +11,7 @@
 #include "linear_map.h"
 #include "linear_set.h"
 #include "utils.h"
-#include "string_map.h"
+#include "string_map.cpp"
 
 using namespace std;
 
@@ -204,8 +204,8 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    typedef string_map<set<Registro>> indice;
-    typedef string_map<indice> indices_en_campos;
+    typedef string_map<linear_set<Registro> > indice;
+typedef string_map<indice> indices_en_campos;
 
     /** @{ */
     linear_set<string> _nombres_tablas;
