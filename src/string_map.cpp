@@ -226,7 +226,7 @@ template <typename T>
 string string_map<T>::siguienteClave(string claveActual) const {
     Nodo* nodoActual = findNodo(claveActual);
     std::string clave = claveActual;
-    if(nodoActual->hijos.size()>0){
+    if(nodoActual->hijos.size()>0){ //la clave actual es substring de la siguiente.
         bool primeraVez= true;
         while(nodoActual->hijos.size()!=0 && nodoActual->valor== nullptr||primeraVez){
             primeraVez=false;
@@ -237,54 +237,64 @@ string string_map<T>::siguienteClave(string claveActual) const {
         }
         return clave;
     }
-    else{
-        cout << "entra aca" << endl ;
+    else{ //la clave siguiente contiene substring de la actual (o es totalmente disjunta)
+
         vector<Nodo*> branch = getBranch(claveActual);
         unsigned long index = branch.size()-1;
-        nodoActual = branch[index-1];
+        nodoActual = branch[index];
         bool flag = true;
-        while(index!=1 && flag){
-            auto it =nodoActual->hijos.begin();
-
-            cout << index << endl;
-            cout << clave<<endl;
-            cout << it->first << " la puta madre" << endl;
-
-            while(it->first<clave.back()&&it!=nodoActual->hijos.end()){
+        while(index>0 && flag) {
+            auto it = nodoActual->hijos.begin();
+            while (it->first < clave.back() && it != nodoActual->hijos.end()) {
                 it++;
             }
-            if(it!=nodoActual->hijos.end()){it++;}
-            clave.pop_back();
-            cout << index << endl;
-            if(it==nodoActual->hijos.end()){
-                nodoActual = branch[index-1];
-                index--;
+            if (it != nodoActual->hijos.end()) {
+
+                it++;
             }
-            else{
+            clave.pop_back();
+
+            if (it == nodoActual->hijos.end()) {
+
+                nodoActual = branch[index - 1];
+                index--;
+            } else {
 
                 char c = it->first;
                 clave.push_back(c);
                 flag = false;
-                nodoActual=nodoActual->hijos[it++->first];
-
+                nodoActual = nodoActual->hijos[it++->first];
             }
         }
-
-
-        cout << clave <<" es la clave" << endl;
         if (nodoActual == nullptr){
             return "";
         }
         else {
-            cout << "entramos aca a veces!"<<endl;
-            while(nodoActual->valor == nullptr){
-                clave+=(*nodoActual->hijos.begin()).first;
-                nodoActual = (*nodoActual->hijos.begin()).second;
+            if(index!=0){ //longest common substring not empty
+
+                while(nodoActual->valor == nullptr){
+                    clave+=(*nodoActual->hijos.begin()).first;
+                    nodoActual = (*nodoActual->hijos.begin()).second;
+                }
+            }
+            else { //longest common substring is ""
+                auto it = raiz->hijos.begin();
+
+                while(it->first<=clave[0]&&it!=raiz->hijos.end()){
+
+                    it++;
+                }
+                clave = "";
+                clave +=it->first;
+                nodoActual=raiz->hijos[it->first];
+                while(nodoActual->valor == nullptr){
+                    clave+=(*nodoActual->hijos.begin()).first;
+                    nodoActual = (*nodoActual->hijos.begin()).second;
+                }
             }
         }
         return clave;
     }
-
 }
 template <typename T>
 typename  string_map<T>::Nodo * string_map<T>::findNodo(string key)const {
@@ -309,7 +319,6 @@ vector<typename string_map<T>::Nodo *> string_map<T>::getBranch(string key) cons
     while (index != key.size() && actual->hijos.count(key[index]) != 0) {
         branch.push_back(actual);
         actual = actual->hijos[key[index]];
-        cout <<key[index] << endl ;
         index++;
     }
     return branch;
