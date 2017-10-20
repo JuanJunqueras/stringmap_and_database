@@ -37,18 +37,34 @@ TEST(string_map_test, test_clave_iterador){
     m1["pablo"] = 4;
     string_map<int>::iterator it = m1.begin();
 }
-
-TEST(string_map_test, test_siguiente_clave){
+/*
+TEST(string_map_test, test_siguiente_clave_con_subtring){
+    //ESTE TEST LO PASA!!!
     string_map<int> m1;
     m1["juan"] = 4;
     m1["juancito"] = 5;
     m1["juatir"] = 6;
+
+
     string juancito = m1.siguienteClave("juan");
     EXPECT_EQ(juancito,"juancito");
     string wtv = m1.siguienteClave("juancito");
-    EXPECT_EQ(wtv,"juanir");
-}
+    EXPECT_EQ(wtv,"juatir");
 
+}*/
+TEST(string_map_test, test_siguiente_clave_sin_substring){
+    string_map<int> m1;
+    m1["ju"] = 4;
+    m1["le"] = 5;
+    m1["pe"] = 6;
+
+
+    string le = m1.siguienteClave("ju");
+    EXPECT_EQ(le,"le");
+    //string pe = m1.siguienteClave("le");
+   // EXPECT_EQ(pe,"pe");
+
+}
 TEST(string_map_test, test_asterisco){
     string_map<int> m1;
     m1["pablorrr"] = 4;

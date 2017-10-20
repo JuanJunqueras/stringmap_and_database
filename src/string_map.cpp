@@ -225,7 +225,7 @@ string string_map<T>::primeraClave() const {
 template <typename T>
 string string_map<T>::siguienteClave(string claveActual) const {
     Nodo* nodoActual = findNodo(claveActual);
-    string clave = claveActual;
+    std::string clave = claveActual;
     if(nodoActual->hijos.size()>0){
         bool primeraVez= true;
         while(nodoActual->hijos.size()!=0 && nodoActual->valor== nullptr||primeraVez){
@@ -243,36 +243,45 @@ string string_map<T>::siguienteClave(string claveActual) const {
         unsigned long index = branch.size()-1;
         nodoActual = branch[index-1];
         bool flag = true;
-        while(index!=0 && flag){
-            cout << clave<<endl;
+        while(index!=1 && flag){
             auto it =nodoActual->hijos.begin();
+
+            cout << index << endl;
+            cout << clave<<endl;
             cout << it->first << " la puta madre" << endl;
-            while(it->first<clave.back()){it++;
+
+            while(it->first<clave.back()&&it!=nodoActual->hijos.end()){
+                it++;
             }
-            it++;
+            if(it!=nodoActual->hijos.end()){it++;}
             clave.pop_back();
+            cout << index << endl;
             if(it==nodoActual->hijos.end()){
                 nodoActual = branch[index-1];
                 index--;
             }
-            else {flag = false;
+            else{
+
+                char c = it->first;
+                clave.push_back(c);
+                flag = false;
                 nodoActual=nodoActual->hijos[it++->first];
-                clave.push_back((char)it->first);
-                cout << (int) it->first << " aca esta el hijo de puta " << endl;
+
             }
         }
-        cout << clave << endl;
 
+
+        cout << clave <<" es la clave" << endl;
         if (nodoActual == nullptr){
             return "";
         }
         else {
+            cout << "entramos aca a veces!"<<endl;
             while(nodoActual->valor == nullptr){
                 clave+=(*nodoActual->hijos.begin()).first;
                 nodoActual = (*nodoActual->hijos.begin()).second;
             }
         }
-
         return clave;
     }
 
