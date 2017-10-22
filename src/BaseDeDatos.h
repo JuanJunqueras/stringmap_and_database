@@ -204,14 +204,14 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    typedef string_map<linear_set<Registro> > indice;
-    typedef string_map<indice> indices_en_campos;
+    typedef string_map<set<Tabla::const_iterador_registros>> Indice;
+    typedef string_map<Indice> IndicesCampos;
 
     /** @{ */
     linear_set<string> _nombres_tablas;
     linear_map<string, Tabla> _tablas;
     linear_map<Criterio, int> _uso_criterios;
-    string_map<indices_en_campos> tablas_indices;
+    string_map<IndicesCampos> tablas_indices;
 
     /** @} */
 
