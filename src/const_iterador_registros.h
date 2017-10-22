@@ -49,6 +49,7 @@ public:
    */
   const_iterador_registros& operator++();
 
+
   /**
    * @brief Comparación entre iteradores 
    *

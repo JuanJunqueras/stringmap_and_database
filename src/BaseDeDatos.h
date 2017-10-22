@@ -29,6 +29,9 @@ using namespace std;
 class BaseDeDatos {
 
 public:
+
+  class Indice;
+
   /** @brief Criterio de búsqueda para una base de datos */
   typedef linear_set<Restriccion> Criterio;
 
@@ -204,16 +207,15 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    typedef string_map<set<Tabla::const_iterador_registros>> Indice;
-    typedef string_map<Indice> IndicesCampos;
 
     /** @{ */
     linear_set<string> _nombres_tablas;
     string_map<Tabla> _tablas;
     linear_map<Criterio, int> _uso_criterios;
-    string_map<IndicesCampos> tablas_indices;
+    string_map<string_map<Indice>> indices;
 
-    /** @} */
+
+  /** @} */
 
     /** @{ */
     /**

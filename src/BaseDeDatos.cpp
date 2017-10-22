@@ -1,4 +1,5 @@
 #include "BaseDeDatos.h"
+#include "Indice.h"
 
 BaseDeDatos::BaseDeDatos(){};
 
@@ -17,14 +18,14 @@ void BaseDeDatos::agregarRegistro(const Registro &r, const string &nombre) {
   Tabla::const_iterador_registros reg = t.agregarRegistro(r);
 
   // Agregar el índice en O(C * (L + log(m)))
-  auto t_campos_indices = tablas_indices.find(nombre); // O(1) (pues largo de claves acotado)
+  auto t_campos_indices = indices.find(nombre); // O(1) (pues largo de claves acotado)
   if (!t_campos_indices.isEnd()) {
 
     // Iteramos sobre los índices de la tabla (en el peor caso todos los campos tienen índice y hacemos C iteraciones)
     for (auto it_campos = (*t_campos_indices).second.cbegin(); !it_campos.isEnd(); ++it_campos) {
-      string valor = obtener_dato_str(r, it_campos.getClave()); // O(1)
+      auto dato = r.dato(it_campos.getClave());
       Indice indice = (*it_campos).second; // O(1)
-      auto registros = indice[valor]; // O(L)
+      auto registros = indice.registros(dato); // O(max{L,log(m)})
       registros.insert(reg); // O(log(m))
     }
   }
@@ -156,15 +157,15 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
 
   Tabla t = this->dameTabla(nombre); // O(T) (TODO: convertir a esta operación en O(1))
-  Indice i; // O(1)
+  Indice indice; // O(1)
 
   for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg){ // O(m)
-    string valor = obtener_dato_str(*it_reg, campo); // O(1)
-    auto registros = i[valor]; // O(L)
+    auto dato = (*it_reg).dato(campo);
+    auto registros = indice.registros(dato); // O(L)
     registros.insert(it_reg); // O(log(m))
   }
 
-  tablas_indices[nombre][campo] = i; // O(copy(i))
+  indices[nombre][campo] = indice; // O(copy(i))
 }
 
 
