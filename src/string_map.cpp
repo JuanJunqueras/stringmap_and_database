@@ -136,7 +136,7 @@ typename string_map<T>::const_iterator string_map<T>::find(const string_map<T>::
         it.claveActual = key;
         return it;
     } else {
-        return this->end();
+        return this->cend();
     }
 }
 

@@ -7,14 +7,19 @@ TEST(string_map_test, test_constructor) {
    string_map<int> m1,m2;
      string_map<int> m3(m1);
     string_map<string_map<string> > m4;
+
 }
 TEST(string_map_test, test_insercion) {
+
+
     string_map<int> m1;
     EXPECT_EQ(m1.size(),0);
-    m1.insert(pair<const string, int>("strikingLoo", 1));
+    cout <<"llega bien aca" <<endl;
+    m1.insert(pair<string, int>("strikingLoo", 1));
+    cout <<"aca no" <<endl;
     EXPECT_EQ(m1.size(),1);
-    m1.insert(pair<const string, int>("pablo", 5));
-    auto falsy = m1.insert(pair<const string, int>("pablo", 7));
+    m1.insert(pair<string, int>("pablo", 5));
+    auto falsy = m1.insert(pair<string, int>("pablo", 7));
     EXPECT_EQ(m1.at("strikingLoo"),1);
     EXPECT_EQ(m1.at("pablo"),5);
     EXPECT_EQ(falsy.second,false);
@@ -39,7 +44,7 @@ TEST(string_map_test, test_clave_iterador){
 }
 
 TEST(string_map_test, test_siguiente_clave_con_subtring){
-    //ESTE TEST LO PASA!!!
+
     string_map<int> m1;
     m1["juan"] = 4;
     m1["juancito"] = 5;
@@ -62,6 +67,7 @@ TEST(string_map_test, test_siguiente_clave_sin_substring){
     EXPECT_EQ(le,"le");
     string pe = m1.siguienteClave("le");
     EXPECT_EQ(pe,"pe");
+
 
 }
 TEST(string_map_test, test_asterisco){
