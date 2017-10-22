@@ -11,8 +11,8 @@
 #include "linear_map.h"
 #include "linear_set.h"
 #include "utils.h"
+#include "string_map.h"
 #include "string_map.cpp"
-
 using namespace std;
 
 /**
@@ -29,6 +29,9 @@ using namespace std;
 class BaseDeDatos {
 
 public:
+
+  class Indice;
+
   /** @brief Criterio de búsqueda para una base de datos */
   typedef linear_set<Restriccion> Criterio;
 
@@ -204,16 +207,15 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    typedef string_map<set<Registro*> > indice; //FIXME: es set y no linear_set porque set tiene un insert de log(cantidad de registros). Es necesario para nusetra complejidad.
-    typedef string_map<indice> indices_en_campos;
 
     /** @{ */
     linear_set<string> _nombres_tablas;
-    linear_map<string, Tabla> _tablas;
+    string_map<Tabla> _tablas;
     linear_map<Criterio, int> _uso_criterios;
-    string_map<indices_en_campos> tablas_indices;
+    string_map<string_map<Indice>> indices;
 
-    /** @} */
+
+  /** @} */
 
     /** @{ */
     /**

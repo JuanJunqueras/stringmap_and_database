@@ -1,7 +1,5 @@
 #include "BaseDeDatos.h"
-#include <list>
-#include <tuple>
-#include <algorithm>
+#include "Indice.h"
 
 BaseDeDatos::BaseDeDatos(){};
 
@@ -10,12 +8,27 @@ void BaseDeDatos::crearTabla(const string &nombre,
                              const vector<string> &campos,
                              const vector<Dato> &tipos) {
   _nombres_tablas.fast_insert(nombre);
-  _tablas.fast_insert(make_pair(nombre, Tabla(claves, campos, tipos)));
+    const string elNombre = nombre;
+  _tablas.insert(make_pair(elNombre, Tabla(claves, campos, tipos)));
 }
 
 void BaseDeDatos::agregarRegistro(const Registro &r, const string &nombre) {
+
   Tabla &t = _tablas.at(nombre);
-  t.agregarRegistro(r);
+  Tabla::const_iterador_registros reg = t.agregarRegistro(r);
+
+  // Agregar el índice en O(C * (L + log(m)))
+  auto t_campos_indices = indices.find(nombre); // O(1) (pues largo de claves acotado)
+  if (!t_campos_indices.isEnd()) {
+
+    // Iteramos sobre los índices de la tabla (en el peor caso todos los campos tienen índice y hacemos C iteraciones)
+    for (auto it_campos = (*t_campos_indices).second.cbegin(); !it_campos.isEnd(); ++it_campos) {
+      auto dato = r.dato(it_campos.getClave());
+      Indice indice = (*it_campos).second; // O(1)
+      auto registros = indice.registros(dato); // O(max{L,log(m)})
+      registros.insert(reg); // O(log(m))
+    }
+  }
 }
 
 const linear_set<string> &BaseDeDatos::tablas() const { return _nombres_tablas; }
@@ -142,20 +155,15 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
 }
 
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
-    Tabla t = this->dameTabla(nombre); //O(?)
-    indice i; //O(1)
-    for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg ){ // O(m)
-        Registro& reg = *(it_reg); // O(1)
-        Dato dato = reg.dato(campo); // O(1)
-        string valor; //O(1)
-        valor = dato.esString() ? dato.valorStr() : to_string(dato.valorNat()); //O(1)
-        if (i.find(valor)){ //Si ya existe un registro con el valor en el que estamos...
-//            i[valor].insert(reg); //O(L) // ... agregamos el registro al conjunto de registros...
-        }else{           //...si no...
-            set<Registro> regs; //...creamos un nuevo set de registros vacío y le agregamos el regitro.
-            regs.insert(reg);
-        }
-    }
-    tablas_indices[nombre][campo] = i; //O(copy(i))
-}
 
+  Tabla t = this->dameTabla(nombre); // O(T) (TODO: convertir a esta operación en O(1))
+  Indice indice; // O(1)
+
+  for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg){ // O(m)
+    auto dato = (*it_reg).dato(campo);
+    auto registros = indice.registros(dato); // O(L)
+    registros.insert(it_reg); // O(log(m))
+  }
+
+  indices[nombre][campo] = indice; // O(copy(i))
+}

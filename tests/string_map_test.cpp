@@ -7,14 +7,19 @@ TEST(string_map_test, test_constructor) {
    string_map<int> m1,m2;
      string_map<int> m3(m1);
     string_map<string_map<string> > m4;
+
 }
 TEST(string_map_test, test_insercion) {
+
+
     string_map<int> m1;
     EXPECT_EQ(m1.size(),0);
-    m1.insert(pair<const string, int>("strikingLoo", 1));
+    cout <<"llega bien aca" <<endl;
+    m1.insert(pair<string, int>("strikingLoo", 1));
+    cout <<"aca no" <<endl;
     EXPECT_EQ(m1.size(),1);
-    m1.insert(pair<const string, int>("pablo", 5));
-    auto falsy = m1.insert(pair<const string, int>("pablo", 7));
+    m1.insert(pair<string, int>("pablo", 5));
+    auto falsy = m1.insert(pair<string, int>("pablo", 7));
     EXPECT_EQ(m1.at("strikingLoo"),1);
     EXPECT_EQ(m1.at("pablo"),5);
     EXPECT_EQ(falsy.second,false);
@@ -38,23 +43,44 @@ TEST(string_map_test, test_clave_iterador){
     string_map<int>::iterator it = m1.begin();
 }
 
-TEST(string_map_test, test_siguiente_clave){
+TEST(string_map_test, test_siguiente_clave_con_subtring){
+
     string_map<int> m1;
     m1["juan"] = 4;
     m1["juancito"] = 5;
     m1["juatir"] = 6;
+    m1["jvan"] = 7;
+
     string juancito = m1.siguienteClave("juan");
     EXPECT_EQ(juancito,"juancito");
     string wtv = m1.siguienteClave("juancito");
-    EXPECT_EQ(wtv,"juanir");
+    EXPECT_EQ(wtv,"juatir");
+    wtv = m1.siguienteClave("juatir");
+    EXPECT_EQ(wtv,"jvan");
 }
+TEST(string_map_test, test_siguiente_clave_sin_substring){
+    string_map<int> m1;
+    m1["ju"] = 4;
+    m1["le"] = 5;
+    m1["pe"] = 6;
+    string le = m1.siguienteClave("ju");
+    EXPECT_EQ(le,"le");
+    string pe = m1.siguienteClave("le");
+    EXPECT_EQ(pe,"pe");
 
+
+}
 TEST(string_map_test, test_asterisco){
     string_map<int> m1;
     m1["pablorrr"] = 4;
     auto begin = m1.begin();
     //cout << "wtv" << endl;
-    //std::pair<string, int> pair = (*begin);
+    string_map<int>::iterator::value_type pair = (*begin);
+    ASSERT_EQ(pair.first,"pablorrr");
+    ASSERT_EQ(pair.second,4);
+
+
+
     /*
      * el asterisco no funciona
      * cout << "claramente si" << endl;

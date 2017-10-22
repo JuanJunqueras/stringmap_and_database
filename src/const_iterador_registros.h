@@ -49,6 +49,7 @@ public:
    */
   const_iterador_registros& operator++();
 
+
   /**
    * @brief Comparación entre iteradores 
    *
@@ -68,6 +69,8 @@ public:
    * \complexity{\O(1)}
    */
   bool operator!=(const const_iterador_registros& o_it) const;
+
+  bool operator<(const const_iterador_registros& o_it) const;
 
 private:
   friend class Tabla;
