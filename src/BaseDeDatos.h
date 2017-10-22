@@ -11,7 +11,7 @@
 #include "linear_map.h"
 #include "linear_set.h"
 #include "utils.h"
-#include "string_map.cpp"
+#include "string_map.h"
 
 using namespace std;
 
@@ -209,7 +209,7 @@ private:
 
     /** @{ */
     linear_set<string> _nombres_tablas;
-    linear_map<string, Tabla> _tablas;
+    string_map<Tabla> _tablas;
     linear_map<Criterio, int> _uso_criterios;
     string_map<IndicesCampos> tablas_indices;
 

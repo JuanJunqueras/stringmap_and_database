@@ -7,7 +7,7 @@ void BaseDeDatos::crearTabla(const string &nombre,
                              const vector<string> &campos,
                              const vector<Dato> &tipos) {
   _nombres_tablas.fast_insert(nombre);
-  _tablas.fast_insert(make_pair(nombre, Tabla(claves, campos, tipos)));
+  _tablas.insert(make_pair(nombre, Tabla(claves, campos, tipos)));
 }
 
 void BaseDeDatos::agregarRegistro(const Registro &r, const string &nombre) {
