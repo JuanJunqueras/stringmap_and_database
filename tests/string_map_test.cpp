@@ -70,9 +70,11 @@ TEST(string_map_test, test_asterisco){
     auto begin = m1.begin();
     //cout << "wtv" << endl;
     string_map<int>::iterator::value_type pair = (*begin);
-    for(auto c : pair.first){cout<< (int) c <<endl;}
-    cout << pair.first << endl ;
-    cout << pair.second << endl;
+    ASSERT_EQ(pair.first,"pablorrr");
+    ASSERT_EQ(pair.second,4);
+
+
+
     /*
      * el asterisco no funciona
      * cout << "claramente si" << endl;

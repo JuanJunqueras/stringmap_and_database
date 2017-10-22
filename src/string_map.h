@@ -48,9 +48,9 @@ public:
         using pointer = value_type*;
         using difference_type = std::ptrdiff_t;
         value_type operator*();
-        value_type operator->();
+        value_type* operator->();
         iterator& operator++();
-        bool operator!=(iterator& o_it);
+        bool operator!=(iterator &o_it);
         bool operator==(iterator& o_it);
 
         bool isEnd();
@@ -65,7 +65,7 @@ public:
             const mapped_type* valorActual;
             public:
             key_type getClave();
-            const_iterator(string_map* mapa);
+            const_iterator(const string_map* mapa);
             const_iterator();
             using value_type = const string_map::value_type;
             using iterator_category = std::forward_iterator_tag;
@@ -73,9 +73,9 @@ public:
             using pointer = value_type*;
             using difference_type = std::ptrdiff_t;
             value_type operator*();
-            value_type operator->();
+            value_type* operator->();
             const_iterator& operator++();
-            bool operator!=(const_iterator& o_it);
+            bool operator!=(const_iterator &o_it);
             bool operator==(const_iterator& o_it);
 
         bool isEnd();
@@ -129,7 +129,7 @@ public:
      * \complexity{\O(sn * S)}
      */
     bool operator==(const string_map& otro) const;
-    bool operator!=(const string_map& otro) const {return !(*this == otro);}
+    bool operator!=(const string_map& otro) const;
 
     /** @brief Cantidad de apariciones de la clave (0 o 1)
      *  @param key clave a buscar
