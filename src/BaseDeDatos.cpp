@@ -167,9 +167,3 @@ void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
 
   indices[nombre][campo] = indice; // O(copy(i))
 }
-
-
-string BaseDeDatos::obtener_dato_str(const Registro &reg, string campo) {
-  Dato dato = reg.dato(campo); // TODO: convertir a esta operación en O(1)
-  return dato.esString() ? dato.valorStr() : to_string(dato.valorNat());
-}
