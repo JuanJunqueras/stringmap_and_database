@@ -47,7 +47,7 @@ public:
         using reference =value_type&;
         using pointer = value_type*;
         using difference_type = std::ptrdiff_t;
-        value_type& operator*();
+        value_type operator*();
         value_type operator->();
         iterator& operator++();
         bool operator!=(iterator& o_it);
@@ -72,7 +72,7 @@ public:
             using reference = value_type&;
             using pointer = value_type*;
             using difference_type = std::ptrdiff_t;
-            value_type& operator*();
+            value_type operator*();
             value_type operator->();
             const_iterator& operator++();
             bool operator!=(const_iterator& o_it);

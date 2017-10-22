@@ -348,9 +348,8 @@ string_map<T>::iterator::iterator(string_map* mapa) {
 }
 
 template <typename T>
-typename string_map<T>::iterator::value_type& string_map<T>::iterator::operator*() {
-    std::string estaClave = "";
-    value_type& pair = make_pair(claveActual, *valorActual);
+typename string_map<T>::iterator::value_type string_map<T>::iterator::operator*() {
+    value_type pair = make_pair(getClave(), *valorActual);
     return pair;
 }
 
@@ -398,8 +397,8 @@ void string_map<T>::iterator::setClave(string_map::key_type key) {
 
 
 template <typename T>
-typename string_map<T>::const_iterator::value_type& string_map<T>::const_iterator::operator*() {
-    value_type& pair = make_pair(claveActual, *valorActual);
+typename string_map<T>::const_iterator::value_type string_map<T>::const_iterator::operator*() {
+    value_type pair = make_pair(claveActual, *valorActual);
     return pair;
 }
 template <typename T>
