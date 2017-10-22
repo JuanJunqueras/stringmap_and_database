@@ -37,14 +37,14 @@ public:
         string_map* mapa;
         friend class string_map;
         key_type claveActual;
-        mapped_type* valorActual;
+        const mapped_type* valorActual;
     public:
         key_type getClave();
         iterator(string_map* mapa);
         iterator();
         using value_type = const string_map::value_type;
         using iterator_category = std::forward_iterator_tag;
-        using reference = value_type&;
+        using reference =value_type&;
         using pointer = value_type*;
         using difference_type = std::ptrdiff_t;
         value_type& operator*();
@@ -58,23 +58,27 @@ public:
     };
     class const_iterator{
 
+            void setClave(key_type key);
             const string_map* mapa;
             friend class string_map;
-            string claveActual;
+            key_type claveActual;
+            const mapped_type* valorActual;
             public:
-            const_iterator(const string_map* mapa);
+            key_type getClave();
+            const_iterator(string_map* mapa);
             const_iterator();
             using value_type = const string_map::value_type;
             using iterator_category = std::forward_iterator_tag;
             using reference = value_type&;
             using pointer = value_type*;
             using difference_type = std::ptrdiff_t;
-            T& operator*();
-            T operator->();
-            bool isEnd();
+            value_type& operator*();
+            value_type operator->();
             const_iterator& operator++();
+            bool operator!=(const_iterator& o_it);
             bool operator==(const_iterator& o_it);
-            bool operator!=(const const_iterator& o_it);
+
+        bool isEnd();
 
 
     };

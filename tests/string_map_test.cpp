@@ -69,7 +69,10 @@ TEST(string_map_test, test_asterisco){
     m1["pablorrr"] = 4;
     auto begin = m1.begin();
     //cout << "wtv" << endl;
-    //std::pair<string, int> pair = (*begin);
+    string_map<int>::iterator::value_type pair = (*begin);
+    for(auto c : pair.first){cout<< (int) c <<endl;}
+    cout << pair.first << endl ;
+    cout << pair.second << endl;
     /*
      * el asterisco no funciona
      * cout << "claramente si" << endl;

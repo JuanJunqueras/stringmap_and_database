@@ -349,6 +349,7 @@ string_map<T>::iterator::iterator(string_map* mapa) {
 
 template <typename T>
 typename string_map<T>::iterator::value_type& string_map<T>::iterator::operator*() {
+    std::string estaClave = "";
     value_type& pair = make_pair(claveActual, *valorActual);
     return pair;
 }
@@ -376,7 +377,11 @@ template <typename T>
 bool string_map<T>::iterator::operator!=(string_map<T>::iterator &o_it) {
     return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));
 }
-
+template <typename T>
+typename string_map<T>::iterator &string_map<T>::iterator::operator++() {
+    this->claveActual = this->mapa->siguienteClave(claveActual);
+    this->valorActual = &mapa->at(claveActual);
+}
 
 template <typename T>
 typename string_map<T>::key_type string_map<T>::iterator::getClave() {
@@ -389,19 +394,16 @@ void string_map<T>::iterator::setClave(string_map::key_type key) {
 }
 
 /////////////////////  empieza const_iterator /////////////////////
-template <typename T>
-string_map<T>::const_iterator::const_iterator(const string_map* mapa) {
-    this->claveActual = mapa->primeraClave();
-    this->mapa = mapa;
-}
+
 
 
 template <typename T>
-T& string_map<T>::const_iterator::operator*() {
-    return mapa->at(claveActual);
+typename string_map<T>::const_iterator::value_type& string_map<T>::const_iterator::operator*() {
+    value_type& pair = make_pair(claveActual, *valorActual);
+    return pair;
 }
 template <typename T>
-T string_map<T>::const_iterator::operator->() {
+typename string_map<T>::const_iterator::value_type string_map<T>::const_iterator::operator->() {
     return mapa->at(claveActual);
 }
 template <typename T>
@@ -412,6 +414,34 @@ string_map<T>::const_iterator::const_iterator() {
 template <typename T>
 bool string_map<T>::const_iterator::isEnd() {
     return claveActual=="";
+}
+template <typename T>
+void string_map<T>::const_iterator::setClave(string_map<T>::key_type key) {
+    claveActual=key;
+}
+template <typename T>
+typename string_map<T>::key_type string_map<T>::const_iterator::getClave() {
+    return claveActual;
+}
+template <typename T>
+string_map<T>::const_iterator::const_iterator(string_map<T> *mapa) {
+    this->claveActual = mapa->primeraClave();
+    this->valorActual = &mapa->at(claveActual);
+    this->mapa = mapa;
+}
+template <typename T>
+typename string_map<T>::const_iterator &string_map<T>::const_iterator::operator++() {
+    this->claveActual = this->mapa->siguienteClave(claveActual);
+    this->valorActual = &mapa->at(claveActual);
+    return *this;
+}
+template <typename T>
+bool string_map<T>::const_iterator::operator==(string_map<T>::const_iterator &o_it) {
+    return (o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual);
+}
+template <typename T>
+bool string_map<T>::const_iterator::operator!=(string_map<T>::const_iterator &o_it) {
+    return not ((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));;
 }
 
 template <typename T>
