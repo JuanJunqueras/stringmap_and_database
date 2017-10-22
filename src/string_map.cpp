@@ -22,9 +22,9 @@ string_map<T>::string_map(const string_map &) {
 }
 
 template<typename T>
-string_map<T> &string_map<T>::operator=(const string_map &otro) {
+string_map<T> &string_map<T>::operator=(const string_map &otro)  {
     for (auto s : otro) {
-        this->insert(s);
+        insert(s);
     }
 }
 
@@ -91,7 +91,7 @@ typename string_map<T>::iterator string_map<T>::begin() {
 }
 
 template<typename T>
-typename string_map<T>::iterator string_map<T>::end() {
+typename string_map<T>::iterator string_map<T>::end() const {
     auto it = new string_map<T>::iterator(this);
     it->claveActual = "";
     it->valorActual = nullptr;

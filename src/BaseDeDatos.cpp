@@ -20,7 +20,7 @@ void BaseDeDatos::agregarRegistro(const Registro &r, const string &nombre) {
   if (!t_campos_indices.isEnd()) {
 
     // Iteramos sobre los índices de la tabla (en el peor caso todos los campos tienen índice y hacemos C iteraciones)
-    for (auto it_campos = (*t_campos_indices).second.begin(); !it_campos.isEnd(); ++it_campos) {
+    for (auto it_campos = (*t_campos_indices).second.cbegin(); !it_campos.isEnd(); ++it_campos) {
       string valor = obtener_dato_str(r, it_campos.getClave()); // O(1)
       Indice indice = (*it_campos).second; // O(1)
       auto registros = indice[valor]; // O(L)
