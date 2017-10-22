@@ -24,5 +24,9 @@ bool Tabla::const_iterador_registros::operator!=(const Tabla::const_iterador_reg
   return not (it_registro == o_it.it_registro);
 }
 
+bool Tabla::const_iterador_registros::operator<(const Tabla::const_iterador_registros &o_it) const {
+  return &(*this) < &o_it;
+}
+
 Tabla::const_iterador_registros::const_iterador_registros(const linear_set<Registro>::const_iterator _it_registro) :
     it_registro(_it_registro) {}

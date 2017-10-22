@@ -69,6 +69,8 @@ public:
    */
   bool operator!=(const const_iterador_registros& o_it) const;
 
+  bool operator<(const const_iterador_registros& o_it) const;
+
 private:
   friend class Tabla;
 
