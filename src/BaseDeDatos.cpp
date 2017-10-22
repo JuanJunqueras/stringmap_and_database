@@ -14,8 +14,33 @@ void BaseDeDatos::crearTabla(const string &nombre,
 }
 
 void BaseDeDatos::agregarRegistro(const Registro &r, const string &nombre) {
+
   Tabla &t = _tablas.at(nombre);
-  t.agregarRegistro(r);
+  Tabla::const_iterador_registros reg = t.agregarRegistro(r);
+
+  // Agregar el índice en O(C * (L + log(m)))
+  auto t_campos_indices = tablas_indices.find(nombre); // O(1) (pues largo de claves acotado)
+  if (!t_campos_indices.isEnd()) {
+
+    // Iteramos sobre los índices de la tabla
+    auto campo_actual = (*t_campos_indices).second.begin(); // O(1) (pues el largo de los campos esacotado)
+    while (!campo_actual.isEnd()) { // O(C) (en el peor caso, todos los campos de la tabla tienen índice)
+
+      Indice indice = (*campo_actual).second;
+      string campo = campo_actual.getClave();
+      const Dato &dato = r.dato(campo);
+      string valor = dato.esString() ? dato.valorStr() : to_string(dato.valorNat());
+      auto registros = indice.find(valor); // O(L)
+
+      set<Tabla::const_iterador_registros> regs;
+      if (!registros.isEnd()) {
+        regs = (*registros).second;
+      }
+
+      regs.insert(reg); // O(L)
+      indice[valor] = regs;
+    }
+  }
 }
 
 const linear_set<string> &BaseDeDatos::tablas() const { return _nombres_tablas; }
