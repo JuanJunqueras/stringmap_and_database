@@ -33,13 +33,13 @@ public:
 
     class iterator{
         void setClave(key_type key);
-        string_map* mapa;
+        const string_map* mapa;
         friend class string_map;
         key_type claveActual;
         const mapped_type* valorActual;
     public:
         key_type getClave();
-        iterator(string_map* mapa);
+        iterator(const string_map* mapa);
         iterator();
         using value_type = const string_map::value_type;
         using iterator_category = std::forward_iterator_tag;
@@ -118,7 +118,7 @@ public:
      *
      * \complexity{\O(sn * S)}
      */
-    string_map& operator=(const string_map &);
+    string_map& operator=(string_map &);
 
     /** @brief Operadores de comparacion
      *
