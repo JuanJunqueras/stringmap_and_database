@@ -222,7 +222,7 @@ public:
      *
      *  \complexity{\O(S)}
      */
-   iterator end();
+   iterator end() const;
 
     /// Versiones const de begin/end
 
