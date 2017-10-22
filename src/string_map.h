@@ -12,7 +12,7 @@ using namespace std;
 /**
  * @brief Representa un diccionario cuyas claves son strings.
  *
- * **se explica con** TAD Diccionario
+ * **se explica con** TAD Diccionario(string, T)
  */
 
 /**
@@ -297,6 +297,22 @@ public:
     string siguienteClave(string claveActual) const;
 
 private:
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    /** \name Representación
+     * rep: string_map \TO bool\n
+     * rep(m) \EQUIV
+     *  * m.raiz.valor = null
+     *  * m._cantidadDeClaves = FIXME no se a qué igualarlo
+     *
+     * abs: string_map \TO Diccionario(string, T)\n
+     * abs(m) \EQUIV m' \|
+     *  * #claves(m') = m._cantidadDeClaves \AND
+     *  * \FORALL (c : string) def?(c,m') \IMPLIES \EXISTS (i: string_map_iterator(m))(i.claveActual = c) \LAND
+     *  (i.valorActual = obtener(c,m')
+     *  * \FORALL (i: string_map_iterator(m)) (i \NEQ m.end) \LIMPLIES def?(i.claveActual, m') \AND
+     *  obtener(i.claveActual, m') = i.valorActual
+     */
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     struct Nodo {
         map<char, Nodo*> hijos;
@@ -307,7 +323,7 @@ private:
     Nodo* raiz;
     size_t _cantidadDeClaves;
     string primeraClave() const;
-    Nodo * findNodo(string key)const;
+    Nodo* findNodo(string key)const;
     vector<Nodo*> getBranch(string key)const;
 };
 
