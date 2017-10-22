@@ -145,11 +145,16 @@ void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
     Tabla t = this->dameTabla(nombre); //O(?)
     indice i; //O(1)
     for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg ){ // O(m)
-        const Registro& reg = *(it_reg); // O(1)
+        Registro& reg = *(it_reg); // O(1)
         Dato dato = reg.dato(campo); // O(1)
         string valor; //O(1)
         valor = dato.esString() ? dato.valorStr() : to_string(dato.valorNat()); //O(1)
-        i[valor].insert(reg); //O(L)
+        if (i.find(valor)){ //Si ya existe un registro con el valor en el que estamos...
+//            i[valor].insert(reg); //O(L) // ... agregamos el registro al conjunto de registros...
+        }else{           //...si no...
+            set<Registro> regs; //...creamos un nuevo set de registros vacío y le agregamos el regitro.
+            regs.insert(reg);
+        }
     }
     tablas_indices[nombre][campo] = i; //O(copy(i))
 }

@@ -6,6 +6,7 @@
 #include "Dato.h"
 #include "linear_set.h"
 #include "linear_map.h"
+#include "string_map.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ public:
      * \pre long(campos) = long(datos)
      * \post \P{res} = nuevoRegistro(campos, datos)
      *
-     * \complexity{\O(long(campos) * (copy(campo) + copy(dato)))}
+     * \complexity{\O(long(campos)*copy(dato))} // Dado que la longitud del nombre de los campos es acotada.
      */
     Registro(const vector<string>& campos, const vector<Dato>& datos);
 
@@ -39,7 +40,7 @@ public:
      * \pre campo \in campos(\P{this})
      * \post \P{res} = valor(campo, \P{this})
      * 
-     * \complexity{\O(long(campos(\P{this})) * cmp(campo))}
+     * \complexity{\O(1)} //el largo de los campos es acotado.
      */
     const Dato& dato(const string& campo) const;
 
@@ -71,8 +72,8 @@ private:
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /** @{ */
+    string_map<Dato> _datos;
     linear_set<string> _campos;
-    linear_map<string, Dato> _datos;
     /** @} */
 
     friend ostream &operator<<(ostream &, const Registro &);

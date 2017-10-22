@@ -204,7 +204,7 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    typedef string_map<linear_set<Registro> > indice;
+    typedef string_map<set<Registro*> > indice; //FIXME: es set y no linear_set porque set tiene un insert de log(cantidad de registros). Es necesario para nusetra complejidad.
     typedef string_map<indice> indices_en_campos;
 
     /** @{ */
