@@ -154,7 +154,7 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
 
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
 
-  Tabla t = this->dameTabla(nombre); // O(T)
+  Tabla t = this->dameTabla(nombre); // O(T) (TODO: convertir a esta operación en O(1))
   Indice i; // O(1)
 
   for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg){ // O(m)
@@ -168,6 +168,6 @@ void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
 
 
 string BaseDeDatos::obtener_dato_str(const Registro &reg, string campo) {
-  Dato dato = reg.dato(campo); // O(1)
+  Dato dato = reg.dato(campo); // TODO: convertir a esta operación en O(1)
   return dato.esString() ? dato.valorStr() : to_string(dato.valorNat());
 }
