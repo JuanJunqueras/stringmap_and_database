@@ -276,6 +276,9 @@ private:
      */
     pair<vector<string>, vector<Dato> > _tipos_tabla(const Tabla &t);
     /** @} */
+
+
+    string obtener_dato_str(const Registro &reg, string campo);
 };
 
 #endif

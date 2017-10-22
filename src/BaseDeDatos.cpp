@@ -1,7 +1,4 @@
 #include "BaseDeDatos.h"
-#include <list>
-#include <tuple>
-#include <algorithm>
 
 BaseDeDatos::BaseDeDatos(){};
 
@@ -22,23 +19,12 @@ void BaseDeDatos::agregarRegistro(const Registro &r, const string &nombre) {
   auto t_campos_indices = tablas_indices.find(nombre); // O(1) (pues largo de claves acotado)
   if (!t_campos_indices.isEnd()) {
 
-    // Iteramos sobre los índices de la tabla
-    auto campo_actual = (*t_campos_indices).second.begin(); // O(1) (pues el largo de los campos esacotado)
-    while (!campo_actual.isEnd()) { // O(C) (en el peor caso, todos los campos de la tabla tienen índice)
-
-      Indice indice = (*campo_actual).second;
-      string campo = campo_actual.getClave();
-      const Dato &dato = r.dato(campo);
-      string valor = dato.esString() ? dato.valorStr() : to_string(dato.valorNat());
-      auto registros = indice.find(valor); // O(L)
-
-      set<Tabla::const_iterador_registros> regs;
-      if (!registros.isEnd()) {
-        regs = (*registros).second;
-      }
-
-      regs.insert(reg); // O(L)
-      indice[valor] = regs;
+    // Iteramos sobre los índices de la tabla (en el peor caso todos los campos tienen índice y hacemos C iteraciones)
+    for (auto it_campos = (*t_campos_indices).second.begin(); !it_campos.isEnd(); ++it_campos) {
+      string valor = obtener_dato_str(r, it_campos.getClave()); // O(1)
+      Indice indice = (*it_campos).second; // O(1)
+      auto registros = indice[valor]; // O(L)
+      registros.insert(reg); // O(log(m))
     }
   }
 }
@@ -167,15 +153,21 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
 }
 
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
-    Tabla t = this->dameTabla(nombre); //O(?)
-    indice i; //O(1)
-    for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg ){ // O(m)
-        const Registro& reg = *(it_reg); // O(1)
-        Dato dato = reg.dato(campo); // O(1)
-        string valor; //O(1)
-        valor = dato.esString() ? dato.valorStr() : to_string(dato.valorNat()); //O(1)
-        i[valor].insert(reg); //O(L)
-    }
-    tablas_indices[nombre][campo] = i; //O(copy(i))
+
+  Tabla t = this->dameTabla(nombre); // O(T)
+  Indice i; // O(1)
+
+  for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg){ // O(m)
+    string valor = obtener_dato_str(*it_reg, campo); // O(1)
+    auto registros = i[valor]; // O(L)
+    registros.insert(it_reg); // O(log(m))
+  }
+
+  tablas_indices[nombre][campo] = i; // O(copy(i))
 }
 
+
+string BaseDeDatos::obtener_dato_str(const Registro &reg, string campo) {
+  Dato dato = reg.dato(campo); // O(1)
+  return dato.esString() ? dato.valorStr() : to_string(dato.valorNat());
+}
