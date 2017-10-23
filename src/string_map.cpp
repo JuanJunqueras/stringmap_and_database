@@ -107,10 +107,12 @@ typename string_map<T>::iterator string_map<T>::begin() {
 
 template<typename T>
 typename string_map<T>::iterator string_map<T>::end() const {
-    auto it = new string_map<T>::iterator(this);
-    it->claveActual = "";
-    it->valorActual = nullptr;
-    return *it;
+
+    auto it = string_map<T>::iterator(this);
+
+    it.claveActual = "";
+    it.valorActual = nullptr;
+    return it;
 }
 
 template<typename T>
@@ -129,7 +131,8 @@ typename string_map<T>::const_iterator string_map<T>::cend() const {
 template<typename T>
 typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_type &key) {
     Nodo *nodoEncontrado = findNodo(key);
-    if (nodoEncontrado == nullptr) { return end(); }
+    if (nodoEncontrado == nullptr) {
+        return end(); }
     else {
         auto it = string_map<T>::iterator(this);
         it.claveActual = key;
@@ -156,12 +159,11 @@ typename string_map<T>::const_iterator string_map<T>::find(const string_map<T>::
 
 template<typename T>
 pair<typename string_map<T>::iterator, bool> string_map<T>::insert(const string_map<T>::value_type &value) {
+
     bool inserta = false;
     string clave = value.first;
     T valor = value.second;
-
-    auto it = find(clave);
-
+    iterator it = find(clave);
     if (!it.isEnd()) {
         pair<string_map<T>::iterator, bool> res = make_pair(this->end(), inserta);
         return res;
@@ -320,11 +322,11 @@ template<typename T>
 typename string_map<T>::Nodo *string_map<T>::findNodo(string key) const {
     int index = 0;
     string_map<T>::Nodo *actual = raiz;
-    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
+    while (index < key.size() && actual->hijos.count(key[index]) != 0) {
+
         actual = actual->hijos[key[index]];
         index++;
     }
-
     if (index == key.size() && actual->valor != nullptr) {
         return actual;
     } else {
@@ -371,7 +373,9 @@ typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) 
 template<typename T>
 string_map<T>::iterator::iterator(const string_map *mapa) {
     this->claveActual = mapa->primeraClave();
-    this->valorActual = &mapa->at(claveActual);
+    if(this->claveActual!=""){
+        this->valorActual = &(mapa->at(claveActual));
+    }
     this->mapa = mapa;
 }
 

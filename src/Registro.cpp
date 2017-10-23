@@ -6,7 +6,9 @@ using namespace std;
 Registro::Registro(const vector<string>& campos, const vector<Dato>& datos) : 
     _campos(campos.begin(), campos.end()) {
         for (int i = 0; i < campos.size(); i++) {
+            cout <<campos[i] << endl;
            _datos.insert(make_pair(campos[i], datos[i]));
+            cout << _datos.size();
         }
 };
 
