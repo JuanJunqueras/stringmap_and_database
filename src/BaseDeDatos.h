@@ -11,8 +11,6 @@
 #include "linear_map.h"
 #include "linear_set.h"
 #include "utils.h"
-#include "string_map.h"
-#include "string_map.cpp"
 using namespace std;
 
 /**

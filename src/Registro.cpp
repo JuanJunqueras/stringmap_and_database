@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Registro.h"
 #include "utils.h"
-
 using namespace std;
 
 Registro::Registro(const vector<string>& campos, const vector<Dato>& datos) : 
