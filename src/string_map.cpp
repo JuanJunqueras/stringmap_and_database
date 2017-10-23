@@ -22,20 +22,29 @@ string_map<T>::string_map(const string_map &) {
 }
 
 template<typename T>
-string_map<T> &string_map<T>::operator=(string_map &otro)  {
-
-    for (auto s : otro) {
-        insert(s);
+string_map<T>& string_map<T>::operator=(string_map &otro)  {
+    this->clear();
+    auto it = iterator(&otro);
+    while (!it.isEnd()){
+        auto aInsertar = *it;
+        this->insert(aInsertar);
+        ++it;
     }
+    return *this;
 }
 
 template<typename T>
-bool string_map<T>::operator==(const string_map &otro) const {
+bool string_map<T>::operator==(const string_map<T> &otro) const {
     if (this->size() != otro.size()) {
         return false;
     } else {
-        for (auto s : otro) {
-            if (this->count(s.first) == 0) {
+        auto itOtro = otro.cbegin();
+        while(!itOtro.isEnd()) {
+            auto parOtro = *itOtro;
+            if (this->count(parOtro.first) == 0) {
+                return false;
+            }
+            if (otro.at(parOtro.first) != this->at(parOtro.first)){
                 return false;
             }
         }
@@ -81,6 +90,11 @@ const T &string_map<T>::at(const string_map<T>::key_type &key) const {
 
 template<typename T>
 void string_map<T>::clear() {
+    auto it = this->begin();
+    while (!it.isEnd()){
+        erase(it);
+        ++it;
+    }
 }
 
 template<typename T>
@@ -341,7 +355,15 @@ bool string_map<T>::operator!=(const string_map<T> &otro) const {
             }
         }
     }
-    return false;
+    return !(*this == otro);
+}
+
+template <typename T>
+typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) {
+    auto clave = pos.claveActual;
+    ++pos;
+    erase(clave);
+    return pos;
 }
 
 /////////////////////  empieza iterator /////////////////////
@@ -376,15 +398,6 @@ bool string_map<T>::iterator::isEnd() {
     return this->claveActual == "";
 }
 
-template<typename T>
-bool string_map<T>::iterator::operator==(string_map<T>::iterator &o_it) {
-    return (o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual);
-}
-
-template<typename T>
-bool string_map<T>::iterator::operator!=(iterator &o_it){
-    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));
-}
 
 template<typename T>
 typename string_map<T>::iterator &string_map<T>::iterator::operator++() {
@@ -402,9 +415,18 @@ void string_map<T>::iterator::setClave(string_map::key_type key) {
     claveActual = key;
 }
 
+
+template<typename T>
+bool string_map<T>::iterator::operator==(const string_map<T>::iterator &o_it){
+    return (o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual);
+}
+
+template<typename T>
+bool string_map<T>::iterator::operator!=(const string_map<T>::iterator &o_it){
+    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));
+}
+
 /////////////////////  empieza const_iterator /////////////////////
-
-
 
 template<typename T>
 typename string_map<T>::const_iterator::value_type string_map<T>::const_iterator::operator*() {

@@ -49,9 +49,8 @@ public:
         value_type operator*();
         value_type* operator->();
         iterator& operator++();
-        bool operator!=(iterator &o_it);
-        bool operator==(iterator& o_it);
-
+        bool operator!=(const iterator& o_it);
+        bool operator==(const iterator& o_it);
         bool isEnd();
 
     };
@@ -75,7 +74,7 @@ public:
             value_type* operator->();
             const_iterator& operator++();
             bool operator!=(const_iterator &o_it);
-            bool operator==(const_iterator& o_it);
+            bool operator==(const_iterator &o_it);
 
         bool isEnd();
 
