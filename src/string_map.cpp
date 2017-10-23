@@ -22,7 +22,7 @@ string_map<T>::string_map(const string_map &) {
 }
 
 template<typename T>
-string_map<T>& string_map<T>::operator=(string_map &otro)  {
+string_map<T>& string_map<T>::operator=(const string_map &otro)  {
     this->clear();
     auto it = iterator(&otro);
     while (!it.isEnd()){

@@ -117,7 +117,7 @@ public:
      *
      * \complexity{\O(sn * S)}
      */
-    string_map& operator=(string_map &);
+    string_map& operator=(const string_map &);
 
     /** @brief Operadores de comparacion
      *

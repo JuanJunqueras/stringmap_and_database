@@ -75,13 +75,9 @@ private:
     string_map<Dato> _datos;
     linear_set<string> _campos;
     /** @} */
-
-    friend ostream &operator<<(ostream &, const Registro &);
 };
 
 
 bool operator==(const Registro&, const Registro&);
-ostream &operator<<(ostream &, const Registro &);
-
 
 #endif //_REGISTRO_H
