@@ -71,7 +71,6 @@ mapped_type &string_map<mapped_type>::operator[](const string_map<mapped_type>::
 
 template<typename mapped_type>
 mapped_type &string_map<mapped_type>::at(const string_map<mapped_type>::key_type &key) {
-
     int index = 0;
     Nodo *actual = raiz;
     while (index != key.size() && actual->hijos.count(key[index]) != 0) {
@@ -144,7 +143,7 @@ typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_ty
     else {
         auto it = string_map<T>::iterator(this);
         it.claveActual = key;
-        /* @corregir(ivan): No actualizan el valor al cual apunta el iterador ? */
+        it.valorActual = &at(it.claveActual);
         return it;
     }
 }
@@ -152,19 +151,15 @@ typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_ty
 template<typename T>
 /* @corregir(ivan): Por qué el algoritmo del find para el string_map const difiere del algoritmo del find para el string_map ? */
 typename string_map<T>::const_iterator string_map<T>::find(const string_map<T>::key_type &key) const {
-    int index = 0;
-    Nodo *actual = raiz;
-    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
-        actual = actual->hijos[key[index]];
-        index++;
+    Nodo *nodoEncontrado = findNodo(key);
+    if (nodoEncontrado == nullptr) {
+        return cend();
     }
-    if (index == key.size() && actual->valor != nullptr) {
+    else {
         auto it = string_map<T>::const_iterator(this);
         it.claveActual = key;
-        /* @corregir(ivan): No actualizan el valor al cual apunta el iterador ? */
+        it.valorActual = &at(it.claveActual);
         return it;
-    } else {
-        return this->cend();
     }
 }
 
@@ -232,6 +227,14 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
         }
     }
     return elementosEliminados;
+}
+
+template <typename T>
+typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) {
+    auto clave = pos.claveActual;
+    ++pos;
+    erase(clave);
+    return pos;
 }
 
 template<typename T>
@@ -362,25 +365,9 @@ vector<typename string_map<T>::Nodo *> string_map<T>::getBranch(string key) cons
 }
 template <typename T>
 bool string_map<T>::operator!=(const string_map<T> &otro) const {
-    if (this->size() != otro.size()) {
-        return true;
-    } else {
-        for (auto s : otro) {
-            if (this->count(s.first) == 0) {
-                return true;
-            }
-        }
-    }
     return !(*this == otro); /* @corregir(ivan): Si van a hacer esto al final, hubieran dejado sólo esta linea. */
 }
 
-template <typename T>
-typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) {
-    auto clave = pos.claveActual;
-    ++pos;
-    erase(clave);
-    return pos;
-}
 
 /////////////////////  empieza iterator /////////////////////
 /* @comentario(ivan): Queda mejor si lo definen en otro archivo. Este ya es largo :) */
