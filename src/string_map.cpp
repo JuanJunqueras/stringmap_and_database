@@ -449,7 +449,7 @@ bool string_map<T>::iterator::operator!=(const string_map<T>::iterator &o_it){
 
 template<typename T>
 typename string_map<T>::const_iterator::value_type string_map<T>::const_iterator::operator*() {
-    value_type pair = make_pair(claveActual, *valorActual);
+    value_type pair = value_type(getClave(), *valorActual);
     return pair;
 }
 
