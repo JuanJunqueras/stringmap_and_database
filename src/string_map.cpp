@@ -84,9 +84,13 @@ mapped_type &string_map<mapped_type>::at(const string_map<mapped_type>::key_type
 
 template<typename T>
 const T &string_map<T>::at(const string_map<T>::key_type &key) const {
-    /* @corregir(ivan): Resuelven la función at llamando a la función at.
-     * Esto les genera un loop infinito que eventualmente agota los recursos del proceso y provoca un SIGSEV. */
-    return at(key);
+    int index = 0;
+    Nodo *actual = raiz;
+    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
+        actual = actual->hijos[key[index]];
+        index++;
+    }
+    return *(actual->valor);
 }
 
 template<typename T>
