@@ -16,8 +16,14 @@ string_map<T>::~string_map() {
 }
 
 template<typename T>
-string_map<T>::string_map(const string_map &) {
-    /* @corregir(ivan): Sin terminar */
+string_map<T>::string_map(const string_map & other) {
+    string_map();
+    auto it = other.cbegin();
+    while (!it.isEnd()){
+        cout << "algo nuevo" << endl;
+        insert(*it);
+        ++it;
+    }
 }
 
 template<typename T>
@@ -104,10 +110,6 @@ void string_map<T>::clear() {
 template<typename T>
 typename string_map<T>::iterator string_map<T>::begin() {
     auto it = new string_map<T>::iterator(this);
-    /* @comentario(ivan): No hace falta cambiar la clave y valor actual del iterador recién creado.
-     * Según el constructor que hicieron, ya se crea apuntando a la primera clave. */
-    it->claveActual = primeraClave();
-    it->valorActual = &at(it->claveActual);
     return *it;
 }
 
@@ -115,7 +117,6 @@ template<typename T>
 typename string_map<T>::iterator string_map<T>::end() const {
     /* @comentario(ivan): acá podrían usar un constructor vacío como hacen con el cons_iterator (linea 131 de este archivo) */
     auto it = string_map<T>::iterator(this);
-
     it.claveActual = "";
     it.valorActual = nullptr;
     return it;
@@ -124,19 +125,20 @@ typename string_map<T>::iterator string_map<T>::end() const {
 template<typename T>
 typename string_map<T>::const_iterator string_map<T>::cbegin() const {
     auto it = new string_map<T>::const_iterator(this);
+    return *it;
+}
+
+template<typename T>
+typename string_map<T>::const_iterator string_map<T>::cend() const {
+    auto it = new string_map<T>::const_iterator(this);
     it->claveActual = "";
     it->valorActual = nullptr;
     return *it;
 }
 
 template<typename T>
-typename string_map<T>::const_iterator string_map<T>::cend() const {
-    return string_map<T>::const_iterator();
-}
-
-template<typename T>
-typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_type &key) {
-    Nodo *nodoEncontrado = findNodo(key);
+typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_type &key){
+    Nodo* nodoEncontrado = findNodo(key);
     if (nodoEncontrado == nullptr) {
         return end();
     }
