@@ -1,5 +1,5 @@
 #include "linear_set.h"
-
+#include <iostream>
 template<class T>
 linear_set<T>::linear_set() : _elems() {};
 
@@ -25,6 +25,7 @@ template<class T>
 pair<typename linear_set<T>::iterator, bool> linear_set<T>::insert(const T &x) {
   auto ret = _elems.insert(make_pair(x, true));
   return make_pair(iterator(ret.first), ret.second);
+
 }
   
 template<class T>
