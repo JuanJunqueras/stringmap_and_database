@@ -10,6 +10,7 @@
 #include <set>
 #include "linear_map.h"
 #include "linear_set.h"
+#include "join_iterator.h"
 #include "utils.h"
 using namespace std;
 
