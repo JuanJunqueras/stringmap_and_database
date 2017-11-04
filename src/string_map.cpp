@@ -64,7 +64,7 @@ bool string_map<T>::empty() const {
 template<typename mapped_type>
 mapped_type &string_map<mapped_type>::operator[](const string_map<mapped_type>::key_type &key) {
     if (find(key).isEnd()) {
-        insert(make_pair(key, mapped_type()));
+        insert(const value_type(key, mapped_type()));
     }
     return at(key);
 }
@@ -500,5 +500,5 @@ bool string_map<T>::const_iterator::operator==(typename string_map<T>::const_ite
 
 template<typename T>
 bool string_map<T>::const_iterator::operator!=(typename string_map<T>::const_iterator &o_it) {
-    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));;
+    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));
 }
