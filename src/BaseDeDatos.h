@@ -180,8 +180,23 @@ public:
    */
     // TODO: actualizar documentación del método
     /* @corregir(ivan): Corregir documentación */
+
     void crearIndice(const string &nombre, const string &campo);
 
+    /**
+     * TODO: actualizar documentación del método
+     * @brief Crea un join entre las dos tablas
+     *
+     * @param nombre Nombre de la tabla
+     * @param campo Nombre del campo de la tabla a la que se crea el índice
+     *
+     * \pre db = \P{this} \LAND nombre \IN tablas(\P{this}) \LAND
+     *      puedoInsertar?(r, dameTabla(\P{this}))
+     * \post \P{this} = insertarEntrada(r, nombre, db)
+     *
+     * \complexity{\O(T + copy(reg))}
+     */
+    join_iterator join(const string &tabla1, const string &tabla2, const string &campo) const;
 private:
 	  ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación

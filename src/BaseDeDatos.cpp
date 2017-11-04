@@ -1,5 +1,6 @@
 #include "BaseDeDatos.h"
 #include "Indice.h"
+#include "join_iterator.h"
 
 BaseDeDatos::BaseDeDatos(){};
 
@@ -170,4 +171,8 @@ void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
   }
 
   indices[nombre][campo] = indice; // O(copy(Indice)) /* @corregir(ivan): Este copy(Indice) hace que no cierre la complejidad. */
+}
+
+join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, const string &campo) const {
+
 }
