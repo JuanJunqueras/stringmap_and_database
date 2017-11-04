@@ -64,7 +64,7 @@ bool string_map<T>::empty() const {
 template<typename mapped_type>
 mapped_type &string_map<mapped_type>::operator[](const string_map<mapped_type>::key_type &key) {
     if (find(key).isEnd()) {
-        insert(const value_type(key, mapped_type()));
+        insert(value_type(key, mapped_type()));
     }
     return at(key);
 }
