@@ -22,6 +22,16 @@ public:
     return dato.esString() ? indices_dato_string[dato.valorStr()] : indices_dato_nat[dato.valorNat()];
   }
 
+  bool existe(const Dato &dato) {
+    bool existe;
+    if (dato.esString()) {
+      existe = indices_dato_string.find(dato.valorStr()) != indices_dato_string.end();
+    } else {
+      existe = indices_dato_nat.find(dato.valorNat()) != indices_dato_nat.end();
+    }
+    return existe;
+  }
+
 private:
   string_map<set<Tabla::const_iterador_registros>> indices_dato_string;
   map<int, set<Tabla::const_iterador_registros>> indices_dato_nat;
