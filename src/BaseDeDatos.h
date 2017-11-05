@@ -65,7 +65,7 @@ public:
                   const vector<string> &campos, const vector<Dato> &tipos);
 
   /**
-   * @brief Agrega un registro a la tabla parámetro
+   * @brief Agrega un registro a la tabla parámetro y actualiza el índice si es necesario.
    *
    * @param r Registro a agregar
    * @param nombre Nombre de la tabla donde se agrega el registro
@@ -74,7 +74,7 @@ public:
    *      puedoInsertar?(r, dameTabla(\P{this}))
    * \post \P{this} = insertarEntrada(r, nombre, db)
    *
-   * \complexity{\O(T + copy(reg))}
+   * \complexity{\O([L + log(m)] ∗ C + copy(registro)))}
    */
   void agregarRegistro(const Registro &r, const string &nombre);
 
