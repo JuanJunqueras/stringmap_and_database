@@ -175,31 +175,33 @@ void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
 
 join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, const string &campo) const {
 
-    join_iterator join_it;
-    string tabla_principal = tabla1;
-    string tabla_con_indice = tabla2;
-    set<Tabla::const_iterador_registros> registros_tabla_2;
+  string tabla_principal = tabla1;
+  string tabla_con_indice = tabla2;
+  set<Tabla::const_iterador_registros> registros_tabla_2;
 
-    // Chequeamos si efectivamente la tabla2 tiene indice
-    // Si no lo tiene, por precondicion sabemos que tabla1 tiene indice
-    if (indices.find(tabla_con_indice).isEnd()) {
-        tabla_principal = tabla2;
-        tabla_con_indice = tabla1;
+  // Chequeamos si efectivamente la tabla2 tiene indice
+  // Si no lo tiene, por precondicion sabemos que tabla1 tiene indice
+  if (indices.find(tabla_con_indice).isEnd()) {
+    tabla_principal = tabla2;
+    tabla_con_indice = tabla1;
+  }
+
+  const Tabla &tabla = this->dameTabla(tabla_principal);
+  Indice indice = indices.at(tabla_con_indice).at(campo);
+
+  // Iteramos sobre la tabla principal
+  auto it_reg = tabla.registros_begin();
+  set<Tabla::const_iterador_registros> regs;
+  bool match = false;
+  for (true; it_reg != tabla.registros_end() && !match; ++it_reg) { // O(m)
+    auto dato = (*it_reg).dato(campo);
+    if (indice.existe(dato)) {
+      regs = indice.registros(dato);  //conjunto de registros que corresponden al dato.//FIXME: creo que el problema es que estamos asignando a un iterador de la tabla (res) un registro del indice.
+      match = true;
     }
+  }
 
-    const Tabla &tabla = this->dameTabla(tabla_principal);
-    Indice indice = indices.at(tabla_con_indice).at(campo);
+  join_iterator join_it(it_reg, tabla.registros_end(), regs.begin(), regs.end());
 
-    // Iteramos sobre la tabla principal
-    for (auto it_reg = tabla.registros_begin(); it_reg != tabla.registros_end(); ++it_reg) { // O(m)
-        auto dato = (*it_reg).dato(campo);
-        if (indice.existe(dato)) {
-            auto &regs = indice.registros(dato);
-            join_it.agregarIteradorTablaPrincipal(it_reg, tabla.registros_end());
-            join_it.agregarIteradorTablaIndice(regs.begin(), regs.end());
-        }
-
-    }
-
-    return join_it;
+  return join_it;
 }
