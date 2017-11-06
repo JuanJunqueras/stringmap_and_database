@@ -16,16 +16,15 @@ void BaseDeDatos::crearTabla(const string &nombre,
 void BaseDeDatos::agregarRegistro(const Registro &r, const string &nombre) {
 
   Tabla &t = _tablas.at(nombre); // O(1)
-  Tabla::const_iterador_registros reg = t.agregarRegistro(r);
+  Tabla::const_iterador_registros reg = t.agregarRegistro(r); // O(copy(registro))
 
-  // Agregar el índice en O(C * (L + log(m)))
   auto t_campos_indices = indices.find(nombre); // O(1) (pues largo de claves acotado)
   if (!t_campos_indices.isEnd()) {
 
     // Iteramos sobre los índices de la tabla (en el peor caso todos los campos tienen índice y hacemos C iteraciones)
-    for (auto it_campos = (*t_campos_indices).second.cbegin(); !it_campos.isEnd(); ++it_campos) {
+    for (auto it_campos = (*t_campos_indices).second.cbegin(); !it_campos.isEnd(); ++it_campos) { // O(C)
       auto dato = r.dato(it_campos.getClave());
-      Indice indice = (*it_campos).second; // O(1)
+      Indice indice = (*it_campos).second;
       auto registros = indice.registros(dato); // O(max{L,log(m)})
       registros.insert(reg); // O(log(m))
     }

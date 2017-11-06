@@ -65,7 +65,7 @@ public:
                   const vector<string> &campos, const vector<Dato> &tipos);
 
   /**
-   * @brief Agrega un registro a la tabla parámetro
+   * @brief Agrega un registro a la tabla parámetro y actualiza el índice si es necesario.
    *
    * @param r Registro a agregar
    * @param nombre Nombre de la tabla donde se agrega el registro
@@ -74,7 +74,7 @@ public:
    *      puedoInsertar?(r, dameTabla(\P{this}))
    * \post \P{this} = insertarEntrada(r, nombre, db)
    *
-   * \complexity{\O(T + copy(reg))}
+   * \complexity{\O([L + log(m)] ∗ C + copy(registro)))}
    */
   void agregarRegistro(const Registro &r, const string &nombre);
 
@@ -166,22 +166,18 @@ public:
    */
   linear_set<Criterio> top_criterios() const;
 
-
   /**
-   * @brief Crea un índice para el campo de la tabla
+   * @brief Crea un índice para el campo de la tabla parámetro
    *
-   * @param nombre Nombre de la tabla a la que se crea el índice
-   * @param campo Nombre del campo de la tabla a la que se crea el índice
+   * @param nombre Nombre de la tabla donde se crea el índice
+   * @param campo Nombre del campo donde se crea el índice
    *
    * \pre db = \P{this} \LAND nombre \IN tablas(\P{this}) \LAND
-   *      puedoInsertar?(r, dameTabla(\P{this}))
-   * \post \P{this} = insertarEntrada(r, nombre, db)
+   *      campo \IN campos(dameTabla(nombre, \P{this}))
+   * \post \P{this} = crearIndice(tabla, campo, db)
    *
-   * \complexity{\O(T + copy(reg))}
+   * \complexity{\O(m ∗ [L + log(m)])}
    */
-    // TODO: actualizar documentación del método
-    /* @corregir(ivan): Corregir documentación */
-
     void crearIndice(const string &nombre, const string &campo);
 
     /**
@@ -198,6 +194,7 @@ public:
      * \complexity{\O(T + copy(reg))}
      */
     join_iterator join(const string &tabla1, const string &tabla2, const string &campo) const;
+
 private:
 	  ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación
