@@ -203,6 +203,20 @@ class linear_set {
    */
   const_iterator end() const;
 
+  /**
+   * @brief Devuelve un iterador const relacionado al valor buscado.
+   * End si no está definida.
+   *
+   * \pre true
+   * \post
+   *       * x \IN \P{this} \IMPLIES \P{res} apunta a la aparición de x en el
+   *       conjunto
+   *       * \NEG x \IN \P{this} \IMPLIES \P{res} es end
+   *
+   * \complexity{\O(#claves(\P{this}))}
+   */
+  const_iterator find(const T &x) const;
+
  private:
   /**
    * \name Representación:

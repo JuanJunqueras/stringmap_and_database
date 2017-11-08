@@ -106,6 +106,17 @@ typename linear_set<T>::iterator linear_set<T>::find(const T &x) {
 }
 
 template<class T>
+typename linear_set<T>::const_iterator linear_set<T>::find(const T &x) const {
+  auto _end = end();
+  for (auto it = begin(); it != _end; ++it) {
+    if (*it == x) {
+      return it;
+    }
+  }
+  return _end;
+}
+
+template<class T>
 std::ostream &operator<<(std::ostream &os, const linear_set<T> &s) {
   os << "{ ";
   int count = s.size();
