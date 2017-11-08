@@ -29,7 +29,7 @@ public:
   /**
    * @brief Operador flechita
    *
-   * El valor devuelvo tiene aliasing dentro de la colección.
+   * El valor devuelvo tiene aliasing dentro de la colección. //FIXME: wtF?
    *
    * \pre El iterador no debe estar en la posición pasando-el-último.
    * \post El valor resultado es un puntero al valor apuntado.
@@ -68,7 +68,15 @@ public:
    * \complexity{\O(1)}
    */
   bool operator!=(const const_iterador_registros& o_it) const;
-
+    /**
+     * @brief Comparación entre iteradores
+     *
+     * \pre ambos iteradores refieren a la misma colección
+     * \post true sii el iterador de P{this} apunta a una posición de memoria menor
+     * a la de el puntero tomado como parámetro.  //FIXME: dudas con los nombres usados para los punteros
+     *
+     * \complexity{\O(1)}
+     */
   bool operator<(const const_iterador_registros& o_it) const;
 
 private:
