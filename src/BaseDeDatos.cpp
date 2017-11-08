@@ -204,7 +204,11 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
     ++it_registros_tabla_principal;
   }
 
-  join_iterator join_it(it_registros_tabla_principal, it_registros_tabla_principal_end, registros_en_indice.begin(), registros_en_indice.end());
+  join_iterator join_it(it_registros_tabla_principal,
+                        it_registros_tabla_principal_end,
+                        registros_en_indice.begin(),
+                        registros_en_indice.end()
+  );
 
   return join_it;
 }
