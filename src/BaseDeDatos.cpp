@@ -195,12 +195,13 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
 
   // Iteramos sobre tabla principal, buscando el primer match con registro del indice
   bool match = false;
-  while (it_registros_tabla_principal != it_registros_tabla_principal_end) {
+  while (!match && it_registros_tabla_principal != it_registros_tabla_principal_end) {
     auto dato = (*it_registros_tabla_principal).dato(campo);
     if (indice.existe(dato)) {
       registros_en_indice = indice.registros(dato);
       match = true;
     }
+    ++it_registros_tabla_principal;
   }
 
   join_iterator join_it(it_registros_tabla_principal, it_registros_tabla_principal_end, registros_en_indice.begin(), registros_en_indice.end());
