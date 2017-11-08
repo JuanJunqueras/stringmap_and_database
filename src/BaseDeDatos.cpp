@@ -188,19 +188,22 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
   const Tabla &tabla = this->dameTabla(tabla_principal);
   Indice indice = indices.at(tabla_con_indice).at(campo);
 
-  // Iteramos sobre la tabla principal
-  auto it_reg = tabla.registros_begin();
-  set<Tabla::const_iterador_registros> regs;
+  // Declaramos iterador de tabla principal y variable para almacenar los conjuntos de registros del indice
+  set<Tabla::const_iterador_registros> registros_en_indice;
+  auto it_registros_tabla_principal = tabla.registros_begin();
+  auto it_registros_tabla_principal_end = tabla.registros_end();
+
+  // Iteramos sobre tabla principal, buscando el primer match con registro del indice
   bool match = false;
-  for (true; it_reg != tabla.registros_end() && !match; ++it_reg) { // O(m)
-    auto dato = (*it_reg).dato(campo);
+  while (it_registros_tabla_principal != it_registros_tabla_principal_end) {
+    auto dato = (*it_registros_tabla_principal).dato(campo);
     if (indice.existe(dato)) {
-      regs = indice.registros(dato);  //conjunto de registros que corresponden al dato.//FIXME: creo que el problema es que estamos asignando a un iterador de la tabla (res) un registro del indice.
+      registros_en_indice = indice.registros(dato);
       match = true;
     }
   }
 
-  join_iterator join_it(it_reg, tabla.registros_end(), regs.begin(), regs.end());
+  join_iterator join_it(it_registros_tabla_principal, it_registros_tabla_principal_end, registros_en_indice.begin(), registros_en_indice.end());
 
   return join_it;
 }
