@@ -17,7 +17,8 @@ string_map<T>::~string_map() {
 
 template<typename T>
 string_map<T>::string_map(const string_map & other) {
-    string_map();
+    raiz = new Nodo(nullptr);
+    _cantidadDeClaves = 0;
     auto it = other.cbegin();
     while (!it.isEnd()){
         cout << "algo nuevo" << endl;
