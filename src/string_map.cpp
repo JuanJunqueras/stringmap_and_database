@@ -16,8 +16,15 @@ string_map<T>::~string_map() {
 }
 
 template<typename T>
-string_map<T>::string_map(const string_map &) {
-    /* @corregir(ivan): Sin terminar */
+string_map<T>::string_map(const string_map & other) {
+    raiz = new Nodo(nullptr);
+    _cantidadDeClaves = 0;
+    auto it = other.cbegin();
+    while (!it.isEnd()){
+        cout << "algo nuevo" << endl;
+        insert(*it);
+        ++it;
+    }
 }
 
 template<typename T>
@@ -64,14 +71,13 @@ bool string_map<T>::empty() const {
 template<typename mapped_type>
 mapped_type &string_map<mapped_type>::operator[](const string_map<mapped_type>::key_type &key) {
     if (find(key).isEnd()) {
-        insert(make_pair(key, mapped_type()));
+        insert(value_type(key, mapped_type()));
     }
     return at(key);
 }
 
 template<typename mapped_type>
 mapped_type &string_map<mapped_type>::at(const string_map<mapped_type>::key_type &key) {
-
     int index = 0;
     Nodo *actual = raiz;
     while (index != key.size() && actual->hijos.count(key[index]) != 0) {
@@ -84,9 +90,13 @@ mapped_type &string_map<mapped_type>::at(const string_map<mapped_type>::key_type
 
 template<typename T>
 const T &string_map<T>::at(const string_map<T>::key_type &key) const {
-    /* @corregir(ivan): Resuelven la función at llamando a la función at.
-     * Esto les genera un loop infinito que eventualmente agota los recursos del proceso y provoca un SIGSEV. */
-    return at(key);
+    int index = 0;
+    Nodo *actual = raiz;
+    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
+        actual = actual->hijos[key[index]];
+        index++;
+    }
+    return *(actual->valor);
 }
 
 template<typename T>
@@ -101,10 +111,6 @@ void string_map<T>::clear() {
 template<typename T>
 typename string_map<T>::iterator string_map<T>::begin() {
     auto it = new string_map<T>::iterator(this);
-    /* @comentario(ivan): No hace falta cambiar la clave y valor actual del iterador recién creado.
-     * Según el constructor que hicieron, ya se crea apuntando a la primera clave. */
-    it->claveActual = primeraClave();
-    it->valorActual = &at(it->claveActual);
     return *it;
 }
 
@@ -112,7 +118,6 @@ template<typename T>
 typename string_map<T>::iterator string_map<T>::end() const {
     /* @comentario(ivan): acá podrían usar un constructor vacío como hacen con el cons_iterator (linea 131 de este archivo) */
     auto it = string_map<T>::iterator(this);
-
     it.claveActual = "";
     it.valorActual = nullptr;
     return it;
@@ -121,26 +126,27 @@ typename string_map<T>::iterator string_map<T>::end() const {
 template<typename T>
 typename string_map<T>::const_iterator string_map<T>::cbegin() const {
     auto it = new string_map<T>::const_iterator(this);
+    return *it;
+}
+
+template<typename T>
+typename string_map<T>::const_iterator string_map<T>::cend() const {
+    auto it = new string_map<T>::const_iterator(this);
     it->claveActual = "";
     it->valorActual = nullptr;
     return *it;
 }
 
 template<typename T>
-typename string_map<T>::const_iterator string_map<T>::cend() const {
-    return string_map<T>::const_iterator();
-}
-
-template<typename T>
-typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_type &key) {
-    Nodo *nodoEncontrado = findNodo(key);
+typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_type &key){
+    Nodo* nodoEncontrado = findNodo(key);
     if (nodoEncontrado == nullptr) {
         return end();
     }
     else {
         auto it = string_map<T>::iterator(this);
         it.claveActual = key;
-        /* @corregir(ivan): No actualizan el valor al cual apunta el iterador ? */
+        it.valorActual = &at(it.claveActual);
         return it;
     }
 }
@@ -148,19 +154,15 @@ typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_ty
 template<typename T>
 /* @corregir(ivan): Por qué el algoritmo del find para el string_map const difiere del algoritmo del find para el string_map ? */
 typename string_map<T>::const_iterator string_map<T>::find(const string_map<T>::key_type &key) const {
-    int index = 0;
-    Nodo *actual = raiz;
-    while (index != key.size() && actual->hijos.count(key[index]) != 0) {
-        actual = actual->hijos[key[index]];
-        index++;
+    Nodo *nodoEncontrado = findNodo(key);
+    if (nodoEncontrado == nullptr) {
+        return cend();
     }
-    if (index == key.size() && actual->valor != nullptr) {
+    else {
         auto it = string_map<T>::const_iterator(this);
         it.claveActual = key;
-        /* @corregir(ivan): No actualizan el valor al cual apunta el iterador ? */
+        it.valorActual = &at(it.claveActual);
         return it;
-    } else {
-        return this->cend();
     }
 }
 
@@ -228,6 +230,14 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
         }
     }
     return elementosEliminados;
+}
+
+template <typename T>
+typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) {
+    auto clave = pos.claveActual;
+    ++pos;
+    erase(clave);
+    return pos;
 }
 
 template<typename T>
@@ -358,25 +368,9 @@ vector<typename string_map<T>::Nodo *> string_map<T>::getBranch(string key) cons
 }
 template <typename T>
 bool string_map<T>::operator!=(const string_map<T> &otro) const {
-    if (this->size() != otro.size()) {
-        return true;
-    } else {
-        for (auto s : otro) {
-            if (this->count(s.first) == 0) {
-                return true;
-            }
-        }
-    }
     return !(*this == otro); /* @corregir(ivan): Si van a hacer esto al final, hubieran dejado sólo esta linea. */
 }
 
-template <typename T>
-typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) {
-    auto clave = pos.claveActual;
-    ++pos;
-    erase(clave);
-    return pos;
-}
 
 /////////////////////  empieza iterator /////////////////////
 /* @comentario(ivan): Queda mejor si lo definen en otro archivo. Este ya es largo :) */
@@ -392,7 +386,7 @@ string_map<T>::iterator::iterator(const string_map *mapa) {
 
 template<typename T>
 typename string_map<T>::iterator::value_type string_map<T>::iterator::operator*() {
-    value_type pair = make_pair(getClave(), *valorActual);
+    value_type pair = value_type(getClave(), *valorActual);
     return pair;
 }
 
@@ -445,7 +439,7 @@ bool string_map<T>::iterator::operator!=(const string_map<T>::iterator &o_it){
 
 template<typename T>
 typename string_map<T>::const_iterator::value_type string_map<T>::const_iterator::operator*() {
-    value_type pair = make_pair(claveActual, *valorActual);
+    value_type pair = value_type(getClave(), *valorActual);
     return pair;
 }
 
@@ -496,5 +490,5 @@ bool string_map<T>::const_iterator::operator==(typename string_map<T>::const_ite
 
 template<typename T>
 bool string_map<T>::const_iterator::operator!=(typename string_map<T>::const_iterator &o_it) {
-    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));;
+    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));
 }

@@ -18,7 +18,7 @@ pair<typename linear_map<K, S>::iterator, bool>
       if (it->first == v.first) {
         it->second = v.second;
         return make_pair(it, false);
-      } 
+      }
     }
     auto it = _elems.insert(_elems.end(), v);
     return make_pair(it, true); 
