@@ -7,7 +7,7 @@
 #include "linear_set.h"
 #include "linear_map.h"
 
-#include "string_map.cpp"
+#include "string_map.h"
 using namespace std;
 
 /**

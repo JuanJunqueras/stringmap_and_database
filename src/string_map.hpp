@@ -53,6 +53,7 @@ bool string_map<T>::operator==(const string_map<T> &otro) const {
             if (otro.at(parOtro.first) != this->at(parOtro.first)){ /* @comentario(ivan): O(S + cmp(T)) */
                 return false;
             }
+        ++itOtro;
         }
     }
     return true;
@@ -114,10 +115,13 @@ typename string_map<T>::iterator string_map<T>::begin() {
     return *it;
 }
 
+
+
+
 template<typename T>
-typename string_map<T>::iterator string_map<T>::end() const {
+typename string_map<T>::const_iterator string_map<T>::end() const {
     /* @comentario(ivan): acá podrían usar un constructor vacío como hacen con el cons_iterator (linea 131 de este archivo) */
-    auto it = string_map<T>::iterator(this);
+    auto it = string_map<T>::const_iterator(this);
     it.claveActual = "";
     it.valorActual = nullptr;
     return it;
@@ -325,6 +329,7 @@ string string_map<T>::siguienteClave(string claveActual) const {
 
                     it++;
                 }
+                if(it==raiz->hijos.end()){return "";}
                 clave = "";
                 clave += it->first;
                 nodoActual = raiz->hijos[it->first];
@@ -335,6 +340,7 @@ string string_map<T>::siguienteClave(string claveActual) const {
             }
         }
         return clave;
+        // ¯\_(ツ)_/¯
     }
 }
 
@@ -371,9 +377,22 @@ bool string_map<T>::operator!=(const string_map<T> &otro) const {
     return !(*this == otro); /* @corregir(ivan): Si van a hacer esto al final, hubieran dejado sólo esta linea. */
 }
 
+template <typename T>
+typename string_map<T>::iterator string_map<T>::end() {
+    auto it = string_map<T>::iterator(this);
+    it.claveActual = "";
+    it.valorActual = nullptr;
+    return it;
+}
+template <typename T>
+typename string_map<T>::const_iterator string_map<T>::begin() const {
+    auto it = new string_map<T>::const_iterator(this);
+    return *it;
+}
+
 
 /////////////////////  empieza iterator /////////////////////
-/* @comentario(ivan): Queda mejor si lo definen en otro archivo. Este ya es largo :) */
+/* @comentario(ivan): Queda mejor si lo definen en otro archivo. Este ya es largo :( */
 
 template<typename T>
 string_map<T>::iterator::iterator(const string_map *mapa) {
@@ -426,13 +445,13 @@ void string_map<T>::iterator::setClave(string_map::key_type key) {
 
 
 template<typename T>
-bool string_map<T>::iterator::operator==(const string_map<T>::iterator &o_it){
+bool string_map<T>::iterator::operator==(const string_map<T>::iterator &o_it) const{
     return (o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual);
 }
 
 template<typename T>
-bool string_map<T>::iterator::operator!=(const string_map<T>::iterator &o_it){
-    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));
+bool string_map<T>::iterator::operator!=(const string_map<T>::iterator &o_it) const{
+    return not( *this==o_it  );
 }
 
 /////////////////////  empieza const_iterator /////////////////////
@@ -484,11 +503,11 @@ typename string_map<T>::const_iterator &string_map<T>::const_iterator::operator+
 }
 
 template<typename T>
-bool string_map<T>::const_iterator::operator==(typename string_map<T>::const_iterator &o_it) {
+bool string_map<T>::const_iterator::operator==(const typename string_map<T>::const_iterator &o_it)const {
     return (o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual);
 }
 
 template<typename T>
-bool string_map<T>::const_iterator::operator!=(typename string_map<T>::const_iterator &o_it) {
-    return not((o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual));
+bool string_map<T>::const_iterator::operator!=(const typename string_map<T>::const_iterator &o_it) const{
+    return not( *this==o_it );
 }

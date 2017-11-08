@@ -51,8 +51,8 @@ public:
         value_type operator*();
         value_type* operator->();
         iterator& operator++();
-        bool operator!=(const iterator& o_it);
-        bool operator==(const iterator& o_it);
+        bool operator!=(const iterator& o_it) const;
+        bool operator==(const iterator& o_it) const;
         bool isEnd();
 
     };
@@ -76,8 +76,8 @@ public:
             value_type operator*();
             value_type* operator->();
             const_iterator& operator++();
-            bool operator!=(const_iterator &o_it);
-            bool operator==(const_iterator &o_it);
+            bool operator!=(const const_iterator &o_it) const;
+            bool operator==(const const_iterator &o_it) const;
 
         bool isEnd();
 
@@ -228,7 +228,8 @@ public:
      *  \complexity{\O(S)}
      */
    iterator begin();
-
+   iterator end();
+   const_iterator begin() const;
     /** @brief iterador al fin de la coleccion
      *
      * \pre true
@@ -237,7 +238,7 @@ public:
      *
      *  \complexity{\O(S)}
      */
-   iterator end() const;
+   const_iterator end() const;
 
     /// Versiones const de begin/end
 
@@ -346,5 +347,6 @@ private:
     vector<Nodo*> getBranch(string key)const;
 };
 
+#include "string_map.hpp"
 
 #endif //STRING_MAP_STRING_MAP_H
