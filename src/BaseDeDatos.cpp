@@ -176,7 +176,6 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
 
   string tabla_principal = tabla1;
   string tabla_con_indice = tabla2;
-  set<Tabla::const_iterador_registros> registros_tabla_2;
 
   // Chequeamos si efectivamente la tabla2 tiene indice
   // Si no lo tiene, por precondicion sabemos que tabla1 tiene indice
