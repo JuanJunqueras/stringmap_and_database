@@ -2,8 +2,6 @@
 #include "string_map.h"
 #include <iostream>
 
-
-
 template<typename T>
 string_map<T>::string_map() {
     raiz = new Nodo(nullptr);
@@ -204,7 +202,6 @@ pair<typename string_map<T>::iterator, bool> string_map<T>::insert(const string_
 template<typename T>
 typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_type &key) {
     int index = 0;
-    size_type elementosEliminados = 0;
     Nodo *actual = raiz;
     stack<Nodo *> nodosRecorridos;
     while (index != key.size() && actual->hijos.count(key[index])!=0 ) {//Lo busca
@@ -212,8 +209,8 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
         nodosRecorridos.push(actual);
         index++;
     }
-    if(actual->hijos.count(key[index])==0){
-        return 0; //el numero es cuantos borramos. Esto significa que la clave no esta definida.
+    if(index != key.size()){//Si salio del ciclo antes de encontrar la clave
+        return 0;//No borra nada y devuelve 0.
     }
     nodosRecorridos.pop(); /* @comentario(ivan): Quito del stack el nodo que contiene el significado de la clave
     * Queda como primer nodo en el stack el padre del nodo actual.*/
@@ -228,11 +225,15 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
             if (actual->hijos.size() == 1) {//Si ese nodo solo existía para formar la clave que borré...
                 delete actual;//...lo borra también...
             }
-            actual->hijos.erase(key[index]);//... y sino le saca el hijo correspondiente...
+            else {
+                actual->hijos.erase(key[index]);//... y sino le saca el hijo correspondiente...
+            }
             index--;//... iterando en reversa por la clave.
         }
+        raiz->hijos.erase(key[index]);
+
     }
-    return elementosEliminados;
+    return 1;
 }
 
 template <typename T>
@@ -517,3 +518,4 @@ template<typename T>
 bool string_map<T>::const_iterator::operator!=(const typename string_map<T>::const_iterator &o_it) const{
     return not( *this==o_it );
 }
+
