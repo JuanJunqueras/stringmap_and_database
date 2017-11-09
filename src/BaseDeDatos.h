@@ -221,7 +221,7 @@ private:
 
 
     /** @{ */
-    linear_set<string> _nombres_tablas;
+    linear_set<string> _nombres_tablas;  //FIXME: documentar todas éstas funciones.
     string_map<Tabla> _tablas;
     linear_map<Criterio, int> _uso_criterios;
     string_map<string_map<Indice>> indices;
