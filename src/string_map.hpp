@@ -21,7 +21,6 @@ string_map<T>::string_map(const string_map & other) {
     _cantidadDeClaves = 0;
     auto it = other.cbegin();
     while (!it.isEnd()){
-        cout << "algo nuevo" << endl;
         insert(*it);
         ++it;
     }
@@ -29,11 +28,11 @@ string_map<T>::string_map(const string_map & other) {
 
 template<typename T>
 string_map<T>& string_map<T>::operator=(const string_map &otro)  {
-    this->clear();
-    auto it = iterator(&otro);
-    while (!it.isEnd()){ /* @comentario(ivan): O(sn) */
+    this->clear(); //el problema esta aca
+    auto it = otro.cbegin();
+    while (!it.isEnd()){
         auto aInsertar = *it;
-        this->insert(aInsertar); /* @comentario(ivan): O(S + copy(value_type)) */
+        this->insert(aInsertar);
         ++it;
     }
     return *this;
@@ -208,10 +207,13 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
     size_type elementosEliminados = 0;
     Nodo *actual = raiz;
     stack<Nodo *> nodosRecorridos;
-    while (index != key.size()) {//Lo busca
+    while (index != key.size() && actual->hijos.count(key[index])!=0 ) {//Lo busca
         actual = actual->hijos[key[index]];
         nodosRecorridos.push(actual);
         index++;
+    }
+    if(actual->hijos.count(key[index])==0){
+        return 0; //el numero es cuantos borramos. Esto significa que la clave no esta definida.
     }
     nodosRecorridos.pop(); /* @comentario(ivan): Quito del stack el nodo que contiene el significado de la clave
     * Queda como primer nodo en el stack el padre del nodo actual.*/
@@ -220,16 +222,13 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
     if (actual->hijos.empty()) {//Si no era prefijo de otra clave...
         delete actual;
         this->_cantidadDeClaves--;
-        elementosEliminados++;
         while (!nodosRecorridos.empty()) {
             actual = nodosRecorridos.top();//Recorre hacia atrás
             nodosRecorridos.pop();
             if (actual->hijos.size() == 1) {//Si ese nodo solo existía para formar la clave que borré...
                 delete actual;//...lo borra también...
-                elementosEliminados++;
-            } else {
-                actual->hijos.erase(key[index]);//... y sino le saca el hijo correspondiente...
             }
+            actual->hijos.erase(key[index]);//... y sino le saca el hijo correspondiente...
             index--;//... iterando en reversa por la clave.
         }
     }
@@ -271,6 +270,7 @@ string string_map<T>::primeraClave() const {
 template<typename T>
 string string_map<T>::siguienteClave(string claveActual) const {
     Nodo *nodoActual = findNodo(claveActual);
+    if(nodoActual== nullptr){return "";}
     std::string clave = claveActual;
     if (nodoActual->hijos.size() > 0) { //la clave actual es substring de la siguiente.
         bool primeraVez = true;
@@ -397,8 +397,10 @@ typename string_map<T>::const_iterator string_map<T>::begin() const {
 template<typename T>
 string_map<T>::iterator::iterator(const string_map *mapa) {
     this->claveActual = mapa->primeraClave(); /* @comentario(ivan): O(S) */
-    if(this->claveActual!=""){
-        this->valorActual = &(mapa->at(claveActual));
+    if(claveActual!= ""){
+        this->valorActual = &mapa->at(claveActual);
+    }else{
+        this->valorActual = nullptr;
     }
     this->mapa = mapa;
 }
@@ -491,7 +493,11 @@ typename string_map<T>::key_type string_map<T>::const_iterator::getClave() {
 template<typename T>
 string_map<T>::const_iterator::const_iterator(const string_map<T> *mapa) {
     this->claveActual = mapa->primeraClave(); /* @comentario(ivan): O(S) */
-    this->valorActual = &mapa->at(claveActual);
+    if(claveActual!= ""){
+        this->valorActual = &mapa->at(claveActual);
+    }else{
+        this->valorActual = nullptr;
+    }
     this->mapa = mapa;
 }
 
