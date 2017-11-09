@@ -8,6 +8,16 @@
 
 using namespace std;
 
+/**
+ * @brief Un indice para una tabla y un campo es un diccionario cuyas claves
+ * son los distintos datos que la tabla contiene en dicho campo y los significados
+ * son los registros que comparten dicho dato en ese campo.
+ *
+ * Un indice permite acceder a registros que tienen el mismo dato en un campo.
+ * Permite saber si un dato pertenece al campo en el cual se creó el índice.
+ *
+ * **se explica con** TAD BaseDeDatos //FIXME: el TAD indice no existe, con que TAD se explica entonces?
+ */
 class BaseDeDatos::Indice {
 
     /* @corregir(ivan): Falta escribir la documentación de este módulo (aunque sea @brief). */
