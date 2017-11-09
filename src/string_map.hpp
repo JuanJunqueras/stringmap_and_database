@@ -209,8 +209,8 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
         nodosRecorridos.push(actual);
         index++;
     }
-    if(index != key.size()){//Si salio del ciclo antes de encontrar la clave
-        return 0;//No borra nada y devuelve 0.
+    if(index != key.size()){//Si salio del ciclo antes de encontrar la clave...
+        return 0;//...no borra nada y devuelve 0.
     }
     nodosRecorridos.pop(); /* @comentario(ivan): Quito del stack el nodo que contiene el significado de la clave
     * Queda como primer nodo en el stack el padre del nodo actual.*/
@@ -220,13 +220,11 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
         delete actual;
         this->_cantidadDeClaves--;
         while (!nodosRecorridos.empty()) {
-            actual = nodosRecorridos.top();//Recorre hacia atrás
+            actual = nodosRecorridos.top();//Recorre hacia atrás...
             nodosRecorridos.pop();
-            if (actual->hijos.size() == 1) {//Si ese nodo solo existía para formar la clave que borré...
+            actual->hijos.erase(key[index]);//... y le saca el hijo correspondiente...
+            if (actual->hijos.empty()) {//Si ese nodo solo existía para formar la clave que borré...
                 delete actual;//...lo borra también...
-            }
-            else {
-                actual->hijos.erase(key[index]);//... y sino le saca el hijo correspondiente...
             }
             index--;//... iterando en reversa por la clave.
         }
@@ -246,7 +244,6 @@ typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) 
 
 template<typename T>
 typename string_map<T>::size_type string_map<T>::count(const string_map<T>::key_type &key) const {
-    auto it = string_map<T>::const_iterator(this); /* @comentario(ivan): Para qué se crea este const_iterator ? */
     if (find(key).isEnd()) {
         return 0;
     } else {
