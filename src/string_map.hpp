@@ -100,9 +100,8 @@ const T &string_map<T>::at(const string_map<T>::key_type &key) const {
 template<typename T>
 void string_map<T>::clear() {
     auto it = this->begin();
-    while (!it.isEnd()){
-        erase(it);
-        ++it;
+    while (it != end()){
+        it = erase(it);
     }
 }
 
@@ -201,45 +200,38 @@ pair<typename string_map<T>::iterator, bool> string_map<T>::insert(const string_
 
 template<typename T>
 typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_type &key) {
-    int index = 0;
-    Nodo *actual = raiz;
-    stack<Nodo *> nodosRecorridos;
-    while (index != key.size() && actual->hijos.count(key[index])!=0 ) {//Lo busca
-        actual = actual->hijos[key[index]];
-        nodosRecorridos.push(actual);
-        index++;
+    string clave = key;
+    Nodo* actual = findNodo(key);
+    auto rama = getBranch(key);
+    if(count(key) == 0){
+        return 0;
     }
-    if(index != key.size()){//Si salio del ciclo antes de encontrar la clave...
-        return 0;//...no borra nada y devuelve 0.
-    }
-    nodosRecorridos.pop(); /* @comentario(ivan): Quito del stack el nodo que contiene el significado de la clave
-    * Queda como primer nodo en el stack el padre del nodo actual.*/
-    index--;
     actual->valor = nullptr;
-    if (actual->hijos.empty()) {//Si no era prefijo de otra clave...
-        delete actual;
-        this->_cantidadDeClaves--;
-        while (!nodosRecorridos.empty()) {
-            actual = nodosRecorridos.top();//Recorre hacia atrás...
-            nodosRecorridos.pop();
-            actual->hijos.erase(key[index]);//... y le saca el hijo correspondiente...
-            if (actual->hijos.empty()) {//Si ese nodo solo existía para formar la clave que borré...
-                delete actual;//...lo borra también...
-            }
-            index--;//... iterando en reversa por la clave.
-        }
-        raiz->hijos.erase(key[index]);
-
+    this->_cantidadDeClaves--;
+    if (!actual->hijos.empty()) {//Si es prefijo de otra clave...
+        return 1;
     }
+    actual = rama.back(); // Ahora actual es el padre
+    rama.pop_back();
+    while (!rama.empty() && actual->hijos.size() <= 1 && actual->valor == nullptr) {
+        actual->hijos.erase(clave.back());
+        if (actual->hijos.empty()){
+            delete actual;
+        }
+        actual = rama.back();
+        rama.pop_back();
+        clave.pop_back();
+    }
+    actual->hijos.erase(clave.back());
     return 1;
 }
 
 template <typename T>
 typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) {
     auto clave = pos.claveActual;
-    ++pos;
+    auto it = ++pos;
     erase(clave);
-    return pos;
+    return it;
 }
 
 template<typename T>
@@ -430,7 +422,12 @@ bool string_map<T>::iterator::isEnd() {
 template<typename T>
 typename string_map<T>::iterator &string_map<T>::iterator::operator++() {
     this->claveActual = this->mapa->siguienteClave(claveActual);
-    this->valorActual = &mapa->at(claveActual);
+    if (claveActual == ""){
+        this->valorActual = nullptr;
+    } else {
+        this->valorActual = &mapa->at(claveActual);
+    }
+    return *this;
 }
 
 template<typename T>
