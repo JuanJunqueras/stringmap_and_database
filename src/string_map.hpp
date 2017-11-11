@@ -234,6 +234,14 @@ typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) 
     return it;
 }
 
+template <typename T>
+typename string_map<T>::iterator string_map<T>::erase(string_map::iterator pos) {
+    auto clave = pos.claveActual;
+    ++pos;
+    erase(clave);
+    return pos;
+}
+
 template<typename T>
 typename string_map<T>::size_type string_map<T>::count(const string_map<T>::key_type &key) const {
     if (find(key).isEnd()) {

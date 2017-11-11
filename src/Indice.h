@@ -8,13 +8,37 @@
 
 using namespace std;
 
+/**
+ * @brief Un indice para una tabla y un campo es un diccionario cuyas claves
+ * son los distintos datos que la tabla contiene en dicho campo y los significados
+ * son los registros que comparten dicho dato en ese campo.
+ *
+ * Un indice permite acceder a registros que tienen el mismo dato en un campo.
+ * Permite saber si un dato pertenece al campo en el cual se creó el índice.
+ *
+ * **se explica con** TAD BaseDeDatos //FIXME: el TAD indice no existe, con que TAD se explica entonces?
+ */
 class BaseDeDatos::Indice {
-
-    /* @corregir(ivan): Falta escribir la documentación de este módulo (aunque sea @brief). */
 
 public:
 
-  // O(L) si dato es string
+    /**
+     * @brief Devuelve una referencia a los registros que tienen .
+     *
+     * @param nombre Nombre identificador de la tabla
+     * @param claves Claves de la tabla a crear
+     * @param campos Campos de la tabla a crear
+     * @param tipos  Tipos para los campos de la tabla a crear
+     *
+     * \pre db = \P{this} \LAND
+     *      \LNOT (nombre \IN tablas(\P{this})) \LAND
+     *      \LAND \LNOT \EMPTYSET?(claves) \LAND
+     *      \FORALL (c: campo) c \IN claves \IMPLICA c \IN campos \LAND
+     *      long(campos) = long(tipos) \LAND sinRepetidos(campos)
+     * \post \P{this} = agregarTabla(nuevaTabla(claves, nuevoRegistro(campos, tipos)), db)
+     *
+     * \complexity{\O(C)}
+     */// O(L) si dato es string
   // O(log(m)) si dato es nat
   // Complejidad: O(max{L,log(m)})
   /* @comentario(ivan): En particular O(max{L, log(m)}) está en O(L + log(m)) */
