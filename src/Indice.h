@@ -30,12 +30,17 @@ public:
      *
      * @param dato Dato de tipo string o nat.
      *
-     * \pre índice = \P{this} \LAND
+     * \pre true
+     *
+     *      índice = \P{this} \LAND
      *      \LNOT (nombre \IN tablas(\P{this})) \LAND
      *      \LAND \LNOT \EMPTYSET?(claves) \LAND
      *      \FORALL (c: campo) c \IN claves \IMPLICA c \IN campos \LAND
      *      long(campos) = long(tipos) \LAND sinRepetidos(campos)
-     * \post \P{this} = agregarTabla(nuevaTabla(claves, nuevoRegistro(campos, tipos)), db)
+     * \post (\forall dato : datos) ( //FIXME LATER THEN
+     *  dato.esString() =>L res = obtener(this.indices_data_string, dato) \LAND
+     *  dato.esNat() =>L res = obtener(this.indices_data_nat, dato)
+     * )
      *
      * \complexity{\O(L + log(m)}
      * O(L) si dato es string
@@ -55,6 +60,14 @@ public:
      * @param dato Dato de tipo string o nat.
      *
      * \pre true
+     * \post { // FIXME LATER AND
+     *( dato.esString() \LAND L res = obtener( this.indices_dato_string,dato)) \LOR
+     *( dato.esNat() \LAND L res = obtener( this.indices_dato_nat,dato))
+     *
+     *
+     * }
+     *
+     *
      * \complexity{\O(L + log(m)}
      * O(L) si dato es string
      * O(log(m)) si dato es nat
@@ -85,9 +98,10 @@ private:
      * abs: no hay abs, pues no hay TAD de la clase índice para compararlo. FIXME: chequear
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /** @{ */
     string_map<set<Tabla::const_iterador_registros>> indices_dato_string;
     map<int, set<Tabla::const_iterador_registros>> indices_dato_nat;
+    /** @} */
 };
 
 
