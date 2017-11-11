@@ -20,3 +20,8 @@ CMakeCache.txt
 correrTests
 tests/google-test/libgtest.a
 tests/google-test/libgtest_main.a
+
+## Other
+docs/.DS_STORE
+html/
+latex/

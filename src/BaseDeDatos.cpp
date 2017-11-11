@@ -1,5 +1,6 @@
 #include "BaseDeDatos.h"
 #include "Indice.h"
+#include "join_iterator.h"
 
 BaseDeDatos::BaseDeDatos(){};
 
@@ -15,16 +16,15 @@ void BaseDeDatos::crearTabla(const string &nombre,
 void BaseDeDatos::agregarRegistro(const Registro &r, const string &nombre) {
 
   Tabla &t = _tablas.at(nombre); // O(1)
-  Tabla::const_iterador_registros reg = t.agregarRegistro(r);
+  Tabla::const_iterador_registros reg = t.agregarRegistro(r); // O(copy(registro))
 
-  // Agregar el índice en O(C * (L + log(m)))
   auto t_campos_indices = indices.find(nombre); // O(1) (pues largo de claves acotado)
   if (!t_campos_indices.isEnd()) {
 
     // Iteramos sobre los índices de la tabla (en el peor caso todos los campos tienen índice y hacemos C iteraciones)
-    for (auto it_campos = (*t_campos_indices).second.cbegin(); !it_campos.isEnd(); ++it_campos) {
+    for (auto it_campos = (*t_campos_indices).second.cbegin(); !it_campos.isEnd(); ++it_campos) { // O(C)
       auto dato = r.dato(it_campos.getClave());
-      Indice indice = (*it_campos).second; // O(1)
+      Indice indice = (*it_campos).second;
       auto registros = indice.registros(dato); // O(max{L,log(m)})
       registros.insert(reg); // O(log(m))
     }
@@ -170,4 +170,44 @@ void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
   }
 
   indices[nombre][campo] = indice; // O(copy(Indice)) /* @corregir(ivan): Este copy(Indice) hace que no cierre la complejidad. */
+}
+
+join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, const string &campo) const {
+
+  string tabla_principal = tabla1;
+  string tabla_con_indice = tabla2;
+
+  // Chequeamos si efectivamente la tabla2 tiene indice
+  // Si no lo tiene, por precondicion sabemos que tabla1 tiene indice
+  if (indices.find(tabla_con_indice).isEnd()) {
+    tabla_principal = tabla2;
+    tabla_con_indice = tabla1;
+  }
+
+  const Tabla &tabla = this->dameTabla(tabla_principal);
+  Indice indice = indices.at(tabla_con_indice).at(campo);
+
+  // Declaramos iterador de tabla principal y variable para almacenar los conjuntos de registros del indice
+  set<Tabla::const_iterador_registros> registros_en_indice;
+  auto it_registros_tabla_principal = tabla.registros_begin();
+  auto it_registros_tabla_principal_end = tabla.registros_end();
+
+  // Iteramos sobre tabla principal, buscando el primer match con registro del indice
+  bool match = false;
+  while (!match && it_registros_tabla_principal != it_registros_tabla_principal_end) {
+    auto dato = (*it_registros_tabla_principal).dato(campo);
+    if (indice.existe(dato)) {
+      registros_en_indice = indice.registros(dato);
+      match = true;
+    }
+    ++it_registros_tabla_principal;
+  }
+
+  join_iterator join_it(it_registros_tabla_principal,
+                        it_registros_tabla_principal_end,
+                        registros_en_indice.begin(),
+                        registros_en_indice.end()
+  );
+
+  return join_it;
 }
