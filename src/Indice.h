@@ -38,12 +38,23 @@ public:
      * \post \P{this} = agregarTabla(nuevaTabla(claves, nuevoRegistro(campos, tipos)), db)
      *
      * \complexity{\O(C)}
-     */// O(L) si dato es string
+     */
+
+  // O(L) si dato es string
   // O(log(m)) si dato es nat
   // Complejidad: O(max{L,log(m)})
   /* @comentario(ivan): En particular O(max{L, log(m)}) está en O(L + log(m)) */
   set<Tabla::const_iterador_registros> &registros(const Dato &dato) {
     return dato.esString() ? indices_dato_string[dato.valorStr()] : indices_dato_nat[dato.valorNat()];
+  }
+
+  void agregarRegistro(const string &campo, Tabla::const_iterador_registros it_reg) {
+      Dato dato = (*it_reg).dato(campo);
+      if (dato.esString()) {
+          indices_dato_string[dato.valorStr()].insert(it_reg);
+      } else {
+          indices_dato_nat[dato.valorNat()].insert(it_reg);
+      }
   }
 
   bool existe(const Dato &dato) {

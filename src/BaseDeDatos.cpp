@@ -158,18 +158,10 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
 
 /* @corregir(ivan): No cumple con la complejidad pedida. */
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
-
-  /* @comentario(ivan): La operación dameTabla ya es O(1) como la tienen implementada ahora. Se ve por qué ? */
-  Tabla t = this->dameTabla(nombre); // O(T) (TODO: convertir a esta operación en O(1))
-  Indice indice; // O(1)
-
+  Tabla t = this->dameTabla(nombre); // O(1)
   for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg){ // O(m)
-    auto dato = (*it_reg).dato(campo);
-    auto registros = indice.registros(dato); // O(L) /* @comentario(ivan): Esta complejidad no es lo que dice la documentación de la función registros (Inidice.h:17) */
-    registros.insert(it_reg); // O(log(m))
+    indices[nombre][campo].agregarRegistro(campo, it_reg); // TODO: revisar complejidad
   }
-
-  indices[nombre][campo] = indice; // O(copy(Indice)) /* @corregir(ivan): Este copy(Indice) hace que no cierre la complejidad. */
 }
 
 join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, const string &campo) const {
