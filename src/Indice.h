@@ -50,8 +50,14 @@ public:
   set<Tabla::const_iterador_registros> &registros(const Dato &dato) {
     return dato.esString() ? indices_dato_string[dato.valorStr()] : indices_dato_nat[dato.valorNat()];
   }
+    /**
+   * @brief Permite agregar un registro a un índice
+   *
+   * @param &campo Dato de tipo string.
+   *
+   **/
 
-  void agregarRegistro(const string &campo, Tabla::const_iterador_registros it_reg) {
+    void agregarRegistro(const string &campo, Tabla::const_iterador_registros it_reg) {
       Dato dato = (*it_reg).dato(campo);
       if (dato.esString()) {
           indices_dato_string[dato.valorStr()].insert(it_reg);
@@ -71,10 +77,6 @@ public:
    * \post { // FIXME LATER AND
    *( dato.esString() \LAND L res = obtener( this.indices_dato_string,dato)) \LOR
    *( dato.esNat() \LAND L res = obtener( this.indices_dato_nat,dato))
-   *
-   *
-   * }
-   *
    *
    * \complexity{\O(L + log(m)}
    * O(L) si dato es string
