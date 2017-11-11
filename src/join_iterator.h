@@ -48,7 +48,7 @@ public:
         // Agregamos campos y datos del segundo registro, si estos no están ya en el primero
         const linear_set<string> &campos_r2 = r2.campos();
         for (const string &campo_r2 : campos_r2) { // O(C)
-            if (campos_r1.find(campo_r2) != campos_r1.end()) { // O(C)
+            if (r1.pertenece(campo_r2)) { // O(1)
                 campos_registro_join.push_back(campo_r2); // O(1)
                 datos_registro_join.push_back(r2.dato(campo_r2)); // O(1)
             }

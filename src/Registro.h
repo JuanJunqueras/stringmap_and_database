@@ -56,6 +56,18 @@ public:
      */
     const linear_set<string>& campos() const;
 
+    /**
+     * @brief Verifica si un campo pertenece al registro
+     *
+     *
+     * \pre true
+     * \post \P{res} = campos \in campos(\P{this})
+     *
+     * \complexity{\O(1)}
+     */
+    bool pertenece(const string &campo) const;
+
+
 private:
 	  ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación

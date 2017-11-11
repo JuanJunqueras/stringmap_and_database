@@ -10,7 +10,6 @@ Registro::Registro(const vector<string>& campos, const vector<Dato>& datos) :
         }
 };
 
-
 const Dato& Registro::dato(const string& campo) const {
     return _datos.at(campo);
 }
@@ -18,6 +17,11 @@ const Dato& Registro::dato(const string& campo) const {
 const linear_set<string>& Registro::campos() const {
     return _campos;
 }
+
+bool Registro::pertenece(const string &campo) const {
+    return _datos.count(campo) == 1;
+}
+
 
 bool operator==(const Registro& r1, const Registro& r2) {
     linear_set<string> c1 = r1.campos();
