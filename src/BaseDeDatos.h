@@ -19,9 +19,10 @@ using namespace std;
  * búsqueda.
  *
  * Una base de datos permite administrar tablas identificadas por registro.
- * Permite saber si se puede agegar un registro a una tabla y luego agregarlo.
+ * Permite saber si se puede agregar un registro a una tabla y luego agregarlo.
  * Permite realizar filtros del contenido de tablas mediante criterios de
- * búsqueda. Además mantiene estadísticas del uso de los criterios.
+ * búsqueda. Además mantiene estadísticas del uso de los criterios,
+ * permite crear un indice para un determinado campo y hacer join entre tablas.
  *
  * **se explica con** TAD BaseDeDatos
  */
@@ -125,7 +126,8 @@ public:
    * \pre nombre \IN tablas(\P{this})
    * \post \P{res} = puedoInsertar?(r, dameTabla(nombre, \P{this}))
    *
-   * \complexity{\O(T + C^2 + (c * C + c * n * (C + L)))}
+   * \complexity{\O(T + C^2 + (c * C + c * n * (C + L)))}  //FIXME: chequear si ya tenemos la complejidad requerida o hay que modificar la función
+   * //expected O(C + (c ∗ n ∗ L))
    */
   bool registroValido(const Registro &r, const string &nombre) const;
 

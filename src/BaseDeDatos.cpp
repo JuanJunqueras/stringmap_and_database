@@ -48,10 +48,10 @@ int BaseDeDatos::uso_criterio(const BaseDeDatos::Criterio &criterio) const {
 /* @corregir(ivan): No cumple la complejidad pedida. */
 bool BaseDeDatos::registroValido(const Registro &r,
                                  const string &nombre) const {
-  const Tabla &t = _tablas.at(nombre);
+  const Tabla &t = _tablas.at(nombre); // O(1) por nombre acotado.
 
-  return (t.campos() == r.campos() and _mismos_tipos(r, t) and
-          _no_repite(r, t)); // O(C^2 + C + n + c*n*cmp(T))
+  return (t.campos() == r.campos() and _mismos_tipos(r, t) and // O(C)
+          _no_repite(r, t)); // O(C + C*n*c )
 }
 
 bool BaseDeDatos::_mismos_tipos(const Registro &r, const Tabla &t) const {
