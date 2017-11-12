@@ -9,9 +9,8 @@ TEST(string_map_test, test_constructor) {
     string_map<string_map<string> > m4;
 
 }
+
 TEST(string_map_test, test_insercion) {
-
-
     string_map<int> m1;
     EXPECT_EQ(m1.size(),0);
     m1.insert(pair<string, int>("strikingLoo", 1));
@@ -28,6 +27,7 @@ TEST(string_map_test, test_insercion) {
     m1["alberto"] = 7;
     EXPECT_EQ(m1.at("alberto"),7);
 }
+
 TEST(string_map_test, test_corchetes){
     string_map<int> m1;
     m1["pablo"] = 4;
@@ -35,6 +35,7 @@ TEST(string_map_test, test_corchetes){
     m1["alberto"] = 7;
     EXPECT_EQ(m1.at("alberto"),7);
 }
+
 TEST(string_map_test, test_clave_iterador){
     string_map<int> m1;
     m1["pablo"] = 4;
@@ -72,7 +73,6 @@ TEST(string_map_test, test_asterisco){
     string_map<int> m1;
     m1["pablorrr"] = 4;
     auto begin = m1.begin();
-    //cout << "wtv" << endl;
     string_map<int>::iterator::value_type pair = (*begin);
     ASSERT_EQ(pair.first,"pablorrr");
     ASSERT_EQ(pair.second,4);

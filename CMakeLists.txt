@@ -16,7 +16,7 @@ add_subdirectory(tests/google-test)
 
 
 # Creamos el ejecutable para correr los tests
-add_executable(correrTests ${TEST_SOURCES} ${SOURCE_FILES} src/Indice.h src/join_iterator.h)
+add_executable(correrTests ${TEST_SOURCES} ${SOURCE_FILES} src/Indice.h src/join_iterator.h src/string_set.h)
 
 # Creamos el ejecutable para correr los tests
 add_executable(correrTests_sol ${TEST_SOURCES} ${SOURCE_FILES} src/Indice.h src/join_iterator.h)
