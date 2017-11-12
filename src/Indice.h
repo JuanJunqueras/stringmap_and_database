@@ -78,10 +78,10 @@ public:
    *( dato.esString() \LAND L res = obtener( this.indices_dato_string,dato)) \LOR
    *( dato.esNat() \LAND L res = obtener( this.indices_dato_nat,dato))
    *
-   * \complexity{\O(L + log(m)}
    * O(L) si dato es string
    * O(log(m)) si dato es nat
-   * Complejidad: O(max{L,log(m)}) = O(L + log(m))
+   * Complejidad: O(max{L,log(m)}) = O(L + log(m)) //FIXME: acá hay un problema porque tenemos la complejidad en complexity y acá
+   * \complexity{\O(L + log(m)}
    **/
 
   bool existe(const Dato &dato) {

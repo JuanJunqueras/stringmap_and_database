@@ -59,7 +59,16 @@ public:
             it_registros_tabla_con_indice(it_registros_tabla_con_indice),
             it_registros_tabla_con_indice_end(it_registros_tabla_con_indice_end)
     { }
-
+    /**
+   * @brief Desreferencia los registros a los que apuntan los punteros
+   * y devuelve un registro por referencia.
+   *
+   *
+   * \pre true //FIXME: chequear
+   * \post { // FIXME terminar
+   *
+   * \complexity{\O(copy(Registro))}
+   **/
     Registro& operator*() {
 
         // O(1)
@@ -84,7 +93,7 @@ public:
             }
         }
 
-        Registro registro_join = Registro(campos_registro_join, datos_registro_join); // O(C * copy(Dato)) = O(C)
+        Registro registro_join = Registro(campos_registro_join, datos_registro_join); // O(C * copy(Dato)) = O(C) = O(copy(Registro))
         return registro_join;
     }
 };
