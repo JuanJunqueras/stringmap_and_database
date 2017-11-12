@@ -57,7 +57,7 @@ public:
    *
    **/
 
-    void agregarRegistro(const string &campo, Tabla::const_iterador_registros it_reg) {
+    void agregarRegistro(const string &campo, Tabla::const_iterador_registros it_reg) { //FIXME: documentar
       Dato dato = (*it_reg).dato(campo);
       if (dato.esString()) {
           indices_dato_string[dato.valorStr()].insert(it_reg);

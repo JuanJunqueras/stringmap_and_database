@@ -8,9 +8,39 @@
 #include <set>
 #include "Tabla.h"
 
+/**
+ * @brief Un join_iterator es un iterador que nos permite movernos entre dos tablas
+ * a las cualse se les aplicó la función join.
+ *
+ * Una join_iterator permite generar un iterarador entre dos tablas.
+ * Permite avanzar el iterador.
+ * Permite desreferenciar devolviendo un regitro compuesto por el contenido de ambos punteros.
+ *
+ * **se explica con** TAD BaseDeDatos  //FIXME: chequear
+ */
 class join_iterator {
 
 private:
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    /** \name Representación
+     * rep: join_iterator \TO bool\n
+     * rep(ji) \EQUIV
+     *
+     * siendo: it_registros_tabla_principal = 1
+     *         it_registros_tabla_principal_end = 2
+     *         it_registros_tabla_con_indice = 3
+     *         it_registros_tabla_con_indice_end = 4
+     *         Lo que se me ocurre del rep por ahora es:
+     *         1 != 2
+     *         2 != 4
+     *         Si 1 = 2 entonces 3 = 4
+     *         Si 3 != 4 entonces 1 != 2
+     *
+     *
+     * abs: no hay abs, pues no hay TAD de la clase índice para compararlo. FIXME: chequear
+     */
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
         Tabla::const_iterador_registros it_registros_tabla_principal;
         Tabla::const_iterador_registros it_registros_tabla_principal_end;
         set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice;
