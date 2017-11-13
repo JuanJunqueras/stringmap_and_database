@@ -65,7 +65,8 @@ public:
    *
    *
    * \pre true //FIXME: chequear toda esta docu
-   * \post (\forall dato : datos)(dato\ISIN this* \rArr (dato\ISIN r1 \LOR dato\ISIN r2)) *
+   * \post (\forall dato : datos)(dato\ISIN this* \rArr (dato\ISIN r1 \LOR dato\ISIN r2))
+   //FIXME: opcion 2 :*\post (\forall dato : datos)(obtener(this*,dato)\RARR (dato \ISIN r1  \LOR dato \ISIN r2)
    * \complexity{\O(copy(Registro))}//FIXME: chequear
    **/
     Registro& operator*() {
