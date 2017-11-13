@@ -27,7 +27,7 @@ private:
      * rep: join_iterator \TO bool\n
      * rep(ji) \EQUIV
      *
-     * siendo: it_registros_tabla_principal = 1
+     * siendo: it_registros_tabla_principal = 1  //FIXME: escribir formalmente
      *         it_registros_tabla_principal_end = 2
      *         it_registros_tabla_con_indice = 3
      *         it_registros_tabla_con_indice_end = 4

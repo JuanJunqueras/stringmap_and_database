@@ -45,7 +45,7 @@ int BaseDeDatos::uso_criterio(const BaseDeDatos::Criterio &criterio) const {
   }
 }
 
-/* @corregir(ivan): No cumple la complejidad pedida. */
+//FIXME: consultar: /* @corregir(ivan): No cumple la complejidad pedida. */
 bool BaseDeDatos::registroValido(const Registro &r,
                                  const string &nombre) const {
   const Tabla &t = _tablas.at(nombre); // O(1) por nombre acotado.
@@ -111,7 +111,7 @@ pair<vector<string>, vector<Dato> > BaseDeDatos::_tipos_tabla(const Tabla &t) {
   return make_pair(res_campos, res_tipos);
 }
 
-/* @corregir(ivan): No cumple con la complejidad pedida. */
+//FIXME: consultar:/* @corregir(ivan): No cumple con la complejidad pedida. */
 bool BaseDeDatos::criterioValido(const Criterio &c,
                                  const string &nombre) const {
   const Tabla &t = _tablas.at(nombre);
@@ -164,7 +164,8 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
   return ret;
 }
 
-/* @corregir(ivan): No cumple con la complejidad pedida. */
+
+//FIXME: consultar: /* @corregir(ivan): No cumple con la complejidad pedida. */
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
   Tabla t = this->dameTabla(nombre); // O(1)
   for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg){ // O(m)

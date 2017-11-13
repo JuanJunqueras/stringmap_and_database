@@ -37,7 +37,7 @@ bool operator==(const Registro& r1, const Registro& r2) {
     return true;
 }
 
-/* @corregir(ivan): Lo comentaron por alguna razón ? */
+//FIXME:/* @corregir(ivan): Lo comentaron por alguna razón ? */
 //ostream &operator<<(ostream &os, const Registro &r) {
 //  os << r._datos;
 //  return os;

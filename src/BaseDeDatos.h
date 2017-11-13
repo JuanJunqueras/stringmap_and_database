@@ -184,7 +184,7 @@ public:
     void crearIndice(const string &nombre, const string &campo);
 
     /**
-     * TODO: actualizar documentación del método
+     * //FIXME: TODO: actualizar documentación del método
      * @brief Crea un join entre las dos tablas
      *
      * @param nombre Nombre de la tabla
