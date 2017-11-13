@@ -8,8 +8,8 @@ Tabla::Tabla(const linear_set<string> &claves,
              const vector<Dato> &tipos) 
     : _claves(claves) {
         for (int i = 0; i < campos.size(); i++) {
-            _tipos.fast_insert(make_pair(campos[i], tipos[i]));
-            _campos.fast_insert(campos[i]);
+            _tipos.insert(make_pair(campos[i], tipos[i]));
+            _campos.insert(campos[i]);
         }
 }
 
@@ -18,7 +18,7 @@ Tabla::const_iterador_registros Tabla::agregarRegistro(const Registro& r) {
         linear_set<Registro>::const_iterator(_registros.fast_insert(r)));
 }
 
-const linear_set<string>& Tabla::campos() const {
+const string_set& Tabla::campos() const {
     return _campos;
 }
 
@@ -52,8 +52,7 @@ bool operator==(const Tabla& t1, const Tabla& t2) {
     } else if (not (t1.claves() == t2.claves())) {
         return false;
     } else {
-        linear_set<string> cs = t1.campos();
-        for (auto c : cs) {
+        for (auto c : t1.campos()) {
             if (t1.tipoCampo(c).esNat() != t2.tipoCampo(c).esNat()) {
                 return false;
             }

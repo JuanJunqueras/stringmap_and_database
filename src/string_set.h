@@ -1,11 +1,12 @@
-#ifndef STRING_SET_STRING_SET_H
-#define STRING_SET_STRING_SET_H
+#ifndef STRING_SET_H
+#define STRING_SET_H
 
 #include <cassert>
 #include <string>
 #include <vector>
 #include <stack>
 #include <map>
+#include "linear_set.h"
 
 using namespace std;
 
@@ -108,6 +109,15 @@ public:
      * \complexity{\O(sn * S)}
      */
     string_set(const string_set &);
+
+    /** @brief Constructor desde linear_set
+     *
+     * \pre true
+     * \post res = @param
+     *
+     * \complexity{\O(sn * S)}
+     */
+    string_set(const linear_set<string> &);
 
     /** @brief Operador de asignacion
      *
@@ -304,6 +314,5 @@ private:
     vector<Nodo*> getBranch(string key)const;
 };
 
-#include "string_set.hpp"
 
 #endif //STRING_SET_STRING_SET_H

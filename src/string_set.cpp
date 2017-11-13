@@ -13,13 +13,21 @@ string_set::~string_set() {
 }
 
 
-string_set::string_set(const string_set & other) {
+string_set::string_set(const string_set& other) {
     raiz = new Nodo();
     _cantidadDeElementos = 0;
     auto it = other.cbegin();
     while (!it.isEnd()){
         insert(*it);
         ++it;
+    }
+}
+
+string_set::string_set(const linear_set<string>& other){
+    raiz = new Nodo();
+    _cantidadDeElementos = 0;
+    for (auto s : other){
+        insert(s);
     }
 }
 

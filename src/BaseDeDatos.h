@@ -12,6 +12,7 @@
 #include "linear_set.h"
 #include "join_iterator.h"
 #include "utils.h"
+#include "string_set.h"
 using namespace std;
 
 /**

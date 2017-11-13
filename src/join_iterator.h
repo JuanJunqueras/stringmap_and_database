@@ -78,14 +78,14 @@ public:
         vector<Dato> datos_registro_join;
 
         // Agregamos campos y datos del primer registro
-        const linear_set<string> &campos_r1 = r1.campos(); // O(1)
+        const string_set &campos_r1 = r1.campos(); // O(1)
         for (const string &campo_r1 : campos_r1) { // O(C)
             campos_registro_join.push_back(campo_r1); // O(1)
             datos_registro_join.push_back(r1.dato(campo_r1)); // O(1)
         }
 
         // Agregamos campos y datos del segundo registro, si estos no están ya en el primero
-        const linear_set<string> &campos_r2 = r2.campos();
+        const string_set &campos_r2 = r2.campos();
         for (const string &campo_r2 : campos_r2) { // O(C)
             if (r1.pertenece(campo_r2)) { // O(1)
                 campos_registro_join.push_back(campo_r2); // O(1)

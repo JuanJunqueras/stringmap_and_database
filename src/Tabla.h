@@ -7,6 +7,7 @@
 #include "linear_set.h"
 #include "Dato.h"
 #include "Registro.h"
+#include "string_set.h"
 
 using namespace std;
 
@@ -73,7 +74,7 @@ public:
    *
    * \complexity{\O(1)}
    */
-  const linear_set<string> &campos() const;
+  const string_set &campos() const;
 
   /**
    * @brief Tipo del campo parámetro para la tabla
@@ -160,8 +161,8 @@ private:
 
     /** @{ */
     linear_set<string> _claves;
-    linear_set<string> _campos;
-    linear_map<string, Dato> _tipos;
+    string_set _campos;
+    string_map<Dato> _tipos;
     linear_set<Registro> _registros;
     /** }@ */
 

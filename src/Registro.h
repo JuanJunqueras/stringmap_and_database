@@ -6,7 +6,7 @@
 #include "Dato.h"
 #include "linear_set.h"
 #include "linear_map.h"
-
+#include "string_set.h"
 #include "string_map.h"
 using namespace std;
 
@@ -54,7 +54,7 @@ public:
      *
      * \complexity{\O(1)}
      */
-    const linear_set<string>& campos() const;
+    const string_set& campos() const;
 
     /**
      * @brief Verifica si un campo pertenece al registro
@@ -84,7 +84,7 @@ private:
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /** @{ */
-    linear_set<string> _campos;
+    string_set _campos;
     string_map<Dato> _datos;
     /** @} */
 

@@ -55,8 +55,8 @@ bool BaseDeDatos::registroValido(const Registro &r,
 }
 
 bool BaseDeDatos::_mismos_tipos(const Registro &r, const Tabla &t) const {
-  for (auto c : t.campos()) {
-    if (r.dato(c).esNat() != t.tipoCampo(c).esNat()) {
+  for (auto c : t.campos()) { //O(C)
+    if (r.dato(c).esNat() != t.tipoCampo(c).esNat()) { //O(1) por campo acotado
       return false;
     }
   }
@@ -64,34 +64,42 @@ bool BaseDeDatos::_mismos_tipos(const Registro &r, const Tabla &t) const {
 }
 
 bool BaseDeDatos::_no_repite(const Registro &r, const Tabla &t) const {
-  list<Registro> filtrados(t.registros().begin(), t.registros().end()); /* @comentario(ivan): O(n) */
-  for (auto clave : t.claves()) { /* @comentario(ivan): O(c) */
-    _filtrar_registros(clave, r.dato(clave), filtrados); /* @comentario(ivan): O(n * cmp(T)) */
-  }
-  return filtrados.empty();
+    for (auto rt : t.registros()){ //O(n)
+        int camposClaveIguales = 0;
+        for (auto c : t.claves()){ //O(c)
+            if (rt.dato(c) == r.dato(c)){ //O(1) por campo acotado + O(L)
+                camposClaveIguales++;
+            }
+        }
+        if (camposClaveIguales == t.claves().size()){ // O(1)
+            return false;
+        }
+    }
+    return true;
 }
 
 list<Registro> &
 BaseDeDatos::_filtrar_registros(const string &campo, const Dato &valor,
                                 list<Registro> &registros) const {
-  return _filtrar_registros(campo, valor, registros, true);
+    return _filtrar_registros(campo, valor, registros, true);
 }
 
 list<Registro> &BaseDeDatos::_filtrar_registros(const string &campo,
                                                 const Dato &valor,
                                                 list<Registro> &registros,
                                                 bool igualdad) const {
-  auto iter = registros.begin();
-  while ( iter != registros.end()) { // O(n)
-    auto now = iter;
-    iter++;
-    if ((not igualdad) xor now->dato(campo) != valor) { // O(cmp(T))
-      registros.erase(now);
+    auto iter = registros.begin();
+    while ( iter != registros.end()) { // O(n)
+        auto now = iter;
+        iter++;
+        if ((not igualdad) xor now->dato(campo) != valor) { // O(cmp(T))
+            registros.erase(now);
+        }
     }
-  }
 
-  return registros;
+    return registros;
 }
+
 
 pair<vector<string>, vector<Dato> > BaseDeDatos::_tipos_tabla(const Tabla &t) {
   vector<string> res_campos;

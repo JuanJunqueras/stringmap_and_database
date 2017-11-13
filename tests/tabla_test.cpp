@@ -43,10 +43,10 @@ TEST(tabla_test, crear) {
 };
 
 TEST_F(TablaTests, campos) {
-    EXPECT_EQ(t.campos(), 
+    EXPECT_EQ(t.campos(),
               linear_set<string>({"LU", "Año", "Nombre", "Carrera"}));
     EXPECT_EQ(t2.campos(), linear_set<string>({"Cod", "Carrera"}));
-};
+}
 
 TEST_F(TablaTests, claves) {
     EXPECT_EQ(t.claves(), linear_set<string>({"LU", "Año"}));
