@@ -65,8 +65,8 @@ public:
    *
    *
    * \pre true //FIXME: chequear toda esta docu
-   * \post (\forall dato : datos)(dato\ISIN this* \rArr (dato\ISIN r1 \LOR dato\ISIN r2))
-   //FIXME: opcion 2 :*\post (\forall dato : datos)(obtener(this*,dato)\RARR (dato \ISIN r1  \LOR dato \ISIN r2)
+   * \post todo dato en el resultado de desreferennciar, está en alguna
+   * de los registros a los que apuntan los punteros o en ambos.//FIXME: consulta
    * \complexity{\O(copy(Registro))}//FIXME: chequear
    **/
     Registro& operator*() {
