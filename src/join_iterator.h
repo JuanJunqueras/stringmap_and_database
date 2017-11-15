@@ -71,8 +71,8 @@ public:
     Registro& operator*() {
 
         // O(1)
-        Registro r1 = *it_registros_tabla_principal;
-        Registro r2 = *(*it_registros_tabla_con_indice);
+        const Registro &r1 = *it_registros_tabla_principal;
+        const Registro &r2 = *(*it_registros_tabla_con_indice);
         vector<string> campos_registro_join;
         vector<Dato> datos_registro_join;
 
@@ -86,7 +86,7 @@ public:
         // Agregamos campos y datos del segundo registro, si estos no están ya en el primero
         const string_set &campos_r2 = r2.campos();
         for (const string &campo_r2 : campos_r2) { // O(C)
-            if (r1.pertenece(campo_r2)) { // O(1)
+            if (!r1.pertenece(campo_r2)) { // O(1)
                 campos_registro_join.push_back(campo_r2); // O(1)
                 datos_registro_join.push_back(r2.dato(campo_r2)); // O(1)
             }
