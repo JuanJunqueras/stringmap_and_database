@@ -65,10 +65,10 @@ public:
    * y devuelve un registro por referencia.
    *
    *
-   * \pre true //FIXME: chequear toda esta docu
-   * \post todo dato en el resultado de desreferennciar, está en alguna
-   * de los registros a los que apuntan los punteros o en ambos.//FIXME: consulta
-   * \complexity{\O(copy(Registro))}//FIXME: chequear
+   * \pre true
+   * \post todo dato en el resultado de desreferenciar, está en alguno
+   * de los registros a los que apuntan los iteradores it_ o en ambos.
+   * \complexity{\O(copy(Registro))}
    **/
     Registro& operator*() {
 

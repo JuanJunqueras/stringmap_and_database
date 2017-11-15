@@ -185,14 +185,17 @@ public:
 
     /**
      * //FIXME: TODO: actualizar documentación del método
-     * @brief Crea un join entre las dos tablas
+     * @brief Efectua un join entre las dos tablas y devuelve un iterador apuntando al primer registro del conjunto resultante
      *
-     * @param nombre Nombre de la tabla
-     * @param campo Nombre del campo de la tabla a la que se crea el índice
+     * @param tabla1 Nombre de una tabla
+     * @param tabla2 Nombre de la otra tabla
+     * @param campo Nombre del campo presente en ambas tablas sobre el que se crea el indice.
      *
-     * \pre db = \P{this} \LAND nombre \IN tablas(\P{this}) \LAND
-     *      puedoInsertar?(r, dameTabla(\P{this}))
-     * \post \P{this} = insertarEntrada(r, nombre, db)
+     * \pre db = campo \pertenece campos(Tabla1) \LAND campo \pertenece campos(Tabla2) \LAND \existe ind en (indices(Tabla1)\CUP indices(Tabla2)) \talque campo = clave(ind)
+     * FIXME ARREGLAR EL DOXYGEN
+     * \post \P{this} = this = iterador(t) donde t es una tabla tal que campos(t) = campos(tabla1) \union campos(tabla2)
+     * y r esta en t si \existe r1 en tabla 1 y r2 en tabla 2 tal que r1[campo]=r2[campo]=r[campo]
+     * y #paratodo campo i en campos(r) r[i] = r1[i] o r[i] = r2[i]
      *
      * \complexity{\O(T + copy(reg))}
      */
@@ -224,7 +227,7 @@ private:
 
 
     /** @{ */
-    linear_set<string> _nombres_tablas;  //FIXME: documentar todas éstas funciones.
+    linear_set<string> _nombres_tablas;
     string_map<Tabla> _tablas;
     linear_map<Criterio, int> _uso_criterios;
     string_map<string_map<Indice>> indices;
