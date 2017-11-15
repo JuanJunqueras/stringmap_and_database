@@ -93,7 +93,7 @@ public:
    * \complexity{\O(L + log(m)}
    **/
 
-  bool existe(const Dato &dato) {
+  bool existe(const Dato &dato) const {
     bool existe;
     if (dato.esString()) {
       existe = indices_dato_string.find(dato.valorStr()) != indices_dato_string.end();
