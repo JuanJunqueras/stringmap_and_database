@@ -252,7 +252,7 @@ string string_set::siguienteElemento(string elemActual) const {
                 nodoActual = nodoActual->hijos[it++->first];
             }
         }
-        if (nodoActual == false) {
+        if (nodoActual == nullptr) {
             return "";
         } else {
             if (index != 0) { //longest common substring not empty
