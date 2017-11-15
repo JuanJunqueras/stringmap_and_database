@@ -14,7 +14,7 @@
  *
  * Una join_iterator permite generar un iterarador entre dos tablas.
  * Permite avanzar el iterador.
- * Permite desreferenciar devolviendo un regitro compuesto por el contenido de ambos punteros.
+ * Permite desreferenciar devolviendo un registro compuesto por el contenido de ambos punteros.
  *
  * **se explica con** TAD BaseDeDatos  //FIXME: chequear
  */
@@ -25,20 +25,21 @@ private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación
      * rep: join_iterator \TO bool\n
-     * rep(ji) \EQUIV
-     *
-     * siendo: it_registros_tabla_principal = 1  //FIXME: escribir formalmente
-     *         it_registros_tabla_principal_end = 2
-     *         it_registros_tabla_con_indice = 3
-     *         it_registros_tabla_con_indice_end = 4
-     *         Lo que se me ocurre del rep por ahora es:
-     *         1 != 2
-     *         2 != 4
-     *         Si 1 = 2 entonces 3 = 4
-     *         Si 3 != 4 entonces 1 != 2
-     *
-     *
-     * abs: no hay abs, pues no hay TAD de la clase índice para compararlo. FIXME: chequear
+	rep(ji) \EQUIV
+	siendo: it_registros_tabla_principal = 1  //FIXME: escribir formalmente
+	it_registros_tabla_principal_end = 2
+	it_registros_tabla_con_indice = 3
+	it_registros_tabla_con_indice_end = 4
+	Lo que se me ocurre del rep por ahora es:
+	1 != 3//FIXME:consultar
+	2 != 4//FIXME:consultar
+	Si 1 = 2 entonces 3 = 4
+	Si 3 != 4 entonces 1 != 2
+	Tabla(1) == Tabla(2)
+	set(3) == set(4)
+	end(set(3)) == 4
+	end( Tabla(1)) == 2
+	abs: no hay abs, pues no hay TAD de la clase índice para compararlo. FIXME: chequear
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
         Tabla::const_iterador_registros it_registros_tabla_principal;
