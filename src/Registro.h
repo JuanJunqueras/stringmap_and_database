@@ -88,16 +88,11 @@ private:
     string_map<Dato> _datos;
     /** @} */
 
-    /* @comentario(ivan): Acá les faltaría agregar:
-     * friend ostream &operator<<(ostream &, const Registro &);
-     * Para que ande el operador <<
-     * */
+    friend ostream &operator<<(ostream &, const Registro &);
 };
 
 
 bool operator==(const Registro&, const Registro&);
-/* @comentario(ivan): Y agregar:
- * ostream &operator<<(ostream &, const Registro &);
- * */
+ostream &operator<<(ostream &, const Registro &);
 
 #endif //_REGISTRO_H

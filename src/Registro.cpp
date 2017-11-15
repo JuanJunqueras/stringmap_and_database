@@ -38,7 +38,11 @@ bool operator==(const Registro& r1, const Registro& r2) {
 }
 
 //FIXME:/* @corregir(ivan): Lo comentaron por alguna razón ? */
-//ostream &operator<<(ostream &os, const Registro &r) {
-//  os << r._datos;
-//  return os;
-//}
+ostream &operator<<(ostream &os, const Registro &r) {
+    for (auto it = r._datos.begin(); it != r._datos.end(); ++it) {
+        auto pair = *it;
+        os << pair.first << ": " << pair.second << " | ";
+    }
+    os << endl << "--------------" << endl;
+    return os;
+}
