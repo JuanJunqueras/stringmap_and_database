@@ -94,7 +94,7 @@ public:
    * @brief Construye mapa con su raiz.
    *
    * \pre true
-   * \post vacio?(res) \AND vacio?(raiz.hijos().empty())
+   * \post vacio?(claves(res))
    *
    * \complexity{\O(1)}
    */
@@ -107,13 +107,12 @@ public:
      */
     ~string_map();
 
-    /* @corregir(ivan): En el constructor por copia y en el operador de asignación faltan el costo de copy(T) */
     /** @brief Constructor por copia
      *
      * \pre true
      * \post res = @param
      *
-     * \complexity{\O(sn * S)}
+     * \complexity{\O(sn * (S + copy(value_type)))}
      */
     string_map(const string_map &);
 
@@ -122,19 +121,16 @@ public:
      * \pre true
      * \post res = @param
      *
-     * \complexity{\O(sn * S)}
+     * \complexity{\O(sn * (S + copy(value_type)) }
      */
-    /* @corregir(ivan): Esta complejidad debería ser O(sn * (S + copy(value_type)) */
     string_map& operator=(const string_map &);
 
-    /* @corregir(ivan): En el operador == falta el costo de comparar T (cmp(T)) */
-    /* @corregir(ivan): La post está sin terminar */
     /** @brief Operadores de comparacion
      *
      * \pre true
-     * \post true
+     * \post res  = (claves(this) = claves(otro) \LAND (\FORALL k :claves(this))( obtener(k,this) = obtener(k,otro))    )
      *
-     * \complexity{\O(sn * S)}
+     * \complexity{\O(sn * (S+cmp(T)))}
      */
     bool operator==(const string_map& otro) const;
 

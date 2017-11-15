@@ -53,11 +53,17 @@ public:
     /**
    * @brief Permite agregar un registro a un índice
    *
-   * @param &campo Dato de tipo string.
+   * @param &campo String
+   * @param &it_reg Tabla::const_iterador_registros
+   *
+     * \pre campo \ISIN  campos(tabla(it_reg)) \LAND \LNOT vacio?(indices(tabla(it_reg))
+     * \post it_reg \ISIN  obtener(indices,(obtener(desreferenciar(it_reg),campo)))
+     * (se agrego el iterador que apunta al resgistro, al indice que depende del valor del campo ingresado en el registro)
+     *
    *
    **/
 
-    void agregarRegistro(const string &campo, Tabla::const_iterador_registros it_reg) { //FIXME: documentar
+    void agregarRegistro(const string &campo, Tabla::const_iterador_registros it_reg) {
       Dato dato = (*it_reg).dato(campo);
       if (dato.esString()) {
           indices_dato_string[dato.valorStr()].insert(it_reg);
@@ -80,7 +86,7 @@ public:
    *
    * O(L) si dato es string
    * O(log(m)) si dato es nat
-   * Complejidad: O(max{L,log(m)}) = O(L + log(m)) //FIXME: acá hay un problema porque tenemos la complejidad en complexity y acá
+   * Complejidad: O(max{L,log(m)}) = O(L + log(m))
    * \complexity{\O(L + log(m)}
    **/
 

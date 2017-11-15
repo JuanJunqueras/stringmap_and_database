@@ -184,7 +184,6 @@ public:
     void crearIndice(const string &nombre, const string &campo);
 
     /**
-     * //FIXME: TODO: actualizar documentación del método
      * @brief Efectua un join entre las dos tablas y devuelve un iterador apuntando al primer registro del conjunto resultante
      *
      * @param tabla1 Nombre de una tabla

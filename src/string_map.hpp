@@ -263,9 +263,9 @@ string string_map<T>::siguienteClave(string claveActual) const {
     if(nodoActual== nullptr){return "";}
     std::string clave = claveActual;
     if (nodoActual->hijos.size() > 0) { //la clave actual es substring de la siguiente.
-        bool primeraVez = true;
-        while (nodoActual->hijos.size() != 0 && nodoActual->valor == nullptr || primeraVez) {
-            primeraVez = false;
+        bool noMeMovi = true;
+        while (nodoActual->hijos.size() != 0 && nodoActual->valor == nullptr || noMeMovi) {
+            noMeMovi = false;
             auto tuplaPrimera = nodoActual->hijos.begin();
             char primerChar = (*tuplaPrimera).first;
             clave += primerChar;
@@ -278,8 +278,6 @@ string string_map<T>::siguienteClave(string claveActual) const {
         unsigned long index = branch.size() - 1;
         nodoActual = branch[index];
         bool flag = true; /* @comentario(ivan): flag es un nombre muy poco declarativo */
-        /* @comentario(ivan): Todo este algoritmo es muy dificil de leer, traten de simplificarlo.
-         * Si no se puede simplificar al menos pongan comentarios guiando la lectura del algoritmo. */
         while (index > 0 && flag) {
             auto it = nodoActual->hijos.begin();
             while (it->first < clave.back() && it != nodoActual->hijos.end()) {
@@ -330,7 +328,6 @@ string string_map<T>::siguienteClave(string claveActual) const {
             }
         }
         return clave;
-        // ¯\_(ツ)_/¯
     }
 }
 
