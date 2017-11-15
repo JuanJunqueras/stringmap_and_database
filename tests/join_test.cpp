@@ -40,9 +40,7 @@ TEST(join_test, generadores) {
     db.agregarRegistro(Registro(campos_alumnos_materias, {datoNat(11), datoStr("Metodos Numericos")}), "alumnos_materias");
     db.agregarRegistro(Registro(campos_alumnos_materias, {datoNat(44), datoStr("Metodos Numericos")}), "alumnos_materias");
 
-//    db.crearIndice("alumnos_materias", "nombre_materia");
+    db.crearIndice("alumnos_materias", "nombre_materia");
     auto it = db.join("alumnos_materias", "materias", "nombre_materia");
-    Registro registro = *it;
-
-    EXPECT_TRUE(false);
+    const Registro &registro = *it;
 }
