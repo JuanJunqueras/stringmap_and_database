@@ -134,7 +134,13 @@ public:
      */
     bool operator==(const string_map& otro) const;
 
-    /* @corregir(ivan): Falta la documentación de esta función. */
+    /** @brief Operadores de comparacion
+      *
+      * \pre true
+      * \post res  = (claves(this) != claves(otro) \LOR \LNOT (\FORALL k :claves(this))( obtener(k,this) = obtener(k,otro))    )
+      *
+      * \complexity{\O(sn * (S+cmp(T)))}
+      */
     bool operator!=(const string_map& otro) const;
 
     /** @brief Cantidad de apariciones de la clave (0 o 1)
@@ -165,8 +171,6 @@ public:
      * */
     bool empty() const;
 
-
-    /* @corregir(ivan): Falta el costo de copy(T) */
     /** @brief Acceso / definición de pares clave/valor
      *  @param key clave a acceder, si no existe, se crea
      *  @returns una referencia a la definicion.
@@ -174,7 +178,7 @@ public:
      * \pre true
      * \post res = significado(key, this)
      *
-     *  \complexity{\O(S)}
+     *  \complexity{\O(S + copy(T))}
      */
     mapped_type &operator[](const key_type &key);
 
@@ -185,7 +189,7 @@ public:
      * \pre def?(this, key)
      * \post res = significado(key, this)
      *
-     *  \complexity{\O(S)}
+     *  \complexity{\O(S + copy(T))}
      */
     mapped_type& at(const key_type& key);
 
@@ -196,24 +200,21 @@ public:
      * \pre def?(this, key)
      * \post res = significado(key, this)
      *
-     *  \complexity{\O(S)}
+     *  \complexity{\O(S + copy(T))}
      */
     const mapped_type& at(const key_type& key) const;
 
-    /* @corregir(ivan): En el clear, de dónde sale "raiz" ?
-     * En la pre y la post sólo pueden hablar en terminos de las operaciones del TAD con el cual se explica el módulo.
-     * */
     /** @brief Vacia el mapa
      *
      * \pre true
-     * \post vacio?(res) \AND vacio?(res.raiz().hijos())
+     * \post vacio?(claves(this))
      *
      * \complexity{\O(n)}
      *
      */
     void clear();
 
-    // Accesos con iteradores
+    // Accesos con iteradores FIXME fix this
 
     /** @brief iterador al primer par <clave,significado> en orden lexicografico
      *  @returns iterador al elemento o end() si el mapa era vacio
@@ -276,7 +277,7 @@ public:
      * \pre this=this_0
      * \post El primer elemento del par resultante es un iterador que apunta a tupla <key, this.at(key)>
      * y el segundo elemento es true si la clave no estaba definida en this_0 y false en caso contrario.
-     * 
+     * ademas, obtener(this,value.first) = value.second
      * \complexity{\O(S + copy(value_type))}
      */
     pair<iterator,bool> insert(const value_type &value);
@@ -286,8 +287,8 @@ public:
      *  @param key clave a eliminar
      *  @returns cantidad de elementos eliminados
      *
-     *  \pre key \IN claves(this)
-     *  \post key \NOTIN claves(this) \AND res = FIXME ver como escribir esto en logica
+     *  \pre this = dicc0
+     *  \post key \NOTIN claves(this) \AND res = if clave \ISIN claves(dicc0) then 1 else 0 fi
      *
      *  \complexity{\O(S)}
      */
@@ -297,11 +298,11 @@ public:
      *  @param pos iterador apuntando a clave a eliminar
      *  @returns iterador apuntando el proximo de la clave eliminada (o end() si era la ultima)
      *
-     *  \pre la claveActual de pos esta definida en el mapa
+     *  \pre this = dicc0
      *  \post key \NOTIN claves(this) \AND la claveActual del iterador resultante es la siguiente clave
      *  y valorActual del iterador resultante es un puntero a this.at(claveActual)
      *  o un puntero nulo en caso de ser el fin de la coleccion.
-     *
+     *  \LAND res = if clave \ISIN claves(dicc0) then 1 else 0 fi
      *  \complexity{\O(S)}
      */
     iterator erase(iterator pos);
@@ -318,15 +319,13 @@ private:
      * rep: string_map \TO bool\n
      * rep(m) \EQUIV
      *  * m.raiz.valor = null
-     *  * m._cantidadDeClaves = FIXME no se a qué igualarlo
+     *  * m._cantidadDeClaves = 0
      *
      * abs: string_map \TO Diccionario(string, T)\n
      * abs(m) \EQUIV m' \|
      *  * #claves(m') = m._cantidadDeClaves \AND
      *  * \FORALL (c : string) def?(c,m') \IMPLIES \EXISTS (i: string_map_iterator(m))(i.claveActual = c) \LAND
      *  (i.valorActual = obtener(c,m')
-     *  * \FORALL (i: string_map_iterator(m)) (i \NEQ m.end) \LIMPLIES def?(i.claveActual, m') \AND
-     *  obtener(i.claveActual, m') = i.valorActual
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -342,7 +341,9 @@ private:
     Nodo* findNodo(string key)const;
     vector<Nodo*> getBranch(string key)const;
 };
-
+/* FIXME ESTO ES EL REP D LOS ITERADORES; VER DONDE METERLO
+*   \FORALL (i: string_map_iterator(m)) (i \NEQ m.end) \LIMPLIES def?(i.claveActual, m') \AND
+*  obtener(i.claveActual, m') = i.valorActual */
 #include "string_map.hpp"
 
 #endif //STRING_MAP_STRING_MAP_H
