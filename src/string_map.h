@@ -22,7 +22,6 @@ using namespace std;
  * - tiene operador ==
  * - solo permite utilizar el operator[] si T tiene constructor por defecto
  */
-/* @corregir(ivan): quitaron las asunciones de complejidades sobre el tipo de dato T. */
 
 template < typename T >
 class string_map {
@@ -87,9 +86,7 @@ public:
     friend class const_iterator;
 
 
-    /* @corregir(ivan): De dónde sale "raiz" en la post del constructor vacío ?
-     * En la pre y la post sólo pueden hablar en terminos de las operaciones del TAD con el cual se explica el módulo.
-     * */
+
     /**
    * @brief Construye mapa con su raiz.
    *
@@ -214,7 +211,7 @@ public:
      */
     void clear();
 
-    // Accesos con iteradores FIXME fix this
+    // Accesos con iteradores
 
     /** @brief iterador al primer par <clave,significado> en orden lexicografico
      *  @returns iterador al elemento o end() si el mapa era vacio
@@ -313,7 +310,8 @@ public:
 private:
 
     /* @corregir(ivan): Dado que el string_map tiene dentro una estructura recursiva, les conviene armar un predicado auxiliar que les ayude a escribir el Rep. */
-    /* @corregir(ivan): Están mezclando el abs del string_map con el de sus iteradores. */
+    /* @corregir(ivan): Están mezclando el abs del string_map con el de sus iteradores. Pasar a palabras lo que sea de iteradores o punteros, en rep y abs.
+     * si me dan un nullptr puede tener hijos sii es la raìz*/
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación
      * rep: string_map \TO bool\n
@@ -322,10 +320,10 @@ private:
      *  * m._cantidadDeClaves = 0
      *
      * abs: string_map \TO Diccionario(string, T)\n
-     * abs(m) \EQUIV m' \|
+     * abs(m) \EQUIV m' tal que es un dicc e \|
      *  * #claves(m') = m._cantidadDeClaves \AND
      *  * \FORALL (c : string) def?(c,m') \IMPLIES \EXISTS (i: string_map_iterator(m))(i.claveActual = c) \LAND
-     *  (i.valorActual = obtener(c,m')
+     *  (i.valorActual = obtener(c,m') FIXME ojo con la ida y la vuelta (tiene que tener ambas)
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
