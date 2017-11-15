@@ -72,7 +72,7 @@ public:
 
         // O(1)
         Registro r1 = *it_registros_tabla_principal;
-        Registro r2 = **it_registros_tabla_con_indice;
+        Registro r2 = *(*it_registros_tabla_con_indice);
         vector<string> campos_registro_join;
         vector<Dato> datos_registro_join;
 

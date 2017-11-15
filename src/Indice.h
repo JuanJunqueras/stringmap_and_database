@@ -48,7 +48,11 @@ public:
   * Complejidad: O(max{L,log(m)})
   = O(L+ log(m)) * */
   set<Tabla::const_iterador_registros> &registros(const Dato &dato) {
-    return dato.esString() ? indices_dato_string[dato.valorStr()] : indices_dato_nat[dato.valorNat()];
+      if (dato.esString()) {
+          return indices_dato_string[dato.valorStr()];
+      } else {
+          return indices_dato_nat[dato.valorNat()];
+      }
   }
     /**
    * @brief Permite agregar un registro a un índice
@@ -62,8 +66,7 @@ public:
      *
    *
    **/
-
-    void agregarRegistro(const string &campo, Tabla::const_iterador_registros it_reg) {
+  void agregarRegistro(const string &campo, const Tabla::const_iterador_registros &it_reg) { //FIXME: documentar
       Dato dato = (*it_reg).dato(campo);
       if (dato.esString()) {
           indices_dato_string[dato.valorStr()].insert(it_reg);

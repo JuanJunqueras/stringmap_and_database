@@ -180,7 +180,7 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
 
   // Chequeamos si efectivamente la tabla2 tiene indice
   // Si no lo tiene, por precondicion sabemos que tabla1 tiene indice
-  if (indices.find(tabla_con_indice).isEnd()) {
+  if (indices.count(tabla_con_indice) == 0 ) {
     tabla_principal = tabla2;
     tabla_con_indice = tabla1;
   }
@@ -203,6 +203,10 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
     }
     ++it_registros_tabla_principal;
   }
+
+  auto regb = registros_en_indice.begin();
+  auto primer_it = *regb;
+  auto reg = *primer_it;
 
   join_iterator join_it(it_registros_tabla_principal,
                         it_registros_tabla_principal_end,
