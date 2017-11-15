@@ -47,11 +47,11 @@ public:
   * O(log(m)) si dato es nat
   * Complejidad: O(max{L,log(m)})
   = O(L+ log(m)) * */
-  set<Tabla::const_iterador_registros> &registros(const Dato &dato) {
+  const set<Tabla::const_iterador_registros> &registros(const Dato &dato) const {
       if (dato.esString()) {
-          return indices_dato_string[dato.valorStr()];
+          return indices_dato_string.at(dato.valorStr());
       } else {
-          return indices_dato_nat[dato.valorNat()];
+          return indices_dato_nat.at(dato.valorNat());
       }
   }
     /**

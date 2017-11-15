@@ -164,10 +164,9 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
   return ret;
 }
 
-
 //FIXME: consultar: /* @corregir(ivan): No cumple con la complejidad pedida. */
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
-  Tabla t = this->dameTabla(nombre); // O(1)
+  const Tabla& t = this->dameTabla(nombre); // O(1)
   for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg){ // O(m)
     indices[nombre][campo].agregarRegistro(campo, it_reg); // TODO: revisar complejidad
   }
@@ -186,7 +185,7 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
   }
 
   const Tabla &tabla = this->dameTabla(tabla_principal);
-  Indice indice = indices.at(tabla_con_indice).at(campo);
+  const Indice &indice = indices.at(tabla_con_indice).at(campo);
 
   // Declaramos iterador de tabla principal y variable para almacenar los conjuntos de registros del indice
   set<Tabla::const_iterador_registros> registros_en_indice;
@@ -203,10 +202,6 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
     }
     ++it_registros_tabla_principal;
   }
-
-  auto regb = registros_en_indice.begin();
-  auto primer_it = *regb;
-  auto reg = *primer_it;
 
   join_iterator join_it(it_registros_tabla_principal,
                         it_registros_tabla_principal_end,
