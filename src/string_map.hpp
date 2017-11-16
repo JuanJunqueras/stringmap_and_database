@@ -264,7 +264,7 @@ string string_map<T>::siguienteClave(string claveActual) const {
     std::string clave = claveActual;
     if (nodoActual->hijos.size() > 0) { //la clave actual es substring de la siguiente.
         bool noMeMovi = true;
-        while (nodoActual->hijos.size() != 0 && nodoActual->valor == nullptr || noMeMovi) {
+        while ((nodoActual->hijos.size() != 0 && nodoActual->valor == nullptr) || noMeMovi) {
             noMeMovi = false;
             auto tuplaPrimera = nodoActual->hijos.begin();
             char primerChar = (*tuplaPrimera).first;
