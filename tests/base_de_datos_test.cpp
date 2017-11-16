@@ -6,7 +6,7 @@
 #include <string>
 
 using namespace std;
-/*
+
 template<class iter>
 bool incluye(iter begin_a,
              iter end_a,
@@ -65,6 +65,7 @@ TEST(test_basicos, tabla_alumnos) {
                {datoNat(124), datoNat(45), datoStr("Gerva"), datoStr("10001")});
   EXPECT_FALSE(db.registroValido(gerva_clon, "alumnos"));
 }
+
 
 class DBAlumnos : public ::testing::Test {
 protected:
@@ -196,6 +197,7 @@ protected:
     }
 
 };
+
 
 // Lista de tests:
 // ## Agregar registro
@@ -688,6 +690,8 @@ TEST_F(DBAlumnos, crit_doble_otro_bool) {
 // * Join repetidos un lado
 // * Join repetidos dos lados
 // * Join campos repetidos
+
+/*
 
 #ifdef POST_SOLUCION
 TEST_F(DBAlumnos, join_vacio) {
