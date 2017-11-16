@@ -10,9 +10,9 @@
 #include <set>
 #include "linear_map.h"
 #include "linear_set.h"
-#include "join_iterator.h"
 #include "utils.h"
 #include "string_set.h"
+
 using namespace std;
 
 /**
@@ -32,6 +32,7 @@ class BaseDeDatos {
 public:
 
   class Indice;
+  class join_iterator;
 
   /** @brief Criterio de búsqueda para una base de datos */
   typedef linear_set<Restriccion> Criterio;
@@ -199,6 +200,8 @@ public:
      * \complexity{\O(T + copy(reg))}
      */
     join_iterator join(const string &tabla1, const string &tabla2, const string &campo) const;
+
+    join_iterator join_end() const;
 
 private:
 	  ///////////////////////////////////////////////////////////////////////////////////////////////////

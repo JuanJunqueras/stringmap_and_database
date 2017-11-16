@@ -1,6 +1,6 @@
 #include "../src/BaseDeDatos.h"
+#include "../src/join_iterator.h"
 #include "gtest/gtest.h"
-
 
 using namespace std;
 

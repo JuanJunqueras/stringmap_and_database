@@ -172,7 +172,7 @@ void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
   }
 }
 
-join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, const string &campo) const {
+BaseDeDatos::join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, const string &campo) const {
 
   string tabla_principal = tabla1;
   string tabla_con_indice = tabla2;
@@ -203,11 +203,21 @@ join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, cons
     ++it_registros_tabla_principal;
   }
 
-  join_iterator join_it(it_registros_tabla_principal,
+  join_iterator join_it(*this,
+                        tabla_con_indice,
+                        campo,
+                        it_registros_tabla_principal,
                         it_registros_tabla_principal_end,
                         registros_en_indice.begin(),
                         registros_en_indice.end()
   );
 
+  return join_it;
+}
+
+BaseDeDatos::join_iterator BaseDeDatos::join_end() const {
+  Tabla t({}, {}, {});
+  set<Tabla::const_iterador_registros> s;
+  join_iterator join_it(*this, "", "", t.registros_end(), t.registros_end(), s.end(), s.end());
   return join_it;
 }

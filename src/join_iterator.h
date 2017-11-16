@@ -7,6 +7,8 @@
 
 #include <set>
 #include "Tabla.h"
+#include "BaseDeDatos.h"
+#include "Indice.h"
 
 /**
  * @brief Un join_iterator es un iterador que nos permite movernos entre dos tablas
@@ -18,7 +20,7 @@
  *
  * **se explica con** TAD BaseDeDatos  //FIXME: chequear
  */
-class join_iterator {
+class BaseDeDatos::join_iterator {
 
 private:
 
@@ -40,24 +42,59 @@ private:
 	abs: agarrarse del tad de base de datos que tiene un join. FIXME: hacer
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-        Tabla::const_iterador_registros it_registros_tabla_principal;
-        Tabla::const_iterador_registros it_registros_tabla_principal_end;
-        set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice;
-        set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice_end;
+
+    const BaseDeDatos &db;
+    Tabla::const_iterador_registros it_registros_tabla_principal;
+    Tabla::const_iterador_registros it_registros_tabla_principal_end;
+    set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice;
+    set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice_end;
+    string nombre_tabla = "";
+    string nombre_campo = "";
 
 public:
 
     join_iterator(
+            const BaseDeDatos &db,
+            string nombre_tabla,
+            string nombre_campo,
             Tabla::const_iterador_registros it_registros_tabla_principal,
             Tabla::const_iterador_registros it_registros_tabla_principal_end,
             set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice,
             set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice_end
     ) :
+            db(db),
+            nombre_tabla(nombre_tabla),
+            nombre_campo(nombre_campo),
             it_registros_tabla_principal(it_registros_tabla_principal),
             it_registros_tabla_principal_end(it_registros_tabla_principal_end),
             it_registros_tabla_con_indice(it_registros_tabla_con_indice),
             it_registros_tabla_con_indice_end(it_registros_tabla_con_indice_end)
     { }
+
+
+    join_iterator operator++() {
+
+        if (it_registros_tabla_con_indice != it_registros_tabla_con_indice_end) {
+            ++it_registros_tabla_con_indice;
+        } else {
+
+            const BaseDeDatos::Indice &indice = db.indices.at(nombre_tabla).at(nombre_campo);
+
+            // Iteramos sobre tabla principal, buscando el primer siguiente match con registro del indice
+            bool match = false;
+            while (!match && it_registros_tabla_principal != it_registros_tabla_principal_end) {
+                auto dato = (*it_registros_tabla_principal).dato(nombre_campo);
+                if (indice.existe(dato)) {
+                    it_registros_tabla_con_indice = indice.registros(dato).begin();
+                    it_registros_tabla_con_indice_end = indice.registros(dato).end();
+                    match = true;
+                }
+                ++it_registros_tabla_principal;
+            }
+        }
+
+    }
+
     /**
    * @brief Desreferencia los registros a los que apuntan los punteros
    * y devuelve un registro por referencia.

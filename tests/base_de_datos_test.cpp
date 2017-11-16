@@ -1,5 +1,6 @@
 #include "../src/BaseDeDatos.h"
 #include "../src/Dato.h"
+#include "../src/join_iterator.h"
 #include "gtest/gtest.h"
 #include <algorithm>
 #include <vector>
@@ -691,14 +692,14 @@ TEST_F(DBAlumnos, crit_doble_otro_bool) {
 // * Join repetidos dos lados
 // * Join campos repetidos
 
-/*
 
-#ifdef POST_SOLUCION
+//#ifdef POST_SOLUCION
 TEST_F(DBAlumnos, join_vacio) {
- auto begin = db.join("alumnos", "ex_alumnos", "LU");
- auto end = db.join_end(); 
- EXPECT_EQ(begin, end);
+// auto begin = db.join("alumnos", "ex_alumnos", "LU");
+// auto end = db.join_end();
+// EXPECT_EQ(begin, end);
 }
+/*
 
 TEST_F(DBAlumnos, join_sin_repetidos) {
   auto begin = db.join("libretas", "alumnos", "LU");
