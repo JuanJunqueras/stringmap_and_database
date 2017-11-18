@@ -51,7 +51,7 @@ private:
 public:
 
     join_iterator(
-            const BaseDeDatos &db,
+            BaseDeDatos &db,
             string nombre_tabla,
             string nombre_campo,
             Tabla::const_iterador_registros it_registros_tabla_principal,
@@ -68,6 +68,25 @@ public:
             it_registros_tabla_con_indice_end(it_registros_tabla_con_indice_end)
     { }
 
+    join_iterator(const join_iterator &join_it) :
+            db(join_it.db),
+            nombre_tabla(join_it.nombre_tabla),
+            nombre_campo(join_it.nombre_campo),
+            it_registros_tabla_principal(join_it.it_registros_tabla_principal),
+            it_registros_tabla_principal_end(join_it.it_registros_tabla_principal_end),
+            it_registros_tabla_con_indice(join_it.it_registros_tabla_con_indice),
+            it_registros_tabla_con_indice_end(join_it.it_registros_tabla_con_indice_end)
+    { }
+
+    join_iterator& operator=(const join_iterator &join_it) {
+//        this->db = join_it.db;
+        this->nombre_tabla = join_it.nombre_tabla;
+        this->nombre_campo = join_it.nombre_campo;
+        this->it_registros_tabla_principal = join_it.it_registros_tabla_principal;
+        this->it_registros_tabla_principal_end = join_it.it_registros_tabla_principal_end;
+        this->it_registros_tabla_con_indice = join_it.it_registros_tabla_con_indice;
+        this->it_registros_tabla_con_indice_end = join_it.it_registros_tabla_con_indice_end;
+    }
 
     join_iterator operator++() {
 
@@ -90,6 +109,14 @@ public:
             }
         }
 
+        if (it_registros_tabla_con_indice == it_registros_tabla_con_indice_end && it_registros_tabla_principal == it_registros_tabla_principal_end) {
+            this->nombre_campo = "";
+            this->nombre_tabla = "";
+        }
+    }
+
+    join_iterator operator++(int) {
+        ++(*this);
     }
 
     /**
@@ -128,6 +155,21 @@ public:
 
         Registro registro_join = Registro(campos_registro_join, datos_registro_join); // O(C * copy(Dato)) = O(C) = O(copy(Registro))
         return registro_join;
+    }
+
+    bool operator==(const join_iterator &it_1) const {
+        bool a = this->db == it_1.db;
+        bool b = this->nombre_tabla == it_1.nombre_tabla;
+        bool c = this->nombre_campo == it_1.nombre_campo;
+        bool d = this->it_registros_tabla_principal == it_1.it_registros_tabla_principal;
+        bool e = this->it_registros_tabla_principal_end == it_1.it_registros_tabla_principal_end;
+        bool f = this->it_registros_tabla_con_indice == it_1.it_registros_tabla_con_indice;
+        bool g = this->it_registros_tabla_con_indice_end == it_1.it_registros_tabla_con_indice_end;
+        return a && b && c && d && e && f && g;
+    }
+
+    bool operator!=(const join_iterator &it_1) const {
+        return !(*this == it_1);
     }
 };
 

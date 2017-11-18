@@ -103,6 +103,14 @@ public:
     return existe;
   }
 
+  bool operator==(const Indice &indice) const {
+      return this->indices_dato_string == indice.indices_dato_string && this->indices_dato_nat == indice.indices_dato_nat;
+  }
+
+   bool operator!=(const Indice &indice) const {
+       return !(*this == indice);
+   }
+
 private:
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación

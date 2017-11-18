@@ -203,6 +203,17 @@ public:
 
     join_iterator join_end() const;
 
+    bool operator==(const BaseDeDatos &db) const {
+      return this->_nombres_tablas == db._nombres_tablas &&
+             this->_tablas == db._tablas &&
+             this->_uso_criterios == db._uso_criterios &&
+             this->indices == db.indices;
+    }
+
+    bool operator!=(const BaseDeDatos &db) const {
+      return !(*this == db);
+    }
+
 private:
 	  ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación
