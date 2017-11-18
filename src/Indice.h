@@ -35,7 +35,7 @@ public:
      *      índice = \P{this} \LAND
      *      \LNOT (nombre \IN tablas(\P{this})) \LAND
      *      \LAND \LNOT \EMPTYSET?(claves) \LAND
-     *      \FORALL (c: campo) c \IN claves \IMPLICA c \IN campos \LAND
+     *      \FORALL (c: campo) c \IN claves \IMPLIES c \IN campos \LAND
      *      long(campos) = long(tipos) \LAND sinRepetidos(campos)
      * \post (\forall dato : datos) ( //FIXME LATER THEN
      *  dato.esString() =>L res = obtener(this.indices_data_string, dato) \LAND

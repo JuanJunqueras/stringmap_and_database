@@ -28,17 +28,14 @@ private:
     /** \name Representación
      * rep: join_iterator \TO bool\n
 	rep(ji) \EQUIV
-	siendo: it_registros_tabla_principal = 1  //FIXME: escribir formalmente
-	it_registros_tabla_principal_end = 2
-	it_registros_tabla_con_indice = 3
-	it_registros_tabla_con_indice_end = 4
+	siendo:   //FIXME: escribir formalmente. Revisar rep
 	Lo que se me ocurre del rep por ahora es:
-	Si 1 = 2 entonces 3 = 4
-	Si 3 != 4 entonces 1 != 2
-	Tabla(1) == Tabla(2)
-	set(3) == set(4)
-	end(set(3)) == 4
-	end( Tabla(1)) == 2
+	Si it_registros_tabla_principal = it_registros_tabla_principal_end IMPLIES it_registros_tabla_con_indice = it_registros_tabla_con_indice_end
+	Si it_registros_tabla_con_indice != it_registros_tabla_con_indice_end IMPLIES it_registros_tabla_principal != it_registros_tabla_principal_end
+	Tabla(it_registros_tabla_principal) == Tabla(it_registros_tabla_principal_end)
+	set(it_registros_tabla_con_indice) == set(it_registros_tabla_con_indice_end)
+	end(set(it_registros_tabla_con_indice)) == it_registros_tabla_con_indice_end
+	end( Tabla(1)) == it_registros_tabla_principal_end
 	abs: agarrarse del tad de base de datos que tiene un join. FIXME: hacer
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
