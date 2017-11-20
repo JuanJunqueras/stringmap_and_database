@@ -12,13 +12,12 @@
 
 /**
  * @brief Un join_iterator es un iterador que nos permite movernos entre dos tablas
- * a las cualse se les aplicó la función join.
+ * a las cuales se les aplicó la función join.
  *
- * Una join_iterator permite generar un iterarador entre dos tablas.
- * Permite avanzar el iterador.
+ * Una join_iterator permite generar un iterador entre dos tablas,
+ * Permite avanzar el iterador y
  * Permite desreferenciar devolviendo un registro compuesto por el contenido de ambos punteros.
  *
- * **se explica con** TAD BaseDeDatos  //FIXME: chequear
  */
 class BaseDeDatos::join_iterator {
 
@@ -28,15 +27,17 @@ private:
     /** \name Representación
      * rep: join_iterator \TO bool\n
 	rep(ji) \EQUIV
-	siendo:   //FIXME: escribir formalmente. Revisar rep
-	Lo que se me ocurre del rep por ahora es:
-	Si it_registros_tabla_principal = it_registros_tabla_principal_end IMPLIES it_registros_tabla_con_indice = it_registros_tabla_con_indice_end
-	Si it_registros_tabla_con_indice != it_registros_tabla_con_indice_end IMPLIES it_registros_tabla_principal != it_registros_tabla_principal_end
+
+	it_registros_tabla_principal = it_registros_tabla_principal_end \IMPLIES it_registros_tabla_con_indice = it_registros_tabla_con_indice_end
+	it_registros_tabla_con_indice != it_registros_tabla_con_indice_end \IMPLIES it_registros_tabla_principal != it_registros_tabla_principal_end
 	Tabla(it_registros_tabla_principal) == Tabla(it_registros_tabla_principal_end)
 	set(it_registros_tabla_con_indice) == set(it_registros_tabla_con_indice_end)
 	end(set(it_registros_tabla_con_indice)) == it_registros_tabla_con_indice_end
 	end( Tabla(1)) == it_registros_tabla_principal_end
-	abs: agarrarse del tad de base de datos que tiene un join. FIXME: hacer
+
+	abs: No equivale a ningun TAD, pues no vimos una representacion abstracta para los iteradores.
+     Sin emargo la tabla que 'itera'
+     es el resultado de hacer join de las dos tablas pasadas por parametro.
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
