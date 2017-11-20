@@ -31,7 +31,14 @@ public:
     typedef std::pair<const key_type, mapped_type> value_type;
     typedef size_t size_type;
 
-    /* @corregir(ivan): Falta la documentación de este iterador */
+    /*
+     * permite iterar el String_map, clave por clave,
+     * en orden alfabetico de las claves.
+     * El operador * devuelve una instancia de <value_type>,
+     * y el end es <"",nullptr>.
+     * se inicializa apuntando a la primera clave del string_map en orden alfabetico.
+     * Hacer ++ es O(1) asumiendo que las claves esten acotadas.
+     * */
     class iterator{
         void setClave(key_type key);
         const string_map* mapa;
@@ -55,7 +62,7 @@ public:
         bool isEnd();
 
     };
-    /* @corregir(ivan): Falta la documentación de este iterador */
+    /* idem iterator, pero los valores devueltos son constantes evitando aliasing. */
     class const_iterator{
 
             void setClave(key_type key);
@@ -263,7 +270,7 @@ public:
      */
    const_iterator find(const key_type &key) const;
 
-    /* @corregir(ivan): Acá falta hablar en la post de que pasa con el diccionario */
+    /* */
     /** @brief insercion
      *
      * @param value par <clave,significado> a insertar
@@ -279,7 +286,7 @@ public:
      */
     pair<iterator,bool> insert(const value_type &value);
 
-    /* @corregir(ivan): terminar de escribir la post (si tienen dudas, pregunten). */
+    /*  */
     /** @brief eliminar una clave
      *  @param key clave a eliminar
      *  @returns cantidad de elementos eliminados
@@ -309,21 +316,25 @@ public:
 
 private:
 
-    /* @corregir(ivan): Dado que el string_map tiene dentro una estructura recursiva, les conviene armar un predicado auxiliar que les ayude a escribir el Rep. */
-    /* @corregir(ivan): Están mezclando el abs del string_map con el de sus iteradores. Pasar a palabras lo que sea de iteradores o punteros, en rep y abs.
-     * si me dan un nullptr puede tener hijos sii es la raìz*/
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     /** \name Representación
      * rep: string_map \TO bool\n
      * rep(m) \EQUIV
-     *  * m.raiz.valor = null
-     *  * m._cantidadDeClaves = 0
+     *  si la raiz esta apuntando a nullptr,
+     *  entonces el string_map no tiene ninguna clave con un significado definido.
+     *  Si un nodo apunta a nullptr como valor, entonces
+     *  tiene que tener al menos un hijo, a menos que sea la raiz.
+     *  Todas las otras hojas del arbol tienen un valor distinto de nullptr.
+     *  "" no es una clave valida, y nullptr no un valor valido.
+     *  (pues los usamos para marcar justamente el end en el iterador, y la ausencia de valores).
+     *  La cantidad de claves es igual a la cantidad de strings
+     *  tal que el significado existe (i.e., no es nullptr).
      *
      * abs: string_map \TO Diccionario(string, T)\n
      * abs(m) \EQUIV m' tal que es un dicc e \|
      *  * #claves(m') = m._cantidadDeClaves \AND
-     *  * \FORALL (c : string) def?(c,m') \IMPLIES \EXISTS (i: string_map_iterator(m))(i.claveActual = c) \LAND
-     *  (i.valorActual = obtener(c,m') FIXME ojo con la ida y la vuelta (tiene que tener ambas)
+     *  * \FORALL (c : string) def?(c,m') \IMPLIES string_map[c]=obtener(m',c)
+     *  FIXME fijense si lo hice bien!
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -339,9 +350,6 @@ private:
     Nodo* findNodo(string key)const;
     vector<Nodo*> getBranch(string key)const;
 };
-/* FIXME ESTO ES EL REP D LOS ITERADORES; VER DONDE METERLO
-*   \FORALL (i: string_map_iterator(m)) (i \NEQ m.end) \LIMPLIES def?(i.claveActual, m') \AND
-*  obtener(i.claveActual, m') = i.valorActual */
 #include "string_map.hpp"
 
 #endif //STRING_MAP_STRING_MAP_H
