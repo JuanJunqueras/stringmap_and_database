@@ -277,8 +277,8 @@ string string_map<T>::siguienteClave(string claveActual) const {
         vector<Nodo *> branch = getBranch(claveActual);
         unsigned long index = branch.size() - 1;
         nodoActual = branch[index];
-        bool flag = true; /* @comentario(ivan): flag es un nombre muy poco declarativo */
-        while (index > 0 && flag) {
+        bool sideSteps = false;
+        while (index > 0 && !(sideSteps)) {
             auto it = nodoActual->hijos.begin();
             while (it->first < clave.back() && it != nodoActual->hijos.end()) {
                 it++;
@@ -297,7 +297,7 @@ string string_map<T>::siguienteClave(string claveActual) const {
 
                 char c = it->first;
                 clave.push_back(c);
-                flag = false;
+                sideSteps = false;
                 nodoActual = nodoActual->hijos[it++->first];
             }
         }
@@ -361,7 +361,7 @@ vector<typename string_map<T>::Nodo *> string_map<T>::getBranch(string key) cons
 }
 template <typename T>
 bool string_map<T>::operator!=(const string_map<T> &otro) const {
-    return !(*this == otro); /* @corregir(ivan): Si van a hacer esto al final, hubieran dejado sólo esta linea. */
+    return !(*this == otro);
 }
 
 template <typename T>
@@ -379,7 +379,6 @@ typename string_map<T>::const_iterator string_map<T>::begin() const {
 
 
 /////////////////////  empieza iterator /////////////////////
-/* @comentario(ivan): Queda mejor si lo definen en otro archivo. Este ya es largo :( */
 
 template<typename T>
 string_map<T>::iterator::iterator(const string_map *mapa) {

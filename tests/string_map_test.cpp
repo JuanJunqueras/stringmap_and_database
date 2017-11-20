@@ -67,7 +67,6 @@ TEST(string_map_test, test_siguiente_clave_sin_substring){
     string pe = m1.siguienteClave("le");
     EXPECT_EQ(pe,"pe");
 
-
 }
 TEST(string_map_test, test_asterisco){
     string_map<int> m1;
