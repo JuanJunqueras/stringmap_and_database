@@ -40,18 +40,19 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const BaseDeDatos &db;
+    BaseDeDatos const* db;
     Tabla::const_iterador_registros it_registros_tabla_principal;
     Tabla::const_iterador_registros it_registros_tabla_principal_end;
     set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice;
     set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice_end;
-    string nombre_tabla = "";
-    string nombre_campo = "";
+    string nombre_tabla;
+    string nombre_campo;
+    bool isEnd;
 
 public:
 
     join_iterator(
-            BaseDeDatos &db,
+            BaseDeDatos const *db,
             string nombre_tabla,
             string nombre_campo,
             Tabla::const_iterador_registros it_registros_tabla_principal,
@@ -66,7 +67,13 @@ public:
             it_registros_tabla_principal_end(it_registros_tabla_principal_end),
             it_registros_tabla_con_indice(it_registros_tabla_con_indice),
             it_registros_tabla_con_indice_end(it_registros_tabla_con_indice_end)
-    { }
+    {
+        if(it_registros_tabla_principal == it_registros_tabla_principal_end){
+            isEnd = true;
+        } else {
+            isEnd = false;
+        }
+    }
 
     join_iterator(const join_iterator &join_it) :
             db(join_it.db),
@@ -75,17 +82,20 @@ public:
             it_registros_tabla_principal(join_it.it_registros_tabla_principal),
             it_registros_tabla_principal_end(join_it.it_registros_tabla_principal_end),
             it_registros_tabla_con_indice(join_it.it_registros_tabla_con_indice),
-            it_registros_tabla_con_indice_end(join_it.it_registros_tabla_con_indice_end)
+            it_registros_tabla_con_indice_end(join_it.it_registros_tabla_con_indice_end),
+            isEnd(join_it.isEnd)
     { }
 
     join_iterator& operator=(const join_iterator &join_it) {
-//        this->db = join_it.db;
+        this->db = join_it.db;
         this->nombre_tabla = join_it.nombre_tabla;
         this->nombre_campo = join_it.nombre_campo;
         this->it_registros_tabla_principal = join_it.it_registros_tabla_principal;
         this->it_registros_tabla_principal_end = join_it.it_registros_tabla_principal_end;
         this->it_registros_tabla_con_indice = join_it.it_registros_tabla_con_indice;
         this->it_registros_tabla_con_indice_end = join_it.it_registros_tabla_con_indice_end;
+        this->isEnd = join_it.isEnd;
+        return *this;
     }
 
     join_iterator operator++() {
@@ -94,7 +104,7 @@ public:
             ++it_registros_tabla_con_indice;
         } else {
 
-            const BaseDeDatos::Indice &indice = db.indices.at(nombre_tabla).at(nombre_campo);
+            const BaseDeDatos::Indice &indice = db->indices.at(nombre_tabla).at(nombre_campo);
 
             // Iteramos sobre tabla principal, buscando el primer siguiente match con registro del indice
             bool match = false;
@@ -109,10 +119,10 @@ public:
             }
         }
 
-        if (it_registros_tabla_con_indice == it_registros_tabla_con_indice_end && it_registros_tabla_principal == it_registros_tabla_principal_end) {
-            this->nombre_campo = "";
-            this->nombre_tabla = "";
+        if (it_registros_tabla_principal == it_registros_tabla_principal_end) {
+            this->isEnd = true;
         }
+        return *this;
     }
 
     join_iterator operator++(int) {
@@ -129,7 +139,7 @@ public:
    * de los registros a los que apuntan los iteradores it_ o en ambos.
    * \complexity{\O(copy(Registro))}
    **/
-    Registro& operator*() {
+    Registro operator*() {
 
         // O(1)
         const Registro &r1 = *it_registros_tabla_principal;
@@ -158,14 +168,18 @@ public:
     }
 
     bool operator==(const join_iterator &it_1) const {
-        bool a = this->db == it_1.db;
-        bool b = this->nombre_tabla == it_1.nombre_tabla;
-        bool c = this->nombre_campo == it_1.nombre_campo;
-        bool d = this->it_registros_tabla_principal == it_1.it_registros_tabla_principal;
-        bool e = this->it_registros_tabla_principal_end == it_1.it_registros_tabla_principal_end;
-        bool f = this->it_registros_tabla_con_indice == it_1.it_registros_tabla_con_indice;
-        bool g = this->it_registros_tabla_con_indice_end == it_1.it_registros_tabla_con_indice_end;
-        return a && b && c && d && e && f && g;
+        if (this->isEnd && it_1.isEnd){
+            return true;
+        } else {
+            bool a = this->db == it_1.db;
+            bool b = this->nombre_tabla == it_1.nombre_tabla;
+            bool c = this->nombre_campo == it_1.nombre_campo;
+            bool d = this->it_registros_tabla_principal == it_1.it_registros_tabla_principal;
+            bool e = this->it_registros_tabla_principal_end == it_1.it_registros_tabla_principal_end;
+            bool f = this->it_registros_tabla_con_indice == it_1.it_registros_tabla_con_indice;
+            bool g = this->it_registros_tabla_con_indice_end == it_1.it_registros_tabla_con_indice_end;
+            return a && b && c && d && e && f && g;
+        }
     }
 
     bool operator!=(const join_iterator &it_1) const {

@@ -297,7 +297,7 @@ string string_map<T>::siguienteClave(string claveActual) const {
 
                 char c = it->first;
                 clave.push_back(c);
-                sideSteps = false;
+                sideSteps = true;
                 nodoActual = nodoActual->hijos[it++->first];
             }
         }

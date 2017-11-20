@@ -692,10 +692,10 @@ TEST_F(DBAlumnos, crit_doble_otro_bool) {
 
 #ifdef POST_SOLUCION
 TEST_F(DBAlumnos, join_vacio) {
-//    db.crearIndice("alumnos", "LU");
-//    auto begin = db.join("alumnos", "ex_alumnos", "LU");
-//    auto end = db.join_end();
-//    EXPECT_EQ(begin, end);
+    db.crearIndice("alumnos", "LU");
+    auto begin = db.join("alumnos", "ex_alumnos", "LU");
+    auto end = db.join_end();
+    EXPECT_EQ(begin, end);
 }
 
 TEST_F(DBAlumnos, join_sin_repetidos) {
@@ -710,7 +710,7 @@ TEST_F(DBAlumnos, join_sin_repetidos) {
         count++;
     }
 
-//    EXPECT_EQ(count, db.dameTabla("libretas").registros().size());
+    EXPECT_EQ(count, db.dameTabla("libretas").registros().size());
 
 //    linear_set<Registro> join(begin, end);
 //    EXPECT_EQ(join, join_libretas_alumnos.registros());
