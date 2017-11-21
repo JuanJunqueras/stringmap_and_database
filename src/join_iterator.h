@@ -59,7 +59,7 @@ public:
      *
      * \pre true
      * \post  Genera un iterador entre dos tablas
-     *FIXME:agregar complejidad  
+     *FIXME:agregar complejidad
      **/
 
     join_iterator(
@@ -86,7 +86,7 @@ public:
         isEnd = it_registros_tabla_principal == it_registros_tabla_principal_end;
     }
 
-    join_iterator(const join_iterator &join_it) :
+    join_iterator(const join_iterator &join_it) : //FIXME: documentar
             db(join_it.db),
             nombre_tabla(join_it.nombre_tabla),
             nombre_campo(join_it.nombre_campo),
@@ -97,7 +97,14 @@ public:
             it_registros_tabla_con_indice_end(join_it.registros_en_indice.end()),
             isEnd(join_it.isEnd),
             prioridad_campos_r1(join_it.prioridad_campos_r1) {}
-
+    /**
+        * @brief Comparación entre join_iterators
+        *
+        * \pre ambos join_iterators refieren al mismo par de tablas.
+        * \post true sii los iteradores generados son iguales
+        *
+        * \complexity //FIXME: completar
+    */
     join_iterator &operator=(const join_iterator &join_it) = default;
 
     void operator++() {
