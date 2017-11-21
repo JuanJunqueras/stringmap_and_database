@@ -40,7 +40,7 @@ public:
      * Hacer ++ es O(1) asumiendo que las claves esten acotadas.
      * */
     class iterator{
-        void setClave(key_type key);
+
         const string_map* mapa;
         friend class string_map;
         key_type claveActual;
@@ -65,7 +65,7 @@ public:
     /* idem iterator, pero los valores devueltos son constantes evitando aliasing. */
     class const_iterator{
 
-            void setClave(key_type key);
+
             const string_map* mapa;
             friend class string_map;
             key_type claveActual;
@@ -320,9 +320,9 @@ private:
     /** \name Representación
      * rep: string_map \TO bool\n
      * rep(m) \EQUIV
-     *  si la raiz esta apuntando a nullptr,
+     *  si la raiz esta apuntando a nullptr como valor, y no tiene hijos
      *  entonces el string_map no tiene ninguna clave con un significado definido.
-     *  Si un nodo apunta a nullptr como valor, entonces
+     *  Si un nodo distinto a la raiz apunta a nullptr como valor, entonces
      *  tiene que tener al menos un hijo, a menos que sea la raiz.
      *  Todas las otras hojas del arbol tienen un valor distinto de nullptr.
      *  "" no es una clave valida, y nullptr no un valor valido.

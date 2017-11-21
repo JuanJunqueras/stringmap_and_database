@@ -9,7 +9,7 @@ string_set::string_set() {
 
 
 string_set::~string_set() {
-    /* @corregir(ivan): Sin terminar */
+    this->clear();
 }
 
 

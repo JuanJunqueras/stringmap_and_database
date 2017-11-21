@@ -10,7 +10,7 @@ string_map<T>::string_map() {
 
 template<typename T>
 string_map<T>::~string_map() {
-    /* @corregir(ivan): Sin terminar */
+    this->clear();
 }
 
 template<typename T>
@@ -26,7 +26,7 @@ string_map<T>::string_map(const string_map & other) {
 
 template<typename T>
 string_map<T>& string_map<T>::operator=(const string_map &otro)  {
-    this->clear(); //el problema esta aca
+    this->clear();
     auto it = otro.cbegin();
     while (!it.isEnd()){
         auto aInsertar = *it;
@@ -112,8 +112,6 @@ typename string_map<T>::iterator string_map<T>::begin() {
 }
 
 
-
-
 template<typename T>
 typename string_map<T>::const_iterator string_map<T>::end() const {
     /* @comentario(ivan): acá podrían usar un constructor vacío como hacen con el cons_iterator (linea 131 de este archivo) */
@@ -152,7 +150,6 @@ typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_ty
 }
 
 template<typename T>
-/* @corregir(ivan): Por qué el algoritmo del find para el string_map const difiere del algoritmo del find para el string_map ? */
 typename string_map<T>::const_iterator string_map<T>::find(const string_map<T>::key_type &key) const {
     Nodo *nodoEncontrado = findNodo(key);
     if (nodoEncontrado == nullptr) {
@@ -192,7 +189,7 @@ pair<typename string_map<T>::iterator, bool> string_map<T>::insert(const string_
         this->_cantidadDeClaves++;
         pair<string_map<T>::iterator, bool> res;
         auto it = iterator(this);
-        it.setClave(value.first);
+        it.claveActual = value.first;
         res = make_pair(it, inserta);
         return res;
     }
@@ -257,6 +254,9 @@ string string_map<T>::primeraClave() const {
     return clave;
 }
 
+
+//La idea del algoritmo es ir agregando o quitando caracteres a la clave
+//a medida que sube o baja por los nodos buscando el siguiente
 template<typename T>
 string string_map<T>::siguienteClave(string claveActual) const {
     Nodo *nodoActual = findNodo(claveActual);
@@ -393,13 +393,13 @@ string_map<T>::iterator::iterator(const string_map *mapa) {
 
 template<typename T>
 typename string_map<T>::iterator::value_type string_map<T>::iterator::operator*() {
-    value_type pair = value_type(getClave(), *valorActual);
+    value_type pair = value_type(claveActual, *valorActual);
     return pair;
 }
 
 template<typename T>
 typename string_map<T>::iterator::value_type* string_map<T>::iterator::operator->() {
-    value_type* pair = new value_type(getClave(), *valorActual);
+    value_type* pair = new value_type(claveActual, *valorActual);
     return pair;
 }
 
@@ -432,12 +432,6 @@ typename string_map<T>::key_type string_map<T>::iterator::getClave() {
 }
 
 template<typename T>
-void string_map<T>::iterator::setClave(string_map::key_type key) {
-    claveActual = key;
-}
-
-
-template<typename T>
 bool string_map<T>::iterator::operator==(const string_map<T>::iterator &o_it) const{
     return (o_it.mapa == this->mapa) && (o_it.claveActual == this->claveActual);
 }
@@ -451,7 +445,7 @@ bool string_map<T>::iterator::operator!=(const string_map<T>::iterator &o_it) co
 
 template<typename T>
 typename string_map<T>::const_iterator::value_type string_map<T>::const_iterator::operator*() {
-    value_type pair = value_type(getClave(), *valorActual);
+    value_type pair = value_type(claveActual, *valorActual);
     return pair;
 }
 
@@ -469,11 +463,6 @@ string_map<T>::const_iterator::const_iterator() {
 template<typename T>
 bool string_map<T>::const_iterator::isEnd() {
     return claveActual == "";
-}
-
-template<typename T>
-void string_map<T>::const_iterator::setClave(string_map<T>::key_type key) {
-    claveActual = key;
 }
 
 template<typename T>
