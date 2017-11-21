@@ -102,11 +102,24 @@ public:
     }
     return existe;
   }
+    /** @brief Operadores de comparacion
+  *
+  * \pre true //FIXME: chequear
+  * \post res  = (indices_dato_string(this) = indices_dato_string(otro) \LAND
+  * (indices_dato_nat(this) = indices_dato_nat(otro) \LAND
+  * \complexity{}//FIXME:completar
+  */
 
   bool operator==(const Indice &indice) const {
       return this->indices_dato_string == indice.indices_dato_string && this->indices_dato_nat == indice.indices_dato_nat;
   }
-
+    /** @brief Operadores de comparacion
+     *
+     * \pre true //fixme: chequear
+     * \post true sii el operator== es falso.
+     *
+     * \complexity // idem operator== //fixme: completar
+ */
    bool operator!=(const Indice &indice) const {
        return !(*this == indice);
    }

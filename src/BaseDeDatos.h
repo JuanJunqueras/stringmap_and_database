@@ -201,7 +201,7 @@ public:
      */
     join_iterator join(const string &tabla1, const string &tabla2, const string &campo) const;
 
-    join_iterator join_end() const;
+    join_iterator join_end() const; //FIXME: necesita docu?
 
     /** @brief Operadores de comparacion
     *
