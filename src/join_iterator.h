@@ -106,6 +106,16 @@ public:
         * \complexity //FIXME: completar
     */
     join_iterator &operator=(const join_iterator &join_it) = default;
+    /**
+     * @brief Si la tabla con índice no llegó a su final, avanza el iterador de ésta tabla una posición.
+     * En caso contrario (la tabla con índice llegó a su fin), avanza la tabla, que no tiene índice, una posición.
+     * \pre Los iteradores no deben estar en la posición pasando-el-último de ambas tablas.
+     * \post \P{res} es una referencia a \P{this}. \P{this} apunta a la posición
+     * siguiente. En caso de que la tabla con índice llegue a su fin, se apunta a la posición siguiente
+     * de la tabla que no tiene índice y a la primera de la que sí lo tiene //FIXME: chequear
+     *
+     * \complexity{\O(1)} //FIXME: chequear
+    **/
 
     void operator++() {
 
