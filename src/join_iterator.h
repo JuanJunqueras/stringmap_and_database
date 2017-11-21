@@ -148,7 +148,7 @@ public:
         }
     }
 
-    void operator++(int) {
+    void operator++(int) { //FIXME: no sé que es esto, necesita docu?
         ++(*this);
     }
 
