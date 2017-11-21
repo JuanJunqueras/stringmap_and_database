@@ -6,6 +6,7 @@
 #define TP2_GRUPO2_JOIN_ITERATOR_H
 
 #include <set>
+#include <utility>
 #include "Tabla.h"
 #include "BaseDeDatos.h"
 #include "Indice.h"
@@ -41,7 +42,7 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    BaseDeDatos const* db;
+    BaseDeDatos const *db;
     Tabla::const_iterador_registros it_registros_tabla_principal;
     Tabla::const_iterador_registros it_registros_tabla_principal_end;
     set<Tabla::const_iterador_registros> registros_en_indice;
@@ -66,8 +67,8 @@ public:
             bool prioridad_campos_tabla_principal
     ) :
             db(db),
-            nombre_tabla(nombre_tabla),
-            nombre_campo(nombre_campo),
+            nombre_tabla(std::move(nombre_tabla)),
+            nombre_campo(std::move(nombre_campo)),
             it_registros_tabla_principal(it_registros_tabla_principal),
             it_registros_tabla_principal_end(it_registros_tabla_principal_end),
             registros_en_indice(registros_en_indice),
@@ -88,22 +89,9 @@ public:
             it_registros_tabla_con_indice(join_it.registros_en_indice.begin()),
             it_registros_tabla_con_indice_end(join_it.registros_en_indice.end()),
             isEnd(join_it.isEnd),
-            prioridad_campos_r1(join_it.prioridad_campos_r1)
-    { }
+            prioridad_campos_r1(join_it.prioridad_campos_r1) {}
 
-    join_iterator& operator=(const join_iterator &join_it) {
-        this->db = join_it.db;
-        this->nombre_tabla = join_it.nombre_tabla;
-        this->nombre_campo = join_it.nombre_campo;
-        this->it_registros_tabla_principal = join_it.it_registros_tabla_principal;
-        this->it_registros_tabla_principal_end = join_it.it_registros_tabla_principal_end;
-        this->registros_en_indice = join_it.registros_en_indice;
-        this->it_registros_tabla_con_indice = join_it.it_registros_tabla_con_indice;
-        this->it_registros_tabla_con_indice_end = join_it.it_registros_tabla_con_indice_end;
-        this->isEnd = join_it.isEnd;
-        this->prioridad_campos_r1 = join_it.prioridad_campos_r1;
-        return *this;
-    }
+    join_iterator &operator=(const join_iterator &join_it) = default;
 
     void operator++() {
 
@@ -176,12 +164,13 @@ public:
             }
         }
 
-        Registro registro_join = Registro(campos_registro_join, datos_registro_join); // O(C * copy(Dato)) = O(C) = O(copy(Registro))
+        Registro registro_join = Registro(campos_registro_join,
+                                          datos_registro_join); // O(C * copy(Dato)) = O(C) = O(copy(Registro))
         return registro_join;
     }
 
     bool operator==(const join_iterator &it_1) const {
-        if (this->isEnd && it_1.isEnd){
+        if (this->isEnd && it_1.isEnd) {
             return true;
         } else {
             bool a = this->db == it_1.db;
