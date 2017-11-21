@@ -193,6 +193,15 @@ public:
         return registro_join;
     }
 
+    /** @brief Operadores de comparacion
+     *
+     * \pre true //fixme: chequear
+     * \post true sii las tablas por las que se hace el join_iterator son iguales, esto quiere decir
+     * que avanzar desde una mísma posción de el mísmo iterador, y desreferenciar desde la mísma posicón devuelve
+     * los mísmos registros.
+     *
+     * \complexity //fixme: completar
+    */
     bool operator==(const join_iterator &it_1) const {
         if (this->isEnd && it_1.isEnd) {
             return true;
@@ -207,7 +216,13 @@ public:
             return a && b && c && d && e && f && g;
         }
     }
-
+    /** @brief Operadores de comparacion
+    *
+    * \pre true //fixme: chequear
+    * \post true sii el operator== es falso.
+    *
+    * \complexity //fixme: completar
+   */
     bool operator!=(const join_iterator &it_1) const {
         return !(*this == it_1);
     }
