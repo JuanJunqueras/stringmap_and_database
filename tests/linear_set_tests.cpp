@@ -121,6 +121,7 @@ TEST_F(SetTest, mostrar) {
 TEST_F(SetTest, algorithm_copy) {
   linear_set<int> in = {1, 2, 3, 4};
   list<int> out(in.begin(), in.end());
+
   linear_set<Registro> in_regs = {Registro({"LU"}, {datoStr("123/45")}),
                                   Registro({"LU"}, {datoStr("124/45")})};
   list<Registro> out_regs;
