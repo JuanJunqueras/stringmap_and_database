@@ -205,7 +205,7 @@ public:
 
     /** @brief Operadores de comparacion
     *
-    * \pre true
+    * \pre true //FIXME: chequear
     * \post res  = (_nombres_tablas(this) = _nombres_tablas(otro) \LAND
     * (_tablas(this) = _tablas(otro) \LAND
     * (_uso_criterios(this) = _uso_criterios(otro) \LAND
@@ -217,7 +217,13 @@ public:
              this->_uso_criterios == db._uso_criterios &&
              this->indices == db.indices;
     }
-
+    /** @brief Operadores de comparacion
+        *
+        * \pre true //fixme: chequear
+        * \post true sii el operator== es falso.
+        *
+        * \complexity // idem operator== //fixme: completar
+    */
     bool operator!=(const BaseDeDatos &db) const {
       return !(*this == db);
     }
