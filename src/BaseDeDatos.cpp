@@ -177,11 +177,13 @@ BaseDeDatos::join_iterator BaseDeDatos::join(const string &tabla1, const string 
   string tabla_principal = tabla1;
   string tabla_con_indice = tabla2;
 
-  // Chequeamos si efectivamente la tabla2 tiene indice
+  // Chequeamos si efectivamente la tabla2 tiene indice en el campo
   // Si no lo tiene, por precondicion sabemos que tabla1 tiene indice
-  if (indices.count(tabla_con_indice) == 0 ) {
+  bool prioridad_campos_tabla_principal = true;
+  if (indices.count(tabla_con_indice) == 0 || indices.at(tabla_con_indice).count(campo) == 0) {
     tabla_principal = tabla2;
     tabla_con_indice = tabla1;
+    prioridad_campos_tabla_principal = false;
   }
 
   const Tabla &tabla = this->dameTabla(tabla_principal);
@@ -199,23 +201,27 @@ BaseDeDatos::join_iterator BaseDeDatos::join(const string &tabla1, const string 
     if (indice.existe(dato)) {
       registros_en_indice = indice.registros(dato);
       match = true;
+    } else {
+      ++it_registros_tabla_principal;
     }
-    ++it_registros_tabla_principal;
   }
 
-    return join_iterator(this,
-                         tabla_con_indice,
-                         campo,
-                         it_registros_tabla_principal,
-                         it_registros_tabla_principal_end,
-                         registros_en_indice.begin(),
-                         registros_en_indice.end()
-        );
-    }
+
+  return join_iterator(this,
+                       tabla_con_indice,
+                       campo,
+                       it_registros_tabla_principal,
+                       it_registros_tabla_principal_end,
+                       registros_en_indice,
+                       registros_en_indice.begin(),
+                       registros_en_indice.end(),
+                       prioridad_campos_tabla_principal
+  );
+}
 
 BaseDeDatos::join_iterator BaseDeDatos::join_end() const {
   Tabla t({}, {}, {});
   set<Tabla::const_iterador_registros> s;
-  join_iterator join_it(this, "", "", t.registros_end(), t.registros_end(), s.end(), s.end());
+  join_iterator join_it(this, "", "", t.registros_end(), t.registros_end(), s, s.end(), s.end(), true);
   return join_it;
 }

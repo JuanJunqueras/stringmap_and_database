@@ -44,11 +44,13 @@ private:
     BaseDeDatos const* db;
     Tabla::const_iterador_registros it_registros_tabla_principal;
     Tabla::const_iterador_registros it_registros_tabla_principal_end;
+    set<Tabla::const_iterador_registros> registros_en_indice;
     set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice;
     set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice_end;
     string nombre_tabla;
     string nombre_campo;
     bool isEnd;
+    bool prioridad_campos_r1;
 
 public:
 
@@ -56,24 +58,24 @@ public:
             BaseDeDatos const *db,
             string nombre_tabla,
             string nombre_campo,
-            Tabla::const_iterador_registros it_registros_tabla_principal,
-            Tabla::const_iterador_registros it_registros_tabla_principal_end,
-            set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice,
-            set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice_end
+            const Tabla::const_iterador_registros &it_registros_tabla_principal,
+            const Tabla::const_iterador_registros &it_registros_tabla_principal_end,
+            const set<Tabla::const_iterador_registros> &registros_en_indice,
+            const set<Tabla::const_iterador_registros>::iterator &it_registros_tabla_con_indice,
+            const set<Tabla::const_iterador_registros>::iterator &it_registros_tabla_con_indice_end,
+            bool prioridad_campos_tabla_principal
     ) :
             db(db),
             nombre_tabla(nombre_tabla),
             nombre_campo(nombre_campo),
             it_registros_tabla_principal(it_registros_tabla_principal),
             it_registros_tabla_principal_end(it_registros_tabla_principal_end),
+            registros_en_indice(registros_en_indice),
             it_registros_tabla_con_indice(it_registros_tabla_con_indice),
-            it_registros_tabla_con_indice_end(it_registros_tabla_con_indice_end)
+            it_registros_tabla_con_indice_end(it_registros_tabla_con_indice_end),
+            prioridad_campos_r1(prioridad_campos_tabla_principal)
     {
-        if(it_registros_tabla_principal == it_registros_tabla_principal_end){
-            isEnd = true;
-        } else {
-            isEnd = false;
-        }
+        isEnd = it_registros_tabla_principal == it_registros_tabla_principal_end;
     }
 
     join_iterator(const join_iterator &join_it) :
@@ -82,9 +84,11 @@ public:
             nombre_campo(join_it.nombre_campo),
             it_registros_tabla_principal(join_it.it_registros_tabla_principal),
             it_registros_tabla_principal_end(join_it.it_registros_tabla_principal_end),
-            it_registros_tabla_con_indice(join_it.it_registros_tabla_con_indice),
-            it_registros_tabla_con_indice_end(join_it.it_registros_tabla_con_indice_end),
-            isEnd(join_it.isEnd)
+            registros_en_indice(join_it.registros_en_indice),
+            it_registros_tabla_con_indice(join_it.registros_en_indice.begin()),
+            it_registros_tabla_con_indice_end(join_it.registros_en_indice.end()),
+            isEnd(join_it.isEnd),
+            prioridad_campos_r1(join_it.prioridad_campos_r1)
     { }
 
     join_iterator& operator=(const join_iterator &join_it) {
@@ -93,18 +97,23 @@ public:
         this->nombre_campo = join_it.nombre_campo;
         this->it_registros_tabla_principal = join_it.it_registros_tabla_principal;
         this->it_registros_tabla_principal_end = join_it.it_registros_tabla_principal_end;
+        this->registros_en_indice = join_it.registros_en_indice;
         this->it_registros_tabla_con_indice = join_it.it_registros_tabla_con_indice;
         this->it_registros_tabla_con_indice_end = join_it.it_registros_tabla_con_indice_end;
         this->isEnd = join_it.isEnd;
+        this->prioridad_campos_r1 = join_it.prioridad_campos_r1;
         return *this;
     }
 
-    join_iterator operator++() {
+    void operator++() {
 
         if (it_registros_tabla_con_indice != it_registros_tabla_con_indice_end) {
             ++it_registros_tabla_con_indice;
-        } else {
+        }
 
+        if (it_registros_tabla_con_indice == it_registros_tabla_con_indice_end) {
+
+            ++it_registros_tabla_principal;
             const BaseDeDatos::Indice &indice = db->indices.at(nombre_tabla).at(nombre_campo);
 
             // Iteramos sobre tabla principal, buscando el primer siguiente match con registro del indice
@@ -112,21 +121,22 @@ public:
             while (!match && it_registros_tabla_principal != it_registros_tabla_principal_end) {
                 auto dato = (*it_registros_tabla_principal).dato(nombre_campo);
                 if (indice.existe(dato)) {
+                    registros_en_indice = indice.registros(dato);
                     it_registros_tabla_con_indice = indice.registros(dato).begin();
                     it_registros_tabla_con_indice_end = indice.registros(dato).end();
                     match = true;
+                } else {
+                    ++it_registros_tabla_principal;
                 }
-                ++it_registros_tabla_principal;
             }
         }
 
         if (it_registros_tabla_principal == it_registros_tabla_principal_end) {
             this->isEnd = true;
         }
-        return *this;
     }
 
-    join_iterator operator++(int) {
+    void operator++(int) {
         ++(*this);
     }
 
@@ -151,14 +161,16 @@ public:
         // Agregamos campos y datos del primer registro
         const string_set &campos_r1 = r1.campos(); // O(1)
         for (const string &campo_r1 : campos_r1) { // O(C)
-            campos_registro_join.push_back(campo_r1); // O(1)
-            datos_registro_join.push_back(r1.dato(campo_r1)); // O(1)
+            if (!r2.pertenece(campo_r1) || prioridad_campos_r1) { // O(1)
+                campos_registro_join.push_back(campo_r1); // O(1)
+                datos_registro_join.push_back(r1.dato(campo_r1)); // O(1)
+            }
         }
 
         // Agregamos campos y datos del segundo registro, si estos no están ya en el primero
         const string_set &campos_r2 = r2.campos();
         for (const string &campo_r2 : campos_r2) { // O(C)
-            if (!r1.pertenece(campo_r2)) { // O(1)
+            if (!r1.pertenece(campo_r2) || !prioridad_campos_r1) { // O(1)
                 campos_registro_join.push_back(campo_r2); // O(1)
                 datos_registro_join.push_back(r2.dato(campo_r2)); // O(1)
             }
