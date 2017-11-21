@@ -203,6 +203,14 @@ public:
 
     join_iterator join_end() const;
 
+    /** @brief Operadores de comparacion
+    *
+    * \pre true
+    * \post res  = (_nombres_tablas(this) = _nombres_tablas(otro) \LAND
+    * (_tablas(this) = _tablas(otro) \LAND
+    * (_uso_criterios(this) = _uso_criterios(otro) \LAND
+    * \complexity{}//FIXME:completar
+    */
     bool operator==(const BaseDeDatos &db) const {
       return this->_nombres_tablas == db._nombres_tablas &&
              this->_tablas == db._tablas &&
