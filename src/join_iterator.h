@@ -54,6 +54,13 @@ private:
     bool prioridad_campos_r1;
 
 public:
+    /**
+     * @brief Constructor por parámetros de la clase join_iterator.
+     *
+     * \pre true
+     * \post  Genera un iterador entre dos tablas
+     *FIXME:agregar complejidad  
+     **/
 
     join_iterator(
             BaseDeDatos const *db,
