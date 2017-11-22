@@ -45,13 +45,12 @@ int BaseDeDatos::uso_criterio(const BaseDeDatos::Criterio &criterio) const {
     }
 }
 
-//FIXME: consultar: /* @corregir(ivan): No cumple la complejidad pedida. */
 bool BaseDeDatos::registroValido(const Registro &r,
                                  const string &nombre) const {
     const Tabla &t = _tablas.at(nombre); // O(1) por nombre acotado.
 
     return (t.campos() == r.campos() and _mismos_tipos(r, t) and // O(C)
-            _no_repite(r, t)); // O(C + C*n*c )
+            _no_repite(r, t)); // O(C + n*c*L)
 }
 
 bool BaseDeDatos::_mismos_tipos(const Registro &r, const Tabla &t) const {
@@ -111,16 +110,15 @@ pair<vector<string>, vector<Dato> > BaseDeDatos::_tipos_tabla(const Tabla &t) {
     return make_pair(res_campos, res_tipos);
 }
 
-//FIXME: consultar:/* @corregir(ivan): No cumple con la complejidad pedida. */
 bool BaseDeDatos::criterioValido(const Criterio &c,
                                  const string &nombre) const {
     const Tabla &t = _tablas.at(nombre);
     for (auto restriccion : c) { // O(cr)
-        if (not t.campos().count(restriccion.campo())) { // O(C)
+        if (not t.campos().count(restriccion.campo())) { // O(1) por campo acotado
             return false;
         }
         if (t.tipoCampo(restriccion.campo()).esNat() !=
-            restriccion.dato().esNat()) { // O(C)
+            restriccion.dato().esNat()) { // O(1) por campo acotado
             return false;
         }
     }
@@ -164,58 +162,68 @@ linear_set<BaseDeDatos::Criterio> BaseDeDatos::top_criterios() const {
     return ret;
 }
 
-//FIXME: consultar: /* @corregir(ivan): No cumple con la complejidad pedida. */
 void BaseDeDatos::crearIndice(const string &nombre, const string &campo) {
-    const Tabla &t = this->dameTabla(nombre); // O(1)
+    const Tabla &t = this->dameTabla(nombre); // O(1) por nombre acotado
     for (auto it_reg = t.registros_begin(); it_reg != t.registros_end(); ++it_reg) { // O(m)
-        indices[nombre][campo].agregarRegistro(campo, it_reg); // TODO: revisar complejidad
+        indices[nombre][campo].agregarRegistro(campo, it_reg); // O(L + log m)
     }
 }
 
 BaseDeDatos::join_iterator BaseDeDatos::join(const string &tabla1, const string &tabla2, const string &campo) const {
 
-    string tabla_principal = tabla1;
-    string tabla_con_indice = tabla2;
+    string tabla_principal = tabla1; //O(1)
+    string tabla_con_indice = tabla2; //O(1)
 
     // Chequeamos si efectivamente la tabla2 tiene indice en el campo
     // Si no lo tiene, por precondicion sabemos que tabla1 tiene indice
-    bool prioridad_campos_tabla_principal = true;
-    if (indices.count(tabla_con_indice) == 0 || indices.at(tabla_con_indice).count(campo) == 0) {
-        tabla_principal = tabla2;
-        tabla_con_indice = tabla1;
-        prioridad_campos_tabla_principal = false;
+    bool prioridad_campos_tabla_principal = true; //O(1)
+    if (indices.count(tabla_con_indice) == 0 || indices.at(tabla_con_indice).count(campo) == 0) { //O(1) por nombres acotados
+        tabla_principal = tabla2; //O(1)
+        tabla_con_indice = tabla1; //O(1)
+        prioridad_campos_tabla_principal = false; //O(1)
     }
 
-    const Tabla &tabla = this->dameTabla(tabla_principal);
-    const Indice &indice = indices.at(tabla_con_indice).at(campo);
+    const Tabla &tabla = this->dameTabla(tabla_principal); //O(1)
+    const Indice &indice = indices.at(tabla_con_indice).at(campo); //O(1)
 
     // Declaramos iterador de tabla principal y variable para almacenar los conjuntos de registros del indice
-    set<Tabla::const_iterador_registros> registros_en_indice;
-    auto it_registros_tabla_principal = tabla.registros_begin();
-    auto it_registros_tabla_principal_end = tabla.registros_end();
+    //set<Tabla::const_iterador_registros> registros_en_indice; //O(1)
+    auto it_registros_tabla_principal = tabla.registros_begin(); //O(1)
+    auto it_registros_tabla_principal_end = tabla.registros_end(); //O(1)
 
     // Iteramos sobre tabla principal, buscando el primer match con registro del indice
-    bool match = false;
-    while (!match && it_registros_tabla_principal != it_registros_tabla_principal_end) {
-        auto dato = (*it_registros_tabla_principal).dato(campo);
-        if (indice.existe(dato)) {
-            registros_en_indice = indice.registros(dato);
-            match = true;
-        } else {
-            ++it_registros_tabla_principal;
+    bool match = false; //O(1)
+    while (it_registros_tabla_principal != it_registros_tabla_principal_end) { //O(n)
+        auto dato = (*it_registros_tabla_principal).dato(campo); //O(L + log(m))
+        if (indice.existe(dato)) { //O(L + log(m))
+            return join_iterator(this, //O(1)
+                                 tabla_con_indice,
+                                 campo,
+                                 it_registros_tabla_principal,
+                                 it_registros_tabla_principal_end,
+                                 indice.registros(dato),
+                                 indice.registros(dato).begin(),
+                                 indice.registros(dato).end(),
+                                 prioridad_campos_tabla_principal
+            );
+//            registros_en_indice = indice.registros(dato);
+//            match = true;
         }
+        ++it_registros_tabla_principal;
+
     }
 
-    return join_iterator(this,
-                         tabla_con_indice,
-                         campo,
-                         it_registros_tabla_principal,
-                         it_registros_tabla_principal_end,
-                         registros_en_indice,
-                         registros_en_indice.begin(),
-                         registros_en_indice.end(),
-                         prioridad_campos_tabla_principal
-    );
+//    return join_iterator(this,
+//                         tabla_con_indice,
+//                         campo,
+//                         it_registros_tabla_principal,
+//                         it_registros_tabla_principal_end,
+//                         registros_en_indice,
+//                         registros_en_indice.begin(),
+//                         registros_en_indice.end(),
+//                         prioridad_campos_tabla_principal
+//    );
+    return join_end(); //=(1
 }
 
 BaseDeDatos::join_iterator BaseDeDatos::join_end() const {

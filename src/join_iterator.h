@@ -1,6 +1,3 @@
-//
-// Created by Agustín Argüello on 11/4/17.
-//
 
 #ifndef TP2_GRUPO2_JOIN_ITERATOR_H
 #define TP2_GRUPO2_JOIN_ITERATOR_H
@@ -29,15 +26,19 @@ private:
      * rep: join_iterator \TO bool\n
 	rep(ji) \EQUIV
 
-	it_registros_tabla_principal = it_registros_tabla_principal_end \IMPLIES it_registros_tabla_con_indice = it_registros_tabla_con_indice_end
-	it_registros_tabla_con_indice != it_registros_tabla_con_indice_end \IMPLIES it_registros_tabla_principal != it_registros_tabla_principal_end
-	Tabla(it_registros_tabla_principal) == Tabla(it_registros_tabla_principal_end)
-	set(it_registros_tabla_con_indice) == set(it_registros_tabla_con_indice_end)
-	end(set(it_registros_tabla_con_indice)) == it_registros_tabla_con_indice_end
-	end( Tabla(1)) == it_registros_tabla_principal_end
+     * db es un puntero a la base de datos a la que pertenecen las tablas a las que se les hace el join.
+     *it_registros_tabla_principal es un iterador que apunta a un registro de la tabla no necesariamente
+     indexada.
+     *it_registros_tabla_con_indice es un iterador que apunta a un registro de la tabla indexada.
+     *it_registros_tabla_principal e it_registros_tabla_principal_end apuntan a registros de la misma tabla.
+     *it_registros_tabla_con_indice e it_registros_tabla_con_indice_end apuntan a registros de la misma tabla.
+     *it_registros_tabla_principal_end es el iterador past-the-end de los registros de la tabla principal.
+     *it_registros_tabla_principal solo puede ser igual a it_registros_tabla_principal_end si la tabla principal
+     no tiene registros o si it_registros_tabla_con_indice es igual a it_registros_tabla_con_indice_end.
+     *
 
 	abs: No equivale a ningun TAD, pues no vimos una representacion abstracta para los iteradores.
-     Sin emargo la tabla que 'itera'
+     Sin embargo la tabla que 'itera'
      es el resultado de hacer join de las dos tablas pasadas por parametro.
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +60,7 @@ public:
      *
      * \pre true
      * \post  Genera un iterador entre dos tablas
-     *FIXME:agregar complejidad
+     * \complexity O(1)
      **/
 
     join_iterator(
@@ -85,36 +86,44 @@ public:
     {
         isEnd = it_registros_tabla_principal == it_registros_tabla_principal_end;
     }
-
-    join_iterator(const join_iterator &join_it) : //FIXME: documentar
-            db(join_it.db),
-            nombre_tabla(join_it.nombre_tabla),
-            nombre_campo(join_it.nombre_campo),
-            it_registros_tabla_principal(join_it.it_registros_tabla_principal),
-            it_registros_tabla_principal_end(join_it.it_registros_tabla_principal_end),
-            registros_en_indice(join_it.registros_en_indice),
-            it_registros_tabla_con_indice(join_it.registros_en_indice.begin()),
-            it_registros_tabla_con_indice_end(join_it.registros_en_indice.end()),
-            isEnd(join_it.isEnd),
-            prioridad_campos_r1(join_it.prioridad_campos_r1) {}
+    /**
+     * @brief Constructor por copia de la clase join_iterator.
+     *
+     * \pre true
+     * \post  Genera un iterador entre dos tablas
+     * \complexity O(m) FIXME chequear con agus
+     **/
+    join_iterator(const join_iterator &join_it) :
+            db(join_it.db), //O(1)
+            nombre_tabla(join_it.nombre_tabla), //O(1)
+            nombre_campo(join_it.nombre_campo), //O(1)
+            it_registros_tabla_principal(join_it.it_registros_tabla_principal), //O(1)
+            it_registros_tabla_principal_end(join_it.it_registros_tabla_principal_end), //O(1)
+            registros_en_indice(join_it.registros_en_indice), //O(1)
+            it_registros_tabla_con_indice(join_it.registros_en_indice.begin()), //O(m)
+            it_registros_tabla_con_indice_end(join_it.registros_en_indice.end()), //O(1)
+            isEnd(join_it.isEnd), //O(1)
+            prioridad_campos_r1(join_it.prioridad_campos_r1) {} //O(1)
     /**
         * @brief Comparación entre join_iterators
         *
         * \pre ambos join_iterators refieren al mismo par de tablas.
         * \post true sii los iteradores generados son iguales
         *
-        * \complexity //FIXME: completar
+        * \complexity //FIXME: chequear con Agus
     */
     join_iterator &operator=(const join_iterator &join_it) = default;
     /**
      * @brief Si la tabla con índice no llegó a su final, avanza el iterador de ésta tabla una posición.
-     * En caso contrario (la tabla con índice llegó a su fin), avanza la tabla, que no tiene índice, una posición.
+     * En caso contrario (la tabla con índice llegó a su fin), avanza el iterador de la tabla principal
+     * una posición. Si el iterador de la tabla principal es igual a end, activa el flag correspondiente.
+     *
      * \pre Los iteradores no deben estar en la posición pasando-el-último de ambas tablas.
      * \post \P{res} es una referencia a \P{this}. \P{this} apunta a la posición
      * siguiente. En caso de que la tabla con índice llegue a su fin, se apunta a la posición siguiente
-     * de la tabla que no tiene índice y a la primera de la que sí lo tiene //FIXME: chequear
+     * de la tabla que no tiene índice y a la primera de la que sí lo tiene //FIXME: chequear con Agus
      *
-     * \complexity{\O(1)} //FIXME: chequear
+     * \complexity{\O(1)} //FIXME: chequear con Agus
     **/
 
     void operator++() {
@@ -195,14 +204,17 @@ public:
 
     /** @brief Operadores de comparacion
      *
-     * \pre true //fixme: chequear
+     * \pre true
      * \post true sii las tablas por las que se hace el join_iterator son iguales, esto quiere decir
-     * que avanzar desde una mísma posción de el mísmo iterador, y desreferenciar desde la mísma posicón devuelve
-     * los mísmos registros.
+     * que avanzar desde una misma posición del mismo iterador, y desreferenciar desde la misma posición devuelve
+     * los mismos registros.
      *
-     * \complexity //fixme: completar
+     * \complexity O(1) // FIXME chequear con Agus.
     */
     bool operator==(const join_iterator &it_1) const {
+        if (this->db != it_1.db){
+            return false;
+        }
         if (this->isEnd && it_1.isEnd) {
             return true;
         } else {
@@ -216,12 +228,12 @@ public:
             return a && b && c && d && e && f && g;
         }
     }
-    /** @brief Operadores de comparacion
+    /** @brief Operadores de comparación
     *
-    * \pre true //fixme: chequear
+    * \pre true
     * \post true sii el operator== es falso.
     *
-    * \complexity //fixme: completar
+    * \complexity //O(1) // FIXME chequear con Agus.
    */
     bool operator!=(const join_iterator &it_1) const {
         return !(*this == it_1);

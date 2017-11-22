@@ -128,8 +128,7 @@ public:
    * \pre nombre \IN tablas(\P{this})
    * \post \P{res} = puedoInsertar?(r, dameTabla(nombre, \P{this}))
    *
-   * \complexity{\O(T + C^2 + (c * C + c * n * (C + L)))}  //FIXME: chequear si ya tenemos la complejidad requerida o hay que modificar la función
-   * //expected O(C + (c ∗ n ∗ L))
+   * \complexity{\O(C + (c ∗ n ∗ L))}
    */
   bool registroValido(const Registro &r, const string &nombre) const;
 
