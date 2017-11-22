@@ -294,10 +294,10 @@ private:
       *  La cantidad de claves es igual a la cantidad de strings
       *  tal que el significado existe (i.e., no es " ").
       *
-      * abs: string_set \TO Diccionario(string, T)\n
-      * abs(m) \EQUIV m' tal que es un dicc e \|
+      * abs: string_set \TO conj(string)\n
+      * abs(m) \EQUIV m' tal que es un conj e \|
       *  * #claves(m') = m._cantidadDeClaves \AND
-      *  * \FORALL (c : string) def?(c,m') \IMPLIES string_set[c]=obtener(m',c)
+      *  * \FORALL (c : string) pertenece?(c,m') \IMPLIES string_set[c]=obtener(m',c)
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
