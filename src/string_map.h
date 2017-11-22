@@ -334,7 +334,6 @@ private:
      * abs(m) \EQUIV m' tal que es un dicc e \|
      *  * #claves(m') = m._cantidadDeClaves \AND
      *  * \FORALL (c : string) def?(c,m') \IMPLIES string_map[c]=obtener(m',c)
-     *  FIXME fijense si lo hice bien!
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 

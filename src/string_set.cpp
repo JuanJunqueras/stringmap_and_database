@@ -229,9 +229,7 @@ string string_set::siguienteElemento(string elemActual) const {
         vector<Nodo *> branch = getBranch(elemActual);
         unsigned long index = branch.size() - 1;
         nodoActual = branch[index];
-        bool flag = true; /* @comentario(ivan): flag es un nombre muy poco declarativo */
-        /* @comentario(ivan): Todo este algoritmo es muy dificil de leer, traten de simplificarlo.
-         * Si no se puede simplificar al menos pongan comentarios guiando la lectura del algoritmo. */
+        bool flag = true;
         while (index > 0 && flag) {
             auto it = nodoActual->hijos.begin();
             while (it->first < elem.back() && it != nodoActual->hijos.end()) {
@@ -311,7 +309,7 @@ vector<string_set::Nodo*> string_set::getBranch(string elem) const {
 
 
 bool string_set::operator!=(const string_set &otro) const {
-    return !(*this == otro); /* @corregir(ivan): Si van a hacer esto al final, hubieran dejado sólo esta linea. */
+    return !(*this == otro);
 }
 
 
@@ -328,7 +326,6 @@ string_set::const_iterator string_set::begin() const {
 
 
 /////////////////////  empieza iterator /////////////////////
-/* @comentario(ivan): Queda mejor si lo definen en otro archivo. Este ya es largo :( */
 
 string_set::iterator::iterator(const string_set* set) {
     this->elementoActual = set->primerElemento(); /* @comentario(ivan): O(S) */

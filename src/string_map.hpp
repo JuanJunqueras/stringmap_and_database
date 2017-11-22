@@ -114,7 +114,6 @@ typename string_map<T>::iterator string_map<T>::begin() {
 
 template<typename T>
 typename string_map<T>::const_iterator string_map<T>::end() const {
-    /* @comentario(ivan): acá podrían usar un constructor vacío como hacen con el cons_iterator (linea 131 de este archivo) */
     auto it = string_map<T>::const_iterator(this);
     it.claveActual = "";
     it.valorActual = nullptr;
