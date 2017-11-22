@@ -191,7 +191,6 @@ public:
      * @param campo Nombre del campo presente en ambas tablas sobre el que se crea el indice.
      *
      * \pre db = campo \pertenece campos(Tabla1) \LAND campo \pertenece campos(Tabla2) \LAND \existe ind en (indices(Tabla1)\CUP indices(Tabla2)) \talque campo = clave(ind)
-     * FIXME ARREGLAR EL DOXYGEN
      * \post \P{this} = this = iterador(t) donde t es una tabla tal que campos(t) = campos(tabla1) \union campos(tabla2)
      * y r esta en t si \existe r1 en tabla 1 y r2 en tabla 2 tal que r1[campo]=r2[campo]=r[campo]
      * y #paratodo campo i en campos(r) r[i] = r1[i] o r[i] = r2[i]
@@ -200,15 +199,17 @@ public:
      */
     join_iterator join(const string &tabla1, const string &tabla2, const string &campo) const;
 
-    join_iterator join_end() const; //FIXME: necesita docu?
+    join_iterator join_end() const;
 
     /** @brief Operadores de comparacion
     *
-    * \pre true //FIXME: chequear
+    * \pre true
     * \post res  = (_nombres_tablas(this) = _nombres_tablas(otro) \LAND
     * (_tablas(this) = _tablas(otro) \LAND
     * (_uso_criterios(this) = _uso_criterios(otro) \LAND
-    * \complexity{}//FIXME:completar
+    * siendo l = _nombres_tablas.size
+    *
+    * \complexity{O(l+compararDosStringmap+compararDosLinearMap)}//FIXME:completar
     */
     bool operator==(const BaseDeDatos &db) const {
       return this->_nombres_tablas == db._nombres_tablas &&
@@ -218,10 +219,10 @@ public:
     }
     /** @brief Operadores de comparacion
         *
-        * \pre true //fixme: chequear
+        * \pre true
         * \post true sii el operator== es falso.
         *
-        * \complexity // idem operator== //fixme: completar
+        * \complexity{O(l+compararDosStringmap+compararDosLinearMap)}//fixme: completar
     */
     bool operator!=(const BaseDeDatos &db) const {
       return !(*this == db);
