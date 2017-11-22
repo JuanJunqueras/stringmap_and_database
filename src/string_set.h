@@ -22,8 +22,15 @@ public:
     typedef string value_type;
     typedef size_t size_type;
 
-    /* @corregir(ivan): Falta la documentación de este iterador */
-    class iterator{
+    /*
+       * permite iterar el String_set, clave por clave,
+       * en orden alfabetico de las claves.
+       * El operador * devuelve una instancia de <value_type>,
+       * y el end es <"","">.
+       * se inicializa apuntando a la primera clave del string_set en orden alfabetico.
+       * Hacer ++ es O(clave más larga).
+     * */
+        class iterator{
         const string_set* set;
         friend class string_set;
         value_type elementoActual;
@@ -44,7 +51,7 @@ public:
         bool isEnd();
 
     };
-    /* @corregir(ivan): Falta la documentación de este iterador */
+    /* idem iterator, pero los valores devueltos son constantes evitando aliasing. */
     class const_iterator{
 
         const string_set* set;
@@ -72,17 +79,15 @@ public:
     friend class const_iterator;
 
 
-    /* @corregir(ivan): De dónde sale "raiz" en la post del constructor vacío ?
-     * En la pre y la post sólo pueden hablar en terminos de las operaciones del TAD con el cual se explica el módulo.
-     * */
     /**
    * @brief Construye mapa con su raiz.
    *
    * \pre true
-   * \post vacio?(res) \AND vacio?(raiz.hijos().empty())
+   * \post vacio?(claves(res))
    *
    * \complexity{\O(1)}
    */
+
 
     string_set();
 
@@ -92,14 +97,13 @@ public:
      */
     ~string_set();
 
-    /* @corregir(ivan): En el constructor por copia y en el operador de asignación faltan el costo de copy(T) */
     /** @brief Constructor por copia
-     *
-     * \pre true
-     * \post res = @param
-     *
-     * \complexity{\O(sn * S)}
-     */
+    *
+    * \pre true
+    * \post res = @param
+    *
+    * \complexity{\O(sn * (S + copy(value_type)))}
+    */
     string_set(const string_set &);
 
     /** @brief Constructor desde linear_set
@@ -116,24 +120,28 @@ public:
      * \pre true
      * \post res = @param
      *
-     * \complexity{\O(sn * S)}
+     * \complexity{\O(sn * (S + copy(value_type)) }
      */
-    /* @corregir(ivan): Esta complejidad debería ser O(sn * (S + copy(value_type)) */
+
     string_set& operator=(const string_set &);
 
-    /* @corregir(ivan): En el operador == falta el costo de comparar T (cmp(T)) */
-    /* @corregir(ivan): La post está sin terminar */
-    /** @brief Operadores de comparacion
+     /** @brief Operadores de comparacion
      *
      * \pre true
-     * \post true
+     * \post res  = (claves(this) = claves(otro) \LAND (\FORALL k :claves(this))( obtener(k,this) = obtener(k,otro))    )
      *
-     * \complexity{\O(sn * S)}
+     * \complexity{\O(sn * (S+cmp(T)))}
      */
     bool operator==(const string_set& otro) const;
 
-    /* @corregir(ivan): Falta la documentación de esta función. */
-    bool operator!=(const string_set& otro) const;
+     /** @brief Operadores de comparacion
+      *
+      * \pre true
+      * \post res  = (claves(this) != claves(otro) \LOR \LNOT (\FORALL k :claves(this))( obtener(k,this) = obtener(k,otro))    )
+      *
+      * \complexity{\O(sn * (S+cmp(T)))}
+      */
+     bool operator!=(const string_set& otro) const;
 
     /** @brief Cantidad de apariciones de la clave (0 o 1)
      *  @param key clave a buscar
@@ -163,13 +171,10 @@ public:
      * */
     bool empty() const;
 
-    /* @corregir(ivan): En el clear, de dónde sale "raiz" ?
-     * En la pre y la post sólo pueden hablar en terminos de las operaciones del TAD con el cual se explica el módulo.
-     * */
     /** @brief Vacia el mapa
      *
      * \pre true
-     * \post vacio?(res) \AND vacio?(res.raiz().hijos())
+     * \post vacio?(claves(this))
      *
      * \complexity{\O(n)}
      *
@@ -228,7 +233,6 @@ public:
      */
     const_iterator find(const value_type& elem) const;
 
-    /* @corregir(ivan): Acá falta hablar en la post de que pasa con el diccionario */
     /** @brief insercion
      *
      * @param value par <clave,significado> a insertar
@@ -238,19 +242,19 @@ public:
      *
      * \pre this=this_0
      * \post El primer elemento del par resultante es un iterador que apunta a tupla <key, this.at(key)>
-     * y el segundo elemento es true si la clave no estaba definida en this_0 y false en caso contrario.
-     *
+ *   * y el segundo elemento es true si la clave no estaba definida en this_0 y false en caso contrario.
+ *   * ademas, obtener(this,value.first) = value.second
      * \complexity{\O(S + copy(value_type))}
      */
+
     pair<iterator,bool> insert(const value_type& elem);
 
-    /* @corregir(ivan): terminar de escribir la post (si tienen dudas, pregunten). */
     /** @brief eliminar una clave
      *  @param key clave a eliminar
      *  @returns cantidad de elementos eliminados
      *
      *  \pre key \IN claves(this)
-     *  \post key \NOTIN claves(this) \AND res = FIXME ver como escribir esto en logica
+     *  \post key \NOTIN claves(this) \AND res = if clave \ISIN claves(dicc0) then 1 else 0 fi
      *
      *  \complexity{\O(S)}
      */
@@ -277,19 +281,23 @@ private:
     /* @corregir(ivan): Dado que el string_map tiene dentro una estructura recursiva, les conviene armar un predicado auxiliar que les ayude a escribir el Rep. */
     /* @corregir(ivan): Están mezclando el abs del string_map con el de sus iteradores. */
     ///////////////////////////////////////////////////////////////////////////////////////////////////
-    /** \name Representación
-     * rep: string_map \TO bool\n
-     * rep(m) \EQUIV
-     *  * m.raiz.valor = null
-     *  * m._cantidadDeClaves = FIXME no se a qué igualarlo
-     *
-     * abs: string_map \TO Diccionario(string, T)\n
-     * abs(m) \EQUIV m' \|
-     *  * #claves(m') = m._cantidadDeClaves \AND
-     *  * \FORALL (c : string) def?(c,m') \IMPLIES \EXISTS (i: string_map_iterator(m))(i.claveActual = c) \LAND
-     *  (i.valorActual = obtener(c,m')
-     *  * \FORALL (i: string_map_iterator(m)) (i \NEQ m.end) \LIMPLIES def?(i.claveActual, m') \AND
-     *  obtener(i.claveActual, m') = i.valorActual
+     /** \name Representación
+      * rep: string_map \TO bool\n
+      * rep(m) \EQUIV
+      *  si la raiz esta apuntando a " " como valor, y no tiene hijos
+      *  entonces el string_set no tiene ninguna clave con un significado definido.
+      *  Si un nodo distinto a la raiz apunta a " " como valor, entonces
+      *  tiene que tener al menos un hijo, a menos que sea la raiz.
+      *  Todas las otras hojas del arbol tienen un valor distinto de " ".
+      *  "" no es una clave valida, y " " no un valor valido.
+      *  (pues los usamos para marcar justamente el end en el iterador, y la ausencia de valores).
+      *  La cantidad de claves es igual a la cantidad de strings
+      *  tal que el significado existe (i.e., no es " ").
+      *
+      * abs: string_set \TO Diccionario(string, T)\n
+      * abs(m) \EQUIV m' tal que es un dicc e \|
+      *  * #claves(m') = m._cantidadDeClaves \AND
+      *  * \FORALL (c : string) def?(c,m') \IMPLIES string_set[c]=obtener(m',c)
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
