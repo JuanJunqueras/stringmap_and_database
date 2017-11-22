@@ -201,34 +201,23 @@ BaseDeDatos::join_iterator BaseDeDatos::join(const string &tabla1, const string 
                                  campo,
                                  it_registros_tabla_principal,
                                  it_registros_tabla_principal_end,
-                                 indice.registros(dato),
+                                 &indice.registros(dato),
                                  indice.registros(dato).begin(),
                                  indice.registros(dato).end(),
                                  prioridad_campos_tabla_principal
             );
-//            registros_en_indice = indice.registros(dato);
-//            match = true;
         }
         ++it_registros_tabla_principal;
 
     }
 
-//    return join_iterator(this,
-//                         tabla_con_indice,
-//                         campo,
-//                         it_registros_tabla_principal,
-//                         it_registros_tabla_principal_end,
-//                         registros_en_indice,
-//                         registros_en_indice.begin(),
-//                         registros_en_indice.end(),
-//                         prioridad_campos_tabla_principal
-//    );
-    return join_end(); //=(1
+
+    return join_end(); //O(1)
 }
 
 BaseDeDatos::join_iterator BaseDeDatos::join_end() const {
     Tabla t({}, {}, {});
     set<Tabla::const_iterador_registros> s;
-    join_iterator join_it(this, "", "", t.registros_end(), t.registros_end(), s, s.end(), s.end(), true);
+    join_iterator join_it(this, "", "", t.registros_end(), t.registros_end(), &s, s.end(), s.end(), true);
     return join_it;
 }

@@ -62,7 +62,7 @@ public:
    *
      * \pre campo \ISIN  campos(tabla(it_reg)) \LAND \LNOT vacio?(indices(tabla(it_reg))
      * \post it_reg \ISIN  obtener(indices,(obtener(desreferenciar(it_reg),campo)))
-     * (se agrego el iterador que apunta al resgistro, al indice que depende del valor del campo ingresado en el registro)
+     * (se agrego el iterador que apunta al registro, al indice que depende del valor del campo ingresado en el registro)
      *
    *
    **/

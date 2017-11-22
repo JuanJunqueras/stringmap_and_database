@@ -46,7 +46,7 @@ private:
     BaseDeDatos const *db;
     Tabla::const_iterador_registros it_registros_tabla_principal;
     Tabla::const_iterador_registros it_registros_tabla_principal_end;
-    set<Tabla::const_iterador_registros> registros_en_indice;
+    set<Tabla::const_iterador_registros> const* registros_en_indice;
     set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice;
     set<Tabla::const_iterador_registros>::iterator it_registros_tabla_con_indice_end;
     string nombre_tabla;
@@ -69,7 +69,7 @@ public:
             string nombre_campo,
             const Tabla::const_iterador_registros &it_registros_tabla_principal,
             const Tabla::const_iterador_registros &it_registros_tabla_principal_end,
-            const set<Tabla::const_iterador_registros> &registros_en_indice,
+            const set<Tabla::const_iterador_registros>* registros_en_indice,
             const set<Tabla::const_iterador_registros>::iterator &it_registros_tabla_con_indice,
             const set<Tabla::const_iterador_registros>::iterator &it_registros_tabla_con_indice_end,
             bool prioridad_campos_tabla_principal
@@ -91,7 +91,7 @@ public:
      *
      * \pre true
      * \post  Genera un iterador entre dos tablas
-     * \complexity O(m) FIXME chequear con agus
+     * \complexity O(m)
      **/
     join_iterator(const join_iterator &join_it) :
             db(join_it.db), //O(1)
@@ -100,8 +100,8 @@ public:
             it_registros_tabla_principal(join_it.it_registros_tabla_principal), //O(1)
             it_registros_tabla_principal_end(join_it.it_registros_tabla_principal_end), //O(1)
             registros_en_indice(join_it.registros_en_indice), //O(1)
-            it_registros_tabla_con_indice(join_it.registros_en_indice.begin()), //O(m)
-            it_registros_tabla_con_indice_end(join_it.registros_en_indice.end()), //O(1)
+            it_registros_tabla_con_indice(join_it.registros_en_indice->begin()), //O(m)
+            it_registros_tabla_con_indice_end(join_it.registros_en_indice->end()), //O(1)
             isEnd(join_it.isEnd), //O(1)
             prioridad_campos_r1(join_it.prioridad_campos_r1) {} //O(1)
     /**
@@ -123,41 +123,41 @@ public:
      * siguiente. En caso de que la tabla con índice llegue a su fin, se apunta a la posición siguiente
      * de la tabla que no tiene índice y a la primera de la que sí lo tiene //FIXME: chequear con Agus
      *
-     * \complexity{\O(1)} //FIXME: chequear con Agus
+     * \complexity{\O(n * (L + log(m)))} //FIXME: chequear con Agus
     **/
 
     void operator++() {
 
-        if (it_registros_tabla_con_indice != it_registros_tabla_con_indice_end) {
-            ++it_registros_tabla_con_indice;
+        if (it_registros_tabla_con_indice != it_registros_tabla_con_indice_end) { //O(1)
+            ++it_registros_tabla_con_indice; //O(1)
         }
 
-        if (it_registros_tabla_con_indice == it_registros_tabla_con_indice_end) {
+        if (it_registros_tabla_con_indice == it_registros_tabla_con_indice_end) { //O(1)
 
-            ++it_registros_tabla_principal;
-            const BaseDeDatos::Indice &indice = db->indices.at(nombre_tabla).at(nombre_campo);
+            ++it_registros_tabla_principal; //O(1)
+            const BaseDeDatos::Indice &indice = db->indices.at(nombre_tabla).at(nombre_campo); //O(1)
 
             // Iteramos sobre tabla principal, buscando el primer siguiente match con registro del indice
-            bool match = false;
-            while (!match && it_registros_tabla_principal != it_registros_tabla_principal_end) {
-                auto dato = (*it_registros_tabla_principal).dato(nombre_campo);
-                if (indice.existe(dato)) {
-                    registros_en_indice = indice.registros(dato);
-                    it_registros_tabla_con_indice = indice.registros(dato).begin();
-                    it_registros_tabla_con_indice_end = indice.registros(dato).end();
-                    match = true;
+            bool match = false; //O(1)
+            while (!match && it_registros_tabla_principal != it_registros_tabla_principal_end) { //O(n)
+                auto dato = (*it_registros_tabla_principal).dato(nombre_campo); //O(L + log (m))
+                if (indice.existe(dato)) { //O(L + log(m))
+                    registros_en_indice = &indice.registros(dato); //O(1)
+                    it_registros_tabla_con_indice = indice.registros(dato).begin(); //O(1)
+                    it_registros_tabla_con_indice_end = indice.registros(dato).end(); //O(1)
+                    match = true; //O(1)
                 } else {
-                    ++it_registros_tabla_principal;
+                    ++it_registros_tabla_principal; //O(1)
                 }
             }
         }
 
-        if (it_registros_tabla_principal == it_registros_tabla_principal_end) {
-            this->isEnd = true;
+        if (it_registros_tabla_principal == it_registros_tabla_principal_end) { //O(1)
+            this->isEnd = true; //O(1)
         }
     }
 
-    void operator++(int) { //FIXME: no sé que es esto, necesita docu?
+    void operator++(int) {
         ++(*this);
     }
 
@@ -209,7 +209,7 @@ public:
      * que avanzar desde una misma posición del mismo iterador, y desreferenciar desde la misma posición devuelve
      * los mismos registros.
      *
-     * \complexity O(1) // FIXME chequear con Agus.
+     * \complexity O(1)
     */
     bool operator==(const join_iterator &it_1) const {
         if (this->db != it_1.db){
@@ -233,7 +233,7 @@ public:
     * \pre true
     * \post true sii el operator== es falso.
     *
-    * \complexity //O(1) // FIXME chequear con Agus.
+    * \complexity //O(1)
    */
     bool operator!=(const join_iterator &it_1) const {
         return !(*this == it_1);

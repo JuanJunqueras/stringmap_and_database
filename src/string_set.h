@@ -16,14 +16,6 @@ using namespace std;
  * **se explica con** TAD Diccionario(string, T)
  */
 
-/**
- * Implementacion de map<string,T> sobre Trie
- * Asume de T:
- * - tiene constructor por copia
- * - tiene operador ==
- * - solo permite utilizar el operator[] si T tiene constructor por defecto
- */
-/* @corregir(ivan): quitaron las asunciones de complejidades sobre el tipo de dato T. */
 
 class string_set {
 public:
