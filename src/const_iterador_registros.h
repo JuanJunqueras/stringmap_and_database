@@ -28,7 +28,7 @@ public:
   /**
    * @brief Operador flechita
    *
-   * El valor devuelvo tiene aliasing dentro de la colección. //FIXME: wtF?
+   * El valor devuelvo tiene aliasing dentro de la colección.
    *
    * \pre El iterador no debe estar en la posición pasando-el-último.
    * \post El valor resultado es un puntero al valor apuntado.

@@ -26,7 +26,7 @@ public:
 
     /**
      * @brief Devuelve una referencia a los registros que tienen
-     * el mismo dato en el campo en el que está creado el índice. FIXME: chequear
+     * el mismo dato en el campo en el que está creado el índice.
      *
      * @param dato Dato de tipo string o nat.
      *
@@ -66,7 +66,7 @@ public:
      *
    *
    **/
-  void agregarRegistro(const string &campo, const Tabla::const_iterador_registros &it_reg) { //FIXME: documentar
+  void agregarRegistro(const string &campo, const Tabla::const_iterador_registros &it_reg) {
       Dato dato = (*it_reg).dato(campo);
       if (dato.esString()) {
           indices_dato_string[dato.valorStr()].insert(it_reg);
@@ -83,7 +83,7 @@ public:
    * @param dato Dato de tipo string o nat.
    *
    * \pre true
-   * \post { // FIXME LATER AND
+   * \post {  //notar que con "\LAND L" se ententa expresar "y luego"
    *( dato.esString() \LAND L res = obtener( this.indices_dato_string,dato)) \LOR
    *( dato.esNat() \LAND L res = obtener( this.indices_dato_nat,dato))
    *
@@ -104,10 +104,11 @@ public:
   }
     /** @brief Operadores de comparacion
   *
-  * \pre true //FIXME: chequear
+  * \pre true
   * \post res  = (indices_dato_string(this) = indices_dato_string(otro) \LAND
   * (indices_dato_nat(this) = indices_dato_nat(otro) \LAND
-  * \complexity{}//FIXME:completar
+  * siendo n la cantidad de claves de indices_dato_string y m la cantidad de claves de indices_dato_nat
+  * \complexity{O(n + m)}
   */
 
   bool operator==(const Indice &indice) const {
@@ -115,11 +116,11 @@ public:
   }
     /** @brief Operadores de comparacion
      *
-     * \pre true //fixme: chequear
+     * \pre true
      * \post true sii el operator== es falso.
-     *
-     * \complexity // idem operator== //fixme: completar
- */
+     * siendo n la cantidad de claves de indices_dato_string y m la cantidad de claves de indices_dato_nat
+     * \complexity{O(n + m)}
+     **/
    bool operator!=(const Indice &indice) const {
        return !(*this == indice);
    }
@@ -130,9 +131,9 @@ private:
      * rep: indice \TO bool\n
      * rep(in) \EQUIV
      *  * (\FORALL (a, b: claves(indices_dato_string)) ((obtener(indices_dato_string, a)
-     *  INTERSECCION obtener(indices_dato_string, b) = \EMPTYSET \LAND //FIXME: chequear cómo se hace el INTERSECCIón
+     *  INTERSECCION obtener(indices_dato_string, b) = \EMPTYSET \LAND
      *  * (\FORALL (a, b: claves(indices_dato_nat)) (obtener(indices_dato_nat, a)
-     *  INTERSECCION obtener(indices_dato_nat, b) = \EMPTYSET) \LAND //FIXME: chequear cómo se hace el INTERSECCIón
+     *  INTERSECCION obtener(indices_dato_nat, b) = \EMPTYSET) \LAND
      *  * (\vacio?(claves(indices_dato_string))\LOR \vacio?(claves(indices_dato_nat)))
      *
      * abs: no hay abs, pues no hay TAD de la clase índice para compararlo. FIXME: chequear
