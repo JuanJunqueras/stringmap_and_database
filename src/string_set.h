@@ -278,8 +278,6 @@ public:
 
 private:
 
-    /* @corregir(ivan): Dado que el string_map tiene dentro una estructura recursiva, les conviene armar un predicado auxiliar que les ayude a escribir el Rep. */
-    /* @corregir(ivan): Están mezclando el abs del string_map con el de sus iteradores. */
     ///////////////////////////////////////////////////////////////////////////////////////////////////
      /** \name Representación
       * rep: string_map \TO bool\n

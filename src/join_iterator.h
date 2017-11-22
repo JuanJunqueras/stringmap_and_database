@@ -110,7 +110,7 @@ public:
         * \pre ambos join_iterators refieren al mismo par de tablas.
         * \post true sii los iteradores generados son iguales
         *
-        * \complexity //FIXME: chequear con Agus
+        * \complexity{\O(1)}
     */
     join_iterator &operator=(const join_iterator &join_it) = default;
     /**
