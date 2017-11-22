@@ -207,10 +207,13 @@ public:
     * \post res  = (_nombres_tablas(this) = _nombres_tablas(otro) \LAND
     * (_tablas(this) = _tablas(otro) \LAND
     * (_uso_criterios(this) = _uso_criterios(otro) \LAND
-    * siendo l = _nombres_tablas.size
+    * siendo n la cantidad de claves en _nombres_tablas,
+    * m la cantidad de claves en _tablas, p la cantidad de claves en _uso_criterios,
+    * q la cantidad de claves en indices
     *
-    * \complexity{O(l+compararDosStringmap+compararDosLinearMap)}//FIXME:completar
-    */
+    * \complexity{O(n+m+p+q)}
+    *
+    **/
     bool operator==(const BaseDeDatos &db) const {
       return this->_nombres_tablas == db._nombres_tablas &&
              this->_tablas == db._tablas &&
@@ -221,9 +224,12 @@ public:
         *
         * \pre true
         * \post true sii el operator== es falso.
+        * siendo n la cantidad de claves en _nombres_tablas,
+        * m la cantidad de claves en _tablas, p la cantidad de claves en _uso_criterios,
+        * q la cantidad de claves en indices
         *
-        * \complexity{O(l+compararDosStringmap+compararDosLinearMap)}//fixme: completar
-    */
+        * \complexity{O(n+m+p+q)}
+        **/
     bool operator!=(const BaseDeDatos &db) const {
       return !(*this == db);
     }
