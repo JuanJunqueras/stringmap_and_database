@@ -137,7 +137,7 @@ private:
      *  INTERSECCION obtener(indices_dato_nat, b) = \EMPTYSET) \LAND
      *  * (\vacio?(claves(indices_dato_string))\LOR \vacio?(claves(indices_dato_nat)))
      *
-     * abs: no hay abs, pues no hay TAD de la clase índice para compararlo. FIXME: chequear
+     * abs: no hay abs, pues no hay TAD de la clase índice para compararlo.
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /** @{ */

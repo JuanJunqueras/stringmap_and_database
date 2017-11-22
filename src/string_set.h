@@ -296,8 +296,8 @@ private:
       *
       * abs: string_set \TO conj(string)\n
       * abs(m) \EQUIV m' tal que es un conj e \|
-      *  * #claves(m') = m._cantidadDeClaves \AND
-      *  * \FORALL (c : string) pertenece?(c,m') \IMPLIES string_set[c]=obtener(m',c)
+      * #claves(m') = m._cantidadDeClaves \AND
+      * \FORALL (c : string) pertenece?(c,m') sii m.count(c). == 1
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
