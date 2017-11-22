@@ -121,9 +121,9 @@ public:
      * \pre Los iteradores no deben estar en la posición pasando-el-último de ambas tablas.
      * \post \P{res} es una referencia a \P{this}. \P{this} apunta a la posición
      * siguiente. En caso de que la tabla con índice llegue a su fin, se apunta a la posición siguiente
-     * de la tabla que no tiene índice y a la primera de la que sí lo tiene //FIXME: chequear con Agus
+     * de la tabla que no tiene índice y a la primera de la que sí lo tiene.
      *
-     * \complexity{\O(n * (L + log(m)))} //FIXME: chequear con Agus
+     * \complexity{\O(n * (L + log(m)))}
     **/
 
     void operator++() {

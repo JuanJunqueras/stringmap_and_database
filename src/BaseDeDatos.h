@@ -210,6 +210,7 @@ public:
     * siendo n la cantidad de claves en _nombres_tablas,
     * m la cantidad de claves en _tablas, p la cantidad de claves en _uso_criterios,
     * q la cantidad de claves en indices
+    * Sólo se mira la cantidad de claves pues el largo de las mísmas está acotdado
     *
     * \complexity{O(n+m+p+q)}
     *
@@ -227,7 +228,7 @@ public:
         * siendo n la cantidad de claves en _nombres_tablas,
         * m la cantidad de claves en _tablas, p la cantidad de claves en _uso_criterios,
         * q la cantidad de claves en indices
-        *
+        * Sólo se mira la cantidad de claves pues el largo de las mísmas está acotdado
         * \complexity{O(n+m+p+q)}
         **/
     bool operator!=(const BaseDeDatos &db) const {

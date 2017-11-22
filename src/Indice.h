@@ -108,6 +108,7 @@ public:
   * \post res  = (indices_dato_string(this) = indices_dato_string(otro) \LAND
   * (indices_dato_nat(this) = indices_dato_nat(otro) \LAND
   * siendo n la cantidad de claves de indices_dato_string y m la cantidad de claves de indices_dato_nat
+  *
   * \complexity{O(n + m)}
   */
 
