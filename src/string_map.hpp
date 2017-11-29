@@ -11,6 +11,7 @@ string_map<T>::string_map() {
 template<typename T>
 string_map<T>::~string_map() {
     this->clear();
+    delete raiz;
 }
 
 template<typename T>
@@ -107,8 +108,8 @@ void string_map<T>::clear() {
 
 template<typename T>
 typename string_map<T>::iterator string_map<T>::begin() {
-    auto it = new string_map<T>::iterator(this);
-    return *it;
+    auto it = string_map<T>::iterator(this);
+    return it;
 }
 
 
@@ -122,16 +123,16 @@ typename string_map<T>::const_iterator string_map<T>::end() const {
 
 template<typename T>
 typename string_map<T>::const_iterator string_map<T>::cbegin() const {
-    auto it = new string_map<T>::const_iterator(this);
-    return *it;
+    auto it = string_map<T>::const_iterator(this);
+    return it;
 }
 
 template<typename T>
 typename string_map<T>::const_iterator string_map<T>::cend() const {
-    auto it = new string_map<T>::const_iterator(this);
-    it->claveActual = "";
-    it->valorActual = nullptr;
-    return *it;
+    auto it = string_map<T>::const_iterator(this);
+    it.claveActual = "";
+    it.valorActual = nullptr;
+    return it;
 }
 
 template<typename T>
@@ -202,11 +203,13 @@ typename string_map<T>::size_type string_map<T>::erase(const string_map<T>::key_
     if(count(key) == 0){
         return 0;
     }
+    delete actual->valor;
     actual->valor = nullptr;
     this->_cantidadDeClaves--;
     if (!actual->hijos.empty()) {//Si es prefijo de otra clave...
         return 1;
     }
+    delete actual;
     actual = rama.back(); // Ahora actual es el padre
     rama.pop_back();
     while (!rama.empty() && actual->hijos.size() <= 1 && actual->valor == nullptr) {
