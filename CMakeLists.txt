@@ -20,6 +20,7 @@ add_executable(correrTests ${TEST_SOURCES} ${SOURCE_FILES} src/Indice.h src/join
 
 # Creamos el ejecutable para correr los tests
 add_executable(correrTests_sol ${TEST_SOURCES} ${SOURCE_FILES} src/Indice.h src/join_iterator.h)
+#add_executable(correrTests_sol tests/string_map_test.cpp ${SOURCE_FILES} src/Indice.h src/join_iterator.h)
 target_compile_definitions(correrTests_sol PRIVATE POST_SOLUCION)
 
 # Necesitamos asociar los archivos del framework de testing

@@ -41,14 +41,12 @@ public:
      * */
     class iterator{
 
-        const string_map* mapa;
-        friend class string_map;
-        key_type claveActual;
-        const mapped_type* valorActual;
     public:
         key_type getClave();
         iterator(const string_map* mapa);
         iterator();
+        iterator(const iterator&);
+        //~iterator();
         using value_type = const string_map::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference =value_type&;
@@ -61,15 +59,20 @@ public:
         bool operator==(const iterator& o_it) const;
         bool isEnd();
 
+        //iterator& operator=(const iterator& otro);
+
+    private:
+
+        const string_map* mapa;
+        friend class string_map;
+        key_type claveActual;
+        const mapped_type* valorActual;
+        pointer tuplaActual;
+
     };
     /* idem iterator, pero los valores devueltos son constantes evitando aliasing. */
     class const_iterator{
 
-
-            const string_map* mapa;
-            friend class string_map;
-            key_type claveActual;
-            const mapped_type* valorActual;
         public:
             key_type getClave();
             const_iterator(const string_map* mapa);
@@ -84,9 +87,14 @@ public:
             const_iterator& operator++();
             bool operator!=(const const_iterator &o_it) const;
             bool operator==(const const_iterator &o_it) const;
+            bool isEnd();
 
-        bool isEnd();
-
+    private:
+        const string_map* mapa;
+        friend class string_map;
+        key_type claveActual;
+        const mapped_type* valorActual;
+        pointer tuplaActual;
 
     };
     friend class iterator;
@@ -184,7 +192,7 @@ public:
      *
      *  \complexity{\O(S + copy(T))}
      */
-    mapped_type &operator[](const key_type &key);
+    mapped_type& operator[](const key_type &key);
 
     /** @brief Acceso a una clave sin modificar mapa
      *  @param key clave a acceder que debe existir previamente
@@ -339,8 +347,8 @@ private:
 
     struct Nodo {
         map<char, Nodo*> hijos;
-        T* valor;
-        Nodo(T* v) : valor(v) {};
+        value_type* valor;
+        Nodo(value_type* v) : valor(v) {};
     };
 
     Nodo* raiz;

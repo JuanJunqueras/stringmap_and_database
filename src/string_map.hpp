@@ -78,12 +78,12 @@ mapped_type &string_map<mapped_type>::operator[](const string_map<mapped_type>::
 template<typename mapped_type>
 mapped_type &string_map<mapped_type>::at(const string_map<mapped_type>::key_type &key) {
     int index = 0;
-    Nodo *actual = raiz;
+    Nodo* actual = raiz;
     while (index != key.size() && actual->hijos.count(key[index]) != 0) {
         actual = actual->hijos[key[index]];
         index++;
     }
-    return *(actual->valor);
+    return actual->valor->second;
 
 }
 
@@ -95,7 +95,7 @@ const T &string_map<T>::at(const string_map<T>::key_type &key) const {
         actual = actual->hijos[key[index]];
         index++;
     }
-    return *(actual->valor);
+    return actual->valor->second;
 }
 
 template<typename T>
@@ -118,6 +118,7 @@ typename string_map<T>::const_iterator string_map<T>::end() const {
     auto it = string_map<T>::const_iterator(this);
     it.claveActual = "";
     it.valorActual = nullptr;
+    it.tuplaActual = nullptr;
     return it;
 }
 
@@ -132,6 +133,7 @@ typename string_map<T>::const_iterator string_map<T>::cend() const {
     auto it = string_map<T>::const_iterator(this);
     it.claveActual = "";
     it.valorActual = nullptr;
+    it.tuplaActual = nullptr;
     return it;
 }
 
@@ -145,6 +147,7 @@ typename string_map<T>::iterator string_map<T>::find(const string_map<T>::key_ty
         auto it = string_map<T>::iterator(this);
         it.claveActual = key;
         it.valorActual = &at(it.claveActual);
+        it.tuplaActual = nodoEncontrado->valor;
         return it;
     }
 }
@@ -159,6 +162,7 @@ typename string_map<T>::const_iterator string_map<T>::find(const string_map<T>::
         auto it = string_map<T>::const_iterator(this);
         it.claveActual = key;
         it.valorActual = &at(it.claveActual);
+        it.tuplaActual = nodoEncontrado->valor;
         return it;
     }
 }
@@ -184,12 +188,13 @@ pair<typename string_map<T>::iterator, bool> string_map<T>::insert(const string_
             actual = actual->hijos[clave[index]];
             index++;
         }
-        actual->valor = new T(value.second); /* @comentario(ivan): O(copy(T)) */
+        actual->valor = new value_type(value); /* @comentario(ivan): O(copy(T)) */
         inserta = true;
         this->_cantidadDeClaves++;
         pair<string_map<T>::iterator, bool> res;
         auto it = iterator(this);
         it.claveActual = value.first;
+        it.tuplaActual = actual->valor;
         res = make_pair(it, inserta);
         return res;
     }
@@ -371,12 +376,13 @@ typename string_map<T>::iterator string_map<T>::end() {
     auto it = string_map<T>::iterator(this);
     it.claveActual = "";
     it.valorActual = nullptr;
+    it.tuplaActual = nullptr;
     return it;
 }
 template <typename T>
 typename string_map<T>::const_iterator string_map<T>::begin() const {
-    auto it = new string_map<T>::const_iterator(this);
-    return *it;
+    auto it = string_map<T>::const_iterator(this);
+    return it;
 }
 
 
@@ -387,22 +393,34 @@ string_map<T>::iterator::iterator(const string_map *mapa) {
     this->claveActual = mapa->primeraClave(); /* @comentario(ivan): O(S) */
     if(claveActual!= ""){
         this->valorActual = &mapa->at(claveActual);
+        this->tuplaActual = mapa->findNodo(mapa->primeraClave())->valor;
     }else{
         this->valorActual = nullptr;
+        this->tuplaActual = nullptr;
     }
     this->mapa = mapa;
 }
 
+
+template<typename T>
+string_map<T>::iterator::iterator(const iterator& otro) {
+    this->claveActual = otro.claveActual;
+    this->mapa = otro.mapa;
+    this->valorActual = otro.valorActual;
+    this->tuplaActual = otro.tuplaActual;
+}
+
+
 template<typename T>
 typename string_map<T>::iterator::value_type string_map<T>::iterator::operator*() {
-    value_type pair = value_type(claveActual, *valorActual);
-    return pair;
+    tuplaActual = (mapa->findNodo(claveActual))->valor;
+    return *tuplaActual;
 }
 
 template<typename T>
 typename string_map<T>::iterator::value_type* string_map<T>::iterator::operator->() {
-    value_type* pair = new value_type(claveActual, *valorActual);
-    return pair;
+    tuplaActual = (mapa->findNodo(claveActual))->valor;
+    return tuplaActual;
 }
 
 template<typename T>
@@ -424,7 +442,8 @@ typename string_map<T>::iterator &string_map<T>::iterator::operator++() {
         this->valorActual = nullptr;
     } else {
         this->valorActual = &mapa->at(claveActual);
-    }
+ }
+    this->tuplaActual = nullptr;
     return *this;
 }
 
@@ -447,13 +466,14 @@ bool string_map<T>::iterator::operator!=(const string_map<T>::iterator &o_it) co
 
 template<typename T>
 typename string_map<T>::const_iterator::value_type string_map<T>::const_iterator::operator*() {
-    value_type pair = value_type(claveActual, *valorActual);
-    return pair;
+    tuplaActual = (mapa->findNodo(claveActual))->valor;
+    return *tuplaActual;
 }
 
 template<typename T>
 typename string_map<T>::const_iterator::value_type* string_map<T>::const_iterator::operator->() {
-    return &(mapa->at(claveActual));
+    tuplaActual = (mapa->findNodo(claveActual))->valor;
+    return tuplaActual;
 }
 
 template<typename T>
@@ -477,7 +497,9 @@ string_map<T>::const_iterator::const_iterator(const string_map<T> *mapa) {
     this->claveActual = mapa->primeraClave(); /* @comentario(ivan): O(S) */
     if(claveActual!= ""){
         this->valorActual = &mapa->at(claveActual);
+        this->tuplaActual = mapa->findNodo(mapa->primeraClave())->valor;
     }else{
+        this->valorActual = nullptr;
         this->valorActual = nullptr;
     }
     this->mapa = mapa;
@@ -486,7 +508,12 @@ string_map<T>::const_iterator::const_iterator(const string_map<T> *mapa) {
 template<typename T>
 typename string_map<T>::const_iterator &string_map<T>::const_iterator::operator++() {
     this->claveActual = this->mapa->siguienteClave(claveActual);
-    this->valorActual = &mapa->at(claveActual);
+    if (claveActual == ""){
+        this->valorActual = nullptr;
+    } else {
+        this->valorActual = &mapa->at(claveActual);
+    }
+    this->tuplaActual = nullptr;
     return *this;
 }
 
