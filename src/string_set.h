@@ -7,6 +7,7 @@
 #include <stack>
 #include <map>
 #include "linear_set.h"
+#include "string_map.h"
 
 using namespace std;
 
@@ -33,9 +34,9 @@ public:
         class iterator{
         const string_set* set;
         friend class string_set;
-        value_type elementoActual;
+            string_map<bool>::iterator vastago;
     public:
-        value_type getElemento();
+
         iterator(const string_set* mapa);
         iterator();
         //using value_type = const string_set::value_type;
@@ -50,17 +51,17 @@ public:
         bool operator==(const iterator& o_it) const;
         bool isEnd();
 
+        string claveActual() const;
+
     };
     /* idem iterator, pero los valores devueltos son constantes evitando aliasing. */
     class const_iterator{
-
+        string_map<bool>::const_iterator vastago;
         const string_set* set;
         friend class string_set;
-        value_type elementoActual;
     public:
-        value_type getElemento();
         const_iterator(const string_set* set);
-        const_iterator();
+
         //using value_type = const string_set::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference = value_type&;
@@ -72,6 +73,7 @@ public:
         bool operator!=(const const_iterator &o_it) const;
         bool operator==(const const_iterator &o_it) const;
         bool isEnd();
+        string claveActual() const;
 
 
     };
@@ -193,7 +195,7 @@ public:
      */
     iterator begin();
     iterator end();
-    const_iterator begin() const;
+    iterator begin() const;
     /** @brief iterador al fin de la coleccion
      *
      * \pre true
@@ -202,7 +204,7 @@ public:
      *
      *  \complexity{\O(S)}
      */
-    const_iterator end() const;
+    iterator end() const;
 
     /// Versiones const de begin/end
 
@@ -299,17 +301,9 @@ private:
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    struct Nodo {
-        map<char, Nodo*> hijos;
-        bool esClave;
-        Nodo() {esClave = false;};
-    };
 
-    Nodo* raiz;
-    size_t _cantidadDeElementos;
-    string primerElemento() const;
-    Nodo* findNodo(string key)const;
-    vector<Nodo*> getBranch(string key)const;
+
+    string_map<bool> diccionario;
 };
 
 

@@ -3,29 +3,21 @@
 #include <iostream>
 
 string_set::string_set() {
-    raiz = new Nodo();
-    _cantidadDeElementos = 0;
+    diccionario = string_map<bool>();
 }
 
 
 string_set::~string_set() {
-    this->clear();
+    diccionario.clear();
 }
 
 
 string_set::string_set(const string_set& other) {
-    raiz = new Nodo();
-    _cantidadDeElementos = 0;
-    auto it = other.cbegin();
-    while (!it.isEnd()){
-        insert(*it);
-        ++it;
-    }
+    diccionario = string_map<bool>(other.diccionario);
 }
 
 string_set::string_set(const linear_set<string>& other){
-    raiz = new Nodo();
-    _cantidadDeElementos = 0;
+    diccionario = string_map<bool>();
     for (auto s : other){
         insert(s);
     }
@@ -33,59 +25,36 @@ string_set::string_set(const linear_set<string>& other){
 
 
 string_set& string_set::operator=(const string_set& otro)  {
-    this->clear();
-    auto it = otro.cbegin();
-    while (!it.isEnd()){
-        auto aInsertar = *it;
-        this->insert(aInsertar);
-        ++it;
-    }
-    return *this;
+    this->diccionario = otro.diccionario;
 }
 
 
 bool string_set::operator==(const string_set& otro) const {
-    if (this->size() != otro.size()) {
-        return false;
-    } else {
-        auto itOtro = otro.cbegin();
-        while(!itOtro.isEnd()) { /* @comentario(ivan): O(sn) */
-            auto elemOtro = *itOtro;
-            if (this->count(elemOtro) == 0) { /* @comentario(ivan): O(S) */
-                return false;
-            }
-            ++itOtro;
-        }
-    }
-    return true;
+    return this->diccionario==otro.diccionario;
 }
 
 size_t string_set::size() const {
-    return this->_cantidadDeElementos;
+    return this->diccionario.size();
 }
 
 
 bool string_set::empty() const {
-    return this->raiz->hijos.empty();
+    return this->diccionario.empty();
 }
 
 void string_set::clear() {
-    auto it = this->begin();
-    while (it != end()){
-        it = erase(it);
-    }
+    this->diccionario.clear();
 }
 
 string_set::iterator string_set::begin() {
-    auto it = new string_set::iterator(this);
-    return *it;
+    return string_set::iterator(this);
 }
 
 
-string_set::const_iterator string_set::end() const {
-    auto it = string_set::const_iterator(this);
-    it.elementoActual = "";
-    return it;
+string_set::iterator string_set::end() {
+    auto it = new string_set::iterator(this);
+    it->vastago = const_cast<>(this->diccionario.end());
+    return *it;
 }
 
 
@@ -97,215 +66,48 @@ string_set::const_iterator string_set::cbegin() const {
 
 string_set::const_iterator string_set::cend() const {
     auto it = new string_set::const_iterator(this);
-    it->elementoActual = "";
+    it->vastago = this->diccionario.cend();
     return *it;
 }
 
 string_set::iterator string_set::find(const string_set::value_type& elem){
-    Nodo* nodoEncontrado = findNodo(elem);
-    if (nodoEncontrado == nullptr) {
-        return end();
-    }
-    else {
-        auto it = string_set::iterator(this);
-        it.elementoActual = elem;
-        return it;
-    }
+    string_set::iterator it = this->begin();
+    it.vastago = this->diccionario.find(elem);
+    return it;
 }
 
 string_set::const_iterator string_set::find(const string_set::value_type& elem) const {
-    Nodo* nodoEncontrado = findNodo(elem);
-    if (nodoEncontrado == nullptr) {
-        return end();
-    }
-    else {
-        auto it = string_set::const_iterator(this);
-        it.elementoActual = elem;
-        return it;
-    }
+    string_set::const_iterator it = this->cbegin();
+    it.vastago = const_cast<>(this->diccionario.find(elem));
+    return it;
 }
 
 pair<string_set::iterator, bool> string_set::insert(const string_set::value_type& elem) {
-    bool inserta = false;
-    string elemAInsertar = elem;
-    iterator it = find(elem);/* @comentario(ivan): O(S) */
-    if (!it.isEnd()) {
-        pair<string_set::iterator, bool> res = make_pair(this->end(), inserta);
-        return res;
-    } else {
-        int index = 0;
-        Nodo *actual = raiz;
-        while (index < elem.size()) { /* @comentario(ivan): O(S) */
-            if (actual->hijos.count(elem[index]) == 0) {
-                Nodo *nodoSiguiente = new Nodo();
-                actual->hijos.insert(pair<char, Nodo *>(elem[index], nodoSiguiente));
-            }
-            actual = actual->hijos[elem[index]];
-            index++;
-        }
-        actual->esClave = true; /* @comentario(ivan): O(copy(T)) */
-        inserta = true;
-        this->_cantidadDeElementos++;
-        pair<string_set::iterator, bool> res;
-        auto it = iterator(this);
-        it.elementoActual = elem;
-        res = make_pair(it, inserta);
-        return res;
+    pair<string_map<bool>::iterator, bool> result = this->diccionario.insert(make_pair(elem,true));
+    auto it = this->begin();
+    it.vastago = result.first;
+    return make_pair(it, result.second);
     }
-}
+
 
 
 string_set::size_type string_set::erase(const string_set::value_type& elem) {
-    string elemABorrar = elem;
-    Nodo* actual = findNodo(elem);
-    auto rama = getBranch(elem);
-    if(count(elem) == 0){
-        return 0;
-    }
-    actual->esClave = false;
-    this->_cantidadDeElementos--;
-    if (!actual->hijos.empty()) {//Si es prefijo de otra clave...
-        return 1;
-    }
-    actual = rama.back(); // Ahora actual es el padre
-    rama.pop_back();
-    while (!rama.empty() && actual->hijos.size() <= 1 && actual->esClave == false) {
-        actual->hijos.erase(elemABorrar.back());
-        if (actual->hijos.empty()){
-            delete actual;
-        }
-        actual = rama.back();
-        rama.pop_back();
-        elemABorrar.pop_back();
-    }
-    actual->hijos.erase(elemABorrar.back());
-    return 1;
+    return this->diccionario.erase(elem);
 }
 
 
 string_set::iterator string_set::erase(string_set::iterator pos) {
-    auto elem = pos.elementoActual;
-    auto it = ++pos;
-    erase(elem);
+    auto it = string_set::iterator(this);
+    it.vastago = this->diccionario.erase(pos.vastago);
     return it;
 }
 
 string_set::size_type string_set::count(const string_set::value_type& elem) const {
-    if (find(elem).isEnd()) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
-
-string string_set::primerElemento() const {
-    Nodo *nodoActual = raiz;
-    string elem = "";
-    while (nodoActual->hijos.size() != 0 && nodoActual->esClave == false) {
-        auto tuplaPrimera = nodoActual->hijos.begin();
-        char primerChar = (*tuplaPrimera).first;
-        elem += primerChar;
-        nodoActual = nodoActual->hijos[primerChar];
-    }
-    return elem;
-}
-
-string string_set::siguienteElemento(string elemActual) const {
-    Nodo *nodoActual = findNodo(elemActual);
-    if(nodoActual == nullptr){return "";}
-    string elem = elemActual;
-    if (nodoActual->hijos.size() > 0) { //la clave actual es substring de la siguiente.
-        bool primeraVez = true;
-        while (nodoActual->hijos.size() != 0 && nodoActual->esClave == false || primeraVez) {
-            primeraVez = false;
-            auto tuplaPrimera = nodoActual->hijos.begin();
-            char primerChar = (*tuplaPrimera).first;
-            elem += primerChar;
-            nodoActual = nodoActual->hijos[primerChar];
-        }
-        return elem;
-    } else { //la clave siguiente contiene substring de la actual (o es totalmente disjunta)
-
-        vector<Nodo *> branch = getBranch(elemActual);
-        unsigned long index = branch.size() - 1;
-        nodoActual = branch[index];
-        bool flag = true;
-        while (index > 0 && flag) {
-            auto it = nodoActual->hijos.begin();
-            while (it->first < elem.back() && it != nodoActual->hijos.end()) {
-                it++;
-            }
-            if (it != nodoActual->hijos.end()) {
-                it++;
-            }
-            elem.pop_back();
-
-            if (it == nodoActual->hijos.end()) {
-                nodoActual = branch[index - 1];
-                index--;
-            } else {
-                char c = it->first;
-                elem.push_back(c);
-                flag = false;
-                nodoActual = nodoActual->hijos[it++->first];
-            }
-        }
-        if (nodoActual == nullptr) {
-            return "";
-        } else {
-            if (index != 0) { //longest common substring not empty
-
-                while (nodoActual->esClave == false) {
-                    elem += (*nodoActual->hijos.begin()).first;
-                    nodoActual = (*nodoActual->hijos.begin()).second;
-                }
-            } else { //longest common substring is ""
-                auto it = raiz->hijos.begin();
-
-                while (it->first <= elem[0] && it != raiz->hijos.end()) {
-                    it++;
-                }
-                if(it==raiz->hijos.end()){return "";}
-                elem = "";
-                elem += it->first;
-                nodoActual = raiz->hijos[it->first];
-                while (nodoActual->esClave == false) {
-                    elem += (*nodoActual->hijos.begin()).first;
-                    nodoActual = (*nodoActual->hijos.begin()).second;
-                }
-            }
-        }
-        return elem;
-        // ¯\_(ツ)_/¯
-    }
-}
-
-string_set::Nodo* string_set::findNodo(string elem) const {
-    int index = 0;
-    string_set::Nodo* actual = raiz;
-    while (index < elem.size() && actual->hijos.count(elem[index]) != 0) {
-        actual = actual->hijos[elem[index]];
-        index++;
-    }
-    if (index == elem.size() && actual->esClave != false) {
-        return actual;
-    } else {
-        return nullptr;
-    }
+    return this->diccionario.count(elem);
 }
 
 
-vector<string_set::Nodo*> string_set::getBranch(string elem) const {
-    vector<string_set::Nodo*> branch = vector<string_set::Nodo*>();
-    int index = 0;
-    string_set::Nodo *actual = raiz;
-    while (index != elem.size() && actual->hijos.count(elem[index]) != 0) {
-        branch.push_back(actual);
-        actual = actual->hijos[elem[index]];
-        index++;
-    }
-    return branch;
-}
+
 
 
 bool string_set::operator!=(const string_set &otro) const {
@@ -313,14 +115,9 @@ bool string_set::operator!=(const string_set &otro) const {
 }
 
 
-string_set::iterator string_set::end() {
-    auto it = string_set::iterator(this);
-    it.elementoActual = "";
-    return it;
-}
 
-string_set::const_iterator string_set::begin() const {
-    auto it = new string_set::const_iterator(this);
+string_set::iterator string_set::begin() const {
+    auto it = new string_set::iterator(this);
     return *it;
 }
 
@@ -328,83 +125,80 @@ string_set::const_iterator string_set::begin() const {
 /////////////////////  empieza iterator /////////////////////
 
 string_set::iterator::iterator(const string_set* set) {
-    this->elementoActual = set->primerElemento(); /* @comentario(ivan): O(S) */
-    this->set = set;
+    this->vastago = set->diccionario.begin();
 }
 
 string string_set::iterator::operator*() {
-    value_type elem = this->elementoActual;
-    return elem;
+    return (*vastago).first;
 }
 
 string* string_set::iterator::operator->() {
-    value_type* elem = new value_type(this->elementoActual);
-    return elem;
+    value_type elem = this->vastago.getClave();
+    return &elem; //fixme no hay manera de que esto funcione, por que no podemos devolver string?
 }
 
 string_set::iterator::iterator() {
     set = nullptr;
-    elementoActual = "";
 }
 
 bool string_set::iterator::isEnd() {
-    return this->elementoActual == "";
+    return vastago.isEnd();
 }
 
 string_set::iterator& string_set::iterator::operator++() {
-    this->elementoActual = this->set->siguienteElemento(elementoActual);
-    return *this;
+    this->vastago.operator++();
+    return (*this);
 }
 
-string_set::value_type string_set::iterator::getElemento() {
-    return elementoActual;
-}
 
 bool string_set::iterator::operator==(const string_set::iterator& o_it) const{
-    return (o_it.set == this->set) && (o_it.elementoActual == this->elementoActual);
+    return (o_it.set == this->set) &&
+
+            (this->claveActual() == o_it.claveActual() )
+            ;
 }
 
 bool string_set::iterator::operator!=(const string_set::iterator& o_it) const{
     return not( *this==o_it  );
 }
 
-/////////////////////  empieza const_iterator /////////////////////
+string string_set::iterator::claveActual() const {
+    return this->vastago.getClave();
+}
 
-string string_set::const_iterator::operator*() {
-    value_type elem = value_type(this->elementoActual);
-    return elem;
+/////////////////////  empieza const_iterator /////////////////////
+string string_set::const_iterator::claveActual() const {
+    return this->vastago.getClave();
+}
+value_type string_set::const_iterator::operator*() {
+    auto it = *this;
+    return (*(it.vastago)).first;
 }
 
 string* string_set::const_iterator::operator->() {
-    value_type* elem = new value_type(this->elementoActual);
-    return elem;
+    value_type elem = this->vastago.getClave();
+    return &elem; //fixme no hay manera de que esto funcione, por que no podemos devolver string?
 }
 
-string_set::const_iterator::const_iterator() {
-    set = nullptr;
-    elementoActual = "";
-}
 
 bool string_set::const_iterator::isEnd() {
-    return elementoActual == "";
+    return this->vastago.isEnd();
 }
 
-string_set::value_type string_set::const_iterator::getElemento () {
-    return elementoActual;
-}
 
 string_set::const_iterator::const_iterator(const string_set* set) {
-    this->elementoActual = set->primerElemento(); /* @comentario(ivan): O(S) */
+    this->vastago = set->diccionario.cbegin(); /* @comentario(ivan): O(S) */
     this->set = set;
 }
 
 string_set::const_iterator& string_set::const_iterator::operator++() {
-    this->elementoActual = this->set->siguienteElemento(elementoActual);
+    this->vastago.operator++();
     return *this;
 }
 
 bool string_set::const_iterator::operator==(const string_set::const_iterator& o_it)const {
-    return (o_it.set == this->set) && (o_it.elementoActual == this->elementoActual);
+    return (o_it.set == this->set) &&
+            (this->vastago.getClave()==o_it.vastago.getClave());
 }
 
 bool string_set::const_iterator::operator!=(const string_set::const_iterator& o_it) const{
