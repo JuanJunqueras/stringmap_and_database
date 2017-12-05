@@ -31,15 +31,13 @@ public:
        * se inicializa apuntando a la primera clave del string_set en orden alfabetico.
        * Hacer ++ es O(clave más larga).
      * */
-        class iterator{
-        const string_set* set;
-        friend class string_set;
-            string_map<bool>::iterator vastago;
+    class iterator{
+
     public:
 
         iterator(const string_set* mapa);
         iterator();
-        //using value_type = const string_set::value_type;
+        using value_type = const string_set::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference =value_type&;
         using pointer = value_type*;
@@ -50,19 +48,21 @@ public:
         bool operator!=(const iterator& o_it) const;
         bool operator==(const iterator& o_it) const;
         bool isEnd();
+        value_type elementoActual() const;
 
-        string claveActual() const;
+    private:
+        const string_set* set;
+        friend class string_set;
+        string_map<bool>::iterator vastago;
+        pointer stringActual;
 
     };
     /* idem iterator, pero los valores devueltos son constantes evitando aliasing. */
     class const_iterator{
-        string_map<bool>::const_iterator vastago;
-        const string_set* set;
-        friend class string_set;
+
     public:
         const_iterator(const string_set* set);
-
-        //using value_type = const string_set::value_type;
+        using value_type = const string_set::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference = value_type&;
         using pointer = value_type*;
@@ -73,10 +73,16 @@ public:
         bool operator!=(const const_iterator &o_it) const;
         bool operator==(const const_iterator &o_it) const;
         bool isEnd();
-        string claveActual() const;
+        value_type elementoActual() const;
 
+    private:
+        const string_set* set;
+        friend class string_set;
+        string_map<bool>::const_iterator vastago;
+        pointer stringActual;
 
     };
+
     friend class iterator;
     friend class const_iterator;
 
@@ -89,7 +95,6 @@ public:
    *
    * \complexity{\O(1)}
    */
-
 
     string_set();
 
@@ -195,7 +200,7 @@ public:
      */
     iterator begin();
     iterator end();
-    iterator begin() const;
+    const_iterator begin() const;
     /** @brief iterador al fin de la coleccion
      *
      * \pre true
@@ -204,7 +209,7 @@ public:
      *
      *  \complexity{\O(S)}
      */
-    iterator end() const;
+    const_iterator end() const;
 
     /// Versiones const de begin/end
 
@@ -233,7 +238,7 @@ public:
      *
      *  \complexity{\O(S)}
      */
-    const_iterator find(const value_type& elem) const;
+    //const_iterator find(const value_type& elem) const;
 
     /** @brief insercion
      *
@@ -276,7 +281,6 @@ public:
     iterator erase(iterator pos);
 
 
-    string siguienteElemento(string elemActual) const;
 
 private:
 
@@ -300,8 +304,6 @@ private:
       * \FORALL (c : string) pertenece?(c,m') sii m.count(c). == 1
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
     string_map<bool> diccionario;
 };

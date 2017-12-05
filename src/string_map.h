@@ -42,11 +42,10 @@ public:
     class iterator{
 
     public:
-        key_type getClave();
+        key_type getClave() const ;
         iterator(const string_map* mapa);
         iterator();
         iterator(const iterator&);
-        //~iterator();
         using value_type = const string_map::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference =value_type&;
@@ -58,8 +57,6 @@ public:
         bool operator!=(const iterator& o_it) const;
         bool operator==(const iterator& o_it) const;
         bool isEnd();
-
-        //iterator& operator=(const iterator& otro);
 
     private:
 
@@ -74,7 +71,7 @@ public:
     class const_iterator{
 
         public:
-            key_type getClave();
+            key_type getClave() const ;
             const_iterator(const string_map* mapa);
             const_iterator();
             using value_type = const string_map::value_type;

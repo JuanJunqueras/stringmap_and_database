@@ -17,7 +17,7 @@ string_set::string_set(const string_set& other) {
 }
 
 string_set::string_set(const linear_set<string>& other){
-    diccionario = string_map<bool>();
+    diccionario.clear();
     for (auto s : other){
         insert(s);
     }
@@ -50,24 +50,34 @@ string_set::iterator string_set::begin() {
     return string_set::iterator(this);
 }
 
+string_set::const_iterator string_set::begin() const {
+    return string_set::const_iterator(this);
+}
+
 
 string_set::iterator string_set::end() {
-    auto it = new string_set::iterator(this);
-    it->vastago = const_cast<>(this->diccionario.end());
-    return *it;
+    auto it = string_set::iterator(this);
+    it.vastago = this->diccionario.end();
+    return it;
+}
+
+string_set::const_iterator string_set::end() const {
+    auto it = string_set::const_iterator(this);
+    it.vastago = this->diccionario.cend();
+    return it;
 }
 
 
 string_set::const_iterator string_set::cbegin() const {
-    auto it = new string_set::const_iterator(this);
-    return *it;
+    auto it = string_set::const_iterator(this);
+    return it;
 }
 
 
 string_set::const_iterator string_set::cend() const {
-    auto it = new string_set::const_iterator(this);
-    it->vastago = this->diccionario.cend();
-    return *it;
+    auto it = string_set::const_iterator(this);
+    it.vastago = this->diccionario.cend();
+    return it;
 }
 
 string_set::iterator string_set::find(const string_set::value_type& elem){
@@ -76,11 +86,11 @@ string_set::iterator string_set::find(const string_set::value_type& elem){
     return it;
 }
 
-string_set::const_iterator string_set::find(const string_set::value_type& elem) const {
-    string_set::const_iterator it = this->cbegin();
-    it.vastago = const_cast<>(this->diccionario.find(elem));
-    return it;
-}
+//string_set::const_iterator string_set::find(const string_set::value_type& elem) const {
+//    string_set::const_iterator it = this->cbegin();
+//    it.vastago = this->diccionario.find(elem);
+//    return it;
+//}
 
 pair<string_set::iterator, bool> string_set::insert(const string_set::value_type& elem) {
     pair<string_map<bool>::iterator, bool> result = this->diccionario.insert(make_pair(elem,true));
@@ -88,7 +98,6 @@ pair<string_set::iterator, bool> string_set::insert(const string_set::value_type
     it.vastago = result.first;
     return make_pair(it, result.second);
     }
-
 
 
 string_set::size_type string_set::erase(const string_set::value_type& elem) {
@@ -107,34 +116,24 @@ string_set::size_type string_set::count(const string_set::value_type& elem) cons
 }
 
 
-
-
-
 bool string_set::operator!=(const string_set &otro) const {
     return !(*this == otro);
-}
-
-
-
-string_set::iterator string_set::begin() const {
-    auto it = new string_set::iterator(this);
-    return *it;
 }
 
 
 /////////////////////  empieza iterator /////////////////////
 
 string_set::iterator::iterator(const string_set* set) {
-    this->vastago = set->diccionario.begin();
+    this->vastago = string_map<bool>::iterator(&set->diccionario);
 }
 
-string string_set::iterator::operator*() {
+string_set::iterator::value_type string_set::iterator::operator*() {
     return (*vastago).first;
 }
 
-string* string_set::iterator::operator->() {
-    value_type elem = this->vastago.getClave();
-    return &elem; //fixme no hay manera de que esto funcione, por que no podemos devolver string?
+string_set::iterator::pointer string_set::iterator::operator->() {
+   this->stringActual = &this->vastago.operator->()->first;
+    return stringActual;
 }
 
 string_set::iterator::iterator() {
@@ -146,38 +145,36 @@ bool string_set::iterator::isEnd() {
 }
 
 string_set::iterator& string_set::iterator::operator++() {
+    this->stringActual = nullptr;
     this->vastago.operator++();
-    return (*this);
+    return *this;
 }
 
 
 bool string_set::iterator::operator==(const string_set::iterator& o_it) const{
-    return (o_it.set == this->set) &&
-
-            (this->claveActual() == o_it.claveActual() )
-            ;
+    return (o_it.set == this->set) && (this->elementoActual() == o_it.elementoActual());
 }
 
 bool string_set::iterator::operator!=(const string_set::iterator& o_it) const{
     return not( *this==o_it  );
 }
 
-string string_set::iterator::claveActual() const {
+string_set::iterator::value_type string_set::iterator::elementoActual() const {
     return this->vastago.getClave();
 }
 
 /////////////////////  empieza const_iterator /////////////////////
-string string_set::const_iterator::claveActual() const {
+string_set::const_iterator::value_type string_set::const_iterator::elementoActual() const {
     return this->vastago.getClave();
 }
-value_type string_set::const_iterator::operator*() {
-    auto it = *this;
-    return (*(it.vastago)).first;
+
+string_set::const_iterator::value_type string_set::const_iterator::operator*() {
+    return (*vastago).first;
 }
 
-string* string_set::const_iterator::operator->() {
-    value_type elem = this->vastago.getClave();
-    return &elem; //fixme no hay manera de que esto funcione, por que no podemos devolver string?
+string_set::const_iterator::pointer string_set::const_iterator::operator->() {
+    this->stringActual = &this->vastago.operator->()->first;
+    return stringActual;
 }
 
 
@@ -192,6 +189,7 @@ string_set::const_iterator::const_iterator(const string_set* set) {
 }
 
 string_set::const_iterator& string_set::const_iterator::operator++() {
+    this->stringActual = nullptr;
     this->vastago.operator++();
     return *this;
 }

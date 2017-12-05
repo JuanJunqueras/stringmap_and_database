@@ -448,7 +448,7 @@ typename string_map<T>::iterator &string_map<T>::iterator::operator++() {
 }
 
 template<typename T>
-typename string_map<T>::key_type string_map<T>::iterator::getClave() {
+typename string_map<T>::key_type string_map<T>::iterator::getClave() const{
     return claveActual;
 }
 
@@ -488,7 +488,7 @@ bool string_map<T>::const_iterator::isEnd() {
 }
 
 template<typename T>
-typename string_map<T>::key_type string_map<T>::const_iterator::getClave() {
+typename string_map<T>::key_type string_map<T>::const_iterator::getClave() const {
     return claveActual;
 }
 

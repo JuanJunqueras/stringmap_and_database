@@ -94,7 +94,7 @@ TEST(string_set_test, test_iterator) {
      *      |-h-o-l-a
      *      \-m-u-n-d-o
      */
-    EXPECT_EQ(s1.begin().operator*(), "aaaa");
+    EXPECT_EQ(*(s1.begin()), "aaaa");
 
     // Agrego subramas de "aa": debe iterar en orden correcto lexicográfico
     s1.insert("aaaab");
@@ -112,14 +112,5 @@ TEST(string_set_test, test_iterator) {
     EXPECT_EQ(s1.begin().operator*(), "aaaa");
     s1.erase("aaaa");
     EXPECT_EQ(s1.begin().operator*(), "aaaab");
-    EXPECT_EQ(s1.siguienteElemento("aaaab"), "aaaba");
-    EXPECT_EQ(s1.siguienteElemento("aabba"), "hola");
-
-    auto it = s1.find("aabba");
-    it = s1.erase(it);
-    EXPECT_EQ(it.operator*(), "hola");
-    it = s1.find("mundo");
-    it = s1.erase(it);
-    EXPECT_EQ(it, s1.end());
 
 }
