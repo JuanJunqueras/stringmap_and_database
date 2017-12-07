@@ -12,9 +12,9 @@
 using namespace std;
 
 /**
- * @brief Representa un diccionario cuyas claves son strings.
+ * @brief Representa un conjunto cuyos elementos son strings.
  *
- * **se explica con** TAD Diccionario(string, T)
+ * **se explica con** TAD Conjunto(string)
  */
 
 
@@ -24,31 +24,116 @@ public:
     typedef size_t size_type;
 
     /*
-       * permite iterar el String_set, clave por clave,
-       * en orden alfabetico de las claves.
+       * permite iterar el String_set, elemento por elemento,
+       * en orden alfabetico.
        * El operador * devuelve una instancia de <value_type>,
-       * y el end es <"","">.
-       * se inicializa apuntando a la primera clave del string_set en orden alfabetico.
-       * Hacer ++ es O(clave más larga).
+       * y el end es <"">.
+       * se inicializa apuntando al primer elemento del string_set en orden alfabetico.
+       * Hacer ++ es O(elemento más larga).
      * */
     class iterator{
 
     public:
 
+       /**
+       * @brief Devuelve el elemento actual del iterador
+       *
+       * \pre El iterador no debe estar en la posición pasando-el-último.
+       * \post Devuelve el elemento al que apunta el iterador.
+       *
+       * \complexity{\O(1)}
+       */
+        value_type elementoActual() const;
+
+       /**
+       * @brief Constructor del iterador.
+       *
+       * \pre true
+       * \post El iterador apunta al primer elemento del conjunto que itera.
+       * Si es vacío, apunta a la posición pasando-el-último
+       *
+       * \complexity{\O(1)}
+       */
         iterator(const string_set* mapa);
+
+       /**
+       * @brief Constructor del iterador.
+       *
+       * \pre true
+       * \post El iterador apunta al primer elemento del conjunto que itera.
+       * Si es vacío, apunta a la posición pasando-el-último
+       *
+       * \complexity{\O(1)}
+       */
         iterator();
         using value_type = const string_set::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference =value_type&;
         using pointer = value_type*;
         using difference_type = std::ptrdiff_t;
+
+        /**
+        * @brief Operador de desreferencia.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post Devuelve el elemento al que apunta
+        *
+        * \complexity{\O(L)}
+        */
         value_type operator*();
+
+        /**
+        * @brief Operador de referencia.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post Devuelve una referencia al elemento al que apunta
+        *
+        * \complexity{\O(L)}
+        */
         value_type* operator->();
+
+        /**
+        * @brief Avanza el iterador.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post El elemento es el siguiente al original en orden lexicográfico, o
+        * el string vacio si llegó a la posición pasando-el-último
+        *
+        * \complexity{\O(L)}
+        */
         iterator& operator++();
-        bool operator!=(const iterator& o_it) const;
+
+        /**
+        * @brief Operador de igualdad.
+        *
+        * \pre true
+        * \post true sii iteran el mismo conjunto y se encuentan apuntando al mismo elemento
+        *
+        * \complexity{\O(1)}
+        */
         bool operator==(const iterator& o_it) const;
+
+        /**
+        * @brief Operador de diferencia.
+        *
+        * \pre true
+        * \post true sii no iteran el mismo conjunto o
+        * itera el mismo conjunto pero no se encuentan apuntando al mismo elemento
+        *
+        * \complexity{\O(1)}
+        */
+        bool operator!=(const iterator& o_it) const;
+
+        /**
+        * @brief Consulta si llego al final.
+        *
+        * \pre true
+        * \post true sii el iterador apunta a la posición pasando-el-último
+        *
+        * \complexity{\O(1)}
+        */
         bool isEnd();
-        value_type elementoActual() const;
+
 
     private:
         const string_set* set;
@@ -57,23 +142,101 @@ public:
         pointer stringActual;
 
     };
-    /* idem iterator, pero los valores devueltos son constantes evitando aliasing. */
+
     class const_iterator{
 
     public:
+
+        /**
+        * @brief Devuelve el elemento actual del iterador
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post Devuelve el elemento al que apunta el iterador.
+        *
+        * \complexity{\O(1)}
+        */
+        value_type elementoActual() const;
+
+       /**
+       * @brief Constructor del iterador.
+       *
+       * \pre true
+       * \post El iterador apunta al primer elemento del conjunto que itera.
+       * Si es vacío, apunta a la posición pasando-el-último
+       *
+       * \complexity{\O(1)}
+       */
         const_iterator(const string_set* set);
+
         using value_type = const string_set::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference = value_type&;
         using pointer = value_type*;
         using difference_type = std::ptrdiff_t;
+
+       /**
+       * @brief Operador de desreferencia.
+       *
+       * \pre El iterador no debe estar en la posición pasando-el-último.
+       * \post Devuelve el elemento al que apunta
+       *
+       * \complexity{\O(L)}
+       */
         value_type operator*();
+
+       /**
+       * @brief Operador de referencia.
+       *
+       * \pre El iterador no debe estar en la posición pasando-el-último.
+       * \post Devuelve una referencia al elemento al que apunta
+       *
+       * \complexity{\O(L)}
+       */
         value_type* operator->();
+
+        /**
+        * @brief Avanza el iterador.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post El elemento es el siguiente al original en orden lexicográfico, o
+        * el string vacio si llegó a la posición pasando-el-último
+        *
+        * \complexity{\O(L)}
+        */
         const_iterator& operator++();
-        bool operator!=(const const_iterator &o_it) const;
+
+        /**
+        * @brief Operador de diferencia.
+        *
+        * \pre true
+        * \post true sii no iteran el mismo conjunto o
+        * itera el mismo conjunto pero no se encuentan apuntando al mismo elemento
+        *
+        * \complexity{\O(1)}
+        */
         bool operator==(const const_iterator &o_it) const;
+
+        /**
+        * @brief Operador de diferencia.
+        *
+        * \pre true
+        * \post true sii no iteran el mismo conjunto o
+        * itera el mismo conjunto pero no se encuentan apuntando al mismo elemento
+        *
+        * \complexity{\O(1)}
+        */
+        bool operator!=(const const_iterator &o_it) const;
+
+        /**
+        * @brief Consulta si llego al final.
+        *
+        * \pre true
+        * \post true sii el iterador apunta a la posición pasando-el-último
+        *
+        * \complexity{\O(1)}
+        */
         bool isEnd();
-        value_type elementoActual() const;
+
 
     private:
         const string_set* set;

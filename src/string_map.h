@@ -42,21 +42,117 @@ public:
     class iterator{
 
     public:
-        key_type getClave() const ;
+
+        /**
+       * @brief Devuelve la clave actual del iterador
+       *
+       * \pre El iterador no debe estar en la posición pasando-el-último.
+       * \post Devuelve el primer elemento de la tupla<clave, significado>
+       * a la que apunta el iterador.
+       *
+       * \complexity{\O(1)}
+       */
+        key_type getClave() const;
+
+        /**
+       * @brief Constructor del iterador.
+       *
+       * \pre true
+       * \post El iterador apunta a la primera tupla <clave, significado> del mapa que itera.
+       * Si es vacío, apunta a la posición pasando-el-último
+       *
+       * \complexity{\O(1)}
+       */
         iterator(const string_map* mapa);
+
+      /**
+      * @brief Constructor del iterador.
+      *
+      * \pre true
+      * \post El iterador apunta a la primera tupla <clave, significado> del mapa que itera.
+      * Si es vacío, apunta a la posición pasando-el-último
+      *
+      * \complexity{\O(1)}
+      */
         iterator();
+
+        /**
+      * @brief Constructor por copia del iterador.
+      *
+      * \pre true
+      * \post El iterador creado itera el mismo mapa que el argumento y
+        apunta a la misma tupla <clave, significado>.
+      *
+      * \complexity{\O(1)}
+      */
         iterator(const iterator&);
         using value_type = const string_map::value_type;
         using iterator_category = std::forward_iterator_tag;
         using reference =value_type&;
         using pointer = value_type*;
         using difference_type = std::ptrdiff_t;
+
+        /**
+        * @brief Operador de desreferencia.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post Devuelve la tupla <clave, significado> a la que apunta
+        *
+        * \complexity{\O(L)}
+        */
         value_type operator*();
+
+        /**
+        * @brief Operador de referencia.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post Devuelve una referencia a la tupla <clave, significado> a la que apunta
+        *
+        * \complexity{\O(L)}
+        */
         value_type* operator->();
+
+        /**
+        * @brief Avanza el iterador.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post La clave es la clave siguiente a la original en orden lexicográfico, o
+        * el string vacio si llegó a la posición pasando-el-último
+        *
+        * \complexity{\O(L)}
+        */
         iterator& operator++();
-        bool operator!=(const iterator& o_it) const;
+
+        /**
+        * @brief Operador de igualdad.
+        *
+        * \pre true
+        * \post true sii iteran el mismo mapa y se encuentan apuntando a la misma clave
+        *
+        * \complexity{\O(1)}
+        */
         bool operator==(const iterator& o_it) const;
-        bool isEnd();
+
+        /**
+        * @brief Operador de diferencia.
+        *
+        * \pre true
+        * \post true sii no iteran el mismo mapa o
+        * itera el mismo mapa pero no se encuentan apuntando a la misma clave
+        *
+        * \complexity{\O(1)}
+        */
+        bool operator!=(const iterator& o_it) const;
+
+        /**
+        * @brief Consulta si llego al final.
+        *
+        * \pre true
+        * \post true sii el iterador apunta a la posición pasando-el-último
+        *
+        * \complexity{\O(1)}
+        */
+                bool isEnd();
 
     private:
 
@@ -67,23 +163,108 @@ public:
         pointer tuplaActual;
 
     };
-    /* idem iterator, pero los valores devueltos son constantes evitando aliasing. */
+
     class const_iterator{
 
         public:
-            key_type getClave() const ;
+
+        /**
+        * @brief Devuelve la clave actual del iterador
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post \P{res} es el primer elemento de la tupla<clave, significado>
+        * a la que apunta el iterador.
+        *
+        * \complexity{\O(1)}
+        */
+            key_type getClave() const;
+
+        /**
+        * @brief Constructor del iterador.
+        *
+        * \pre true
+        * \post El iterador apunta a la primera tupla <clave, significado> del mapa que itera.
+        * Si es vacío, apunta a la posición pasando-el-último
+        *
+        * \complexity{\O(1)}
+        */
             const_iterator(const string_map* mapa);
+
+        /**
+        * @brief Constructor del iterador.
+        *
+        * \pre true
+        * \post El iterador apunta a la primera tupla <clave, significado> del mapa que itera.
+        * Si es vacío, apunta a la posición pasando-el-último
+        *
+        * \complexity{\O(1)}
+        */
             const_iterator();
             using value_type = const string_map::value_type;
             using iterator_category = std::forward_iterator_tag;
             using reference = value_type&;
             using pointer = value_type*;
             using difference_type = std::ptrdiff_t;
+
+        /**
+        * @brief Operador de desreferencia.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post Devuelve la tupla <clave, significado> a la que apunta
+        *
+        * \complexity{\O(L)}
+        */
             value_type operator*();
+
+        /**
+        * @brief Operador de referencia.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post Devuelve una referencia a la tupla <clave, significado> a la que apunta
+        *
+        * \complexity{\O(L)}
+        */
             value_type* operator->();
+
+        /**
+        * @brief Avanza el iterador.
+        *
+        * \pre El iterador no debe estar en la posición pasando-el-último.
+        * \post La clave es la clave siguiente a la original en orden lexicográfico, o
+        * el string vacio si llego a la posición pasando-el-último
+        *
+        * \complexity{\O(L)}
+        */
             const_iterator& operator++();
-            bool operator!=(const const_iterator &o_it) const;
+
+        /**
+        * @brief Operador de igualdad.
+        *
+        * \pre true
+        * \post true sii itera el mismo mapa y se encuentan apuntando a la misma clave
+        *
+        * \complexity{\O(1)}
+        */
             bool operator==(const const_iterator &o_it) const;
+
+/**
+        * @brief Operador de diferencia.
+        *
+        * \pre true
+        * \post true sii no itera el mismo mapa o
+        * itera el mismo mapa pero no se encuentan apuntando a la misma clave
+        *
+        * \complexity{\O(1)}
+        */
+            bool operator!=(const const_iterator &o_it) const;
+        /**
+        * @brief Consulta si llego al final.
+        *
+        * \pre true
+        * \post true sii el iterador apunta a la posición pasando-el-último
+        *
+        * \complexity{\O(1)}
+        */
             bool isEnd();
 
     private:
@@ -168,7 +349,7 @@ public:
      * \post res = #claves(this)
      *
      * \complexity{\O(1)}
-     * */
+     */
     size_t size() const;
 
     /** @brief devuelve true si size() == 0
@@ -177,7 +358,7 @@ public:
      * \post res = if #claves(this) = 0 then true else false fi
      *
      * \complexity{\O(1)}
-     * */
+     */
     bool empty() const;
 
     /** @brief Acceso / definición de pares clave/valor
