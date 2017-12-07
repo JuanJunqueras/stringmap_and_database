@@ -136,6 +136,15 @@ public:
 
 
     private:
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        /** \name Representación
+         * rep: string_set::iterator \TO bool\n
+         * rep(m) \EQUIV
+         *  el string actual es un elemento del set que itera, o es el string vacio.
+         *
+         */
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+
         const string_set* set;
         friend class string_set;
         string_map<bool>::iterator vastago;
@@ -239,6 +248,15 @@ public:
 
 
     private:
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        /** \name Representación
+         * rep: string_set::iterator \TO bool\n
+         * rep(m) \EQUIV
+         *  el string actual es un elemento del set que itera, o es el string vacio.
+         *
+         */
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+
         const string_set* set;
         friend class string_set;
         string_map<bool>::const_iterator vastago;

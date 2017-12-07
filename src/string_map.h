@@ -155,6 +155,19 @@ public:
                 bool isEnd();
 
     private:
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        /** \name Representación
+         * rep: string_map::iterator \TO bool\n
+         * rep(m) \EQUIV
+         *  la clave actual es una clave del mapa que itera, o es el string vacio.
+         *  el valor actual es un valor del mapa que itera
+         *  la clave actual es igual al primer elemento de la tupla actual
+         *  el valor actual es igual al segunro elemento de la tupla actual
+         *  si la clave actual es distinta al string vacio, el valor actual es su valor en el mapa que itera.
+         *
+         *
+         */
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
 
         const string_map* mapa;
         friend class string_map;
@@ -268,6 +281,20 @@ public:
             bool isEnd();
 
     private:
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        /** \name Representación
+         * rep: string_map::iterator \TO bool\n
+         * rep(m) \EQUIV
+         *  la clave actual es una clave del mapa que itera, o es el string vacio.
+         *  el valor actual es un valor del mapa que itera
+         *  la clave actual es igual al primer elemento de la tupla actual
+         *  el valor actual es igual al segunro elemento de la tupla actual
+         *  si la clave actual es distinta al string vacio, el valor actual es su valor en el mapa que itera.
+         *
+         *
+         */
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+
         const string_map* mapa;
         friend class string_map;
         key_type claveActual;
