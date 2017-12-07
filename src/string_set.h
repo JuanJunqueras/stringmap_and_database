@@ -35,6 +35,12 @@ public:
 
     public:
 
+        using value_type = const string_set::value_type;
+        using iterator_category = std::forward_iterator_tag;
+        using reference =value_type&;
+        using pointer = value_type*;
+        using difference_type = std::ptrdiff_t;
+
        /**
        * @brief Devuelve el elemento actual del iterador
        *
@@ -66,11 +72,6 @@ public:
        * \complexity{\O(1)}
        */
         iterator();
-        using value_type = const string_set::value_type;
-        using iterator_category = std::forward_iterator_tag;
-        using reference =value_type&;
-        using pointer = value_type*;
-        using difference_type = std::ptrdiff_t;
 
         /**
         * @brief Operador de desreferencia.
@@ -156,6 +157,12 @@ public:
 
     public:
 
+        using value_type = const string_set::value_type;
+        using iterator_category = std::forward_iterator_tag;
+        using reference = value_type&;
+        using pointer = value_type*;
+        using difference_type = std::ptrdiff_t;
+
         /**
         * @brief Devuelve el elemento actual del iterador
         *
@@ -176,12 +183,6 @@ public:
        * \complexity{\O(1)}
        */
         const_iterator(const string_set* set);
-
-        using value_type = const string_set::value_type;
-        using iterator_category = std::forward_iterator_tag;
-        using reference = value_type&;
-        using pointer = value_type*;
-        using difference_type = std::ptrdiff_t;
 
        /**
        * @brief Operador de desreferencia.
